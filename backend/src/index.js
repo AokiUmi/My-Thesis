@@ -6,7 +6,13 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import fs from 'fs';
 
-import { applyRateLimiting, applyLooseCORSPolicy, applyBodyParsing, applyLogging, applyErrorCatching } from './api-middleware.js'
+import {
+    applyRateLimiting,
+    applyLooseCORSPolicy,
+    applyBodyParsing,
+    applyLogging,
+    applyErrorCatching
+} from './api-middleware.js'
 
 const app = express();
 const port = 53706;
@@ -77,8 +83,18 @@ app.delete('/api/messages/:messageId', (req, res) => {
     const messageId = req.params.messageId;
     console.log("I should delete message " + messageId + "...");
 
-    res.status(200).send({
-        "msg": "Successfully deleted post!"
+    db.prepare(DELETE_POST_SQL).get(messageId, (err, ret) => {
+        if (err) {
+            res.status(500).send({
+                msg: "Something went wrong!",
+                err: err
+            });
+        } else {
+            res.status(200).send({
+                msg: "Successfully deleted!",
+                
+            })
+        }
     })
 });
 
