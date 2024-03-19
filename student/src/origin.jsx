@@ -1,25 +1,39 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useEffect, useState,useRef} from "react";
 import "./App.css";
 import { Button, Card, Form } from "react-bootstrap";
-
+import React from 'react'
+import ReactPlayer from 'react-player'
 function App() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+  const [total, setTotal] = useState("");
   const [messages, setMessages] = useState([]);
 
   const load = () => {
-    fetch("http://localhost:53706/api/messages")
+    fetch("http://10.20.196.26:53706/api/messages")
       .then((res) => res.json())
       .then((data) => {
         setMessages(data);
+        
+        
       });
   };
-
+  const CountTotal = () => {
+    fetch("http://10.20.196.26:53706/api/messages/total")
+      .then((res) => res.json())
+      .then((data) => {
+        setTotal(data[0].total_post);
+      
+        
+      });
+  };
   useEffect(load, []);
+  useEffect(CountTotal, []);
+ 
 
   const handlePost = () => {
-    fetch("http://localhost:53706/api/messages", {
+    fetch("http://10.20.196.26:53706/api/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,13 +46,14 @@ function App() {
       if (res.ok) {
         alert("Created post!");
         load();
+        CountTotal();
       } else {
         alert("Something went wrong!");
       }
     });
   };
   const deletePost = (meg_id) => {
-    fetch(`http://localhost:53706/api/messages/${meg_id}`, {
+    fetch(`http://10.20.196.26:53706/api/messages/${meg_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -47,14 +62,27 @@ function App() {
       if (res.ok) {
         alert("Delete post!");
         load();
+        CountTotal();
       } else {
         alert("Something went wrong!");
       }
     });
   };
+
+  const playerRef = useRef(null);
+  const GetCurrentTime = () => {
+    if (playerRef.current) {
+      console.log("current time: ", playerRef.current.getCurrentTime());
+    }
+  }
+  setInterval(GetCurrentTime, 1000);
   return (
     <div>
-      <h1>Welcome to BadgerChat Mini!</h1>
+      <ReactPlayer url='https://www.youtube.com/watch?v=UaCL4LZbjXI' ref={playerRef} controls={true} />
+      <Button onClick={GetCurrentTime}>Get Current Time</Button>
+    
+      {/* <h1>Welcome to BadgerChat Mini!</h1>
+      <p>Total post is: {total }</p>
       <Form>
         <Form.Label htmlFor="title-inp">Title</Form.Label>
         <Form.Control
@@ -79,7 +107,7 @@ function App() {
             Delete
           </Button>
         </Card>
-      ))}
+      ))} */}
     </div>
   );
 }

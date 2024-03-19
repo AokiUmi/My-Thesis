@@ -1,0 +1,38 @@
+{
+    "chapters": [
+        {
+            "id": 1,
+            "name": "Chapter1",
+            "time_begin": 0,
+            "time_end": 63
+        },
+        {
+            "id": 2,
+            "name": "Chapter2",
+            "time_begin": 63,
+            "time_end": 115
+        },
+        {
+            "id": 3,
+            "name": "Chapter3",
+            "time_begin": 115,
+            "time_end": 245
+        },
+        {
+            "id": 4,
+            "name": "Chapter4",
+            "time_begin": 245,
+            "time_end": 290
+        },
+        {
+            "id": 5,
+            "name": "Chapter5",
+            "time_begin": 290,
+            "time_end": 314
+        }
+
+
+    ]
+    
+    
+}

@@ -1,0 +1,55 @@
+.comment {
+    background-color: rgb(238, 238, 238);
+    height: 21vh;
+    line-height: 21vh;
+    border-radius: 0px;
+    color: black;
+}
+
+.player {
+    background-color: #454545;
+    text-align: center;
+    line-height: 73vh;
+    height: 73vh;
+    justify-content: center;
+   
+    color: black;
+   
+}
+.button{
+
+    line-height: 6vh;
+    height: 6vh;
+  
+    color: black;
+   
+}
+.chapter{
+    text-align: left;
+    line-height: 88vh;
+    height: 88vh;
+  background-color: rgb(226, 226, 226);
+    color: black;
+   
+}
+.image {
+    line-height: 690px;
+    height: 690px;
+    justify-content: center;
+    text-align: center;
+    color: black;
+}
+.paragraph {
+   margin-top: 0px;
+   margin-bottom: 0px;
+    max-height: 3vh;
+    line-height: 3vh;
+  }
+
+.test {
+    background-color: rgb(255, 142, 142);
+    color:rgb(77, 161, 77);
+    color :rgb(123, 181, 222);
+    color: rgb(160, 0, 0);
+    color:rgb(197, 231, 255)
+}

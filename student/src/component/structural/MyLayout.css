@@ -1,0 +1,22 @@
+.header {
+   
+    margin: 0px;
+    height: 6vh;
+    line-height: 6vh;
+   width: 100%;
+    color:aliceblue;
+}
+
+
+.menu-icon {
+    position: absolute;
+    left: 20px; /* Adjust the left positioning as needed */
+    top:0.2vh;
+  }
+
+  
+.username {
+    position: absolute;
+    right: 20px; /* Adjust the left positioning as needed */
+  
+  }

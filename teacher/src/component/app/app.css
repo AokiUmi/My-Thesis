@@ -1,0 +1,16 @@
+.card {
+  
+
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 8px;
+}
+.ant-card-body {
+    background-color: var(--background);
+    font-size: 16px;
+  }
+
+.ant-card-head-title {
+    color: var(--text-color);
+    font-size: 18px
+}

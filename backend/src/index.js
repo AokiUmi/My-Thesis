@@ -18,7 +18,9 @@ const app = express();
 const port = 53706;
 
 const GET_POST_SQL = 'SELECT * FROM BadgerMessage;'
+const GET_POST_TOTAL_SQL = 'SELECT COUNT(id) AS total_post FROM BadgerMessage;'
 const INSERT_POST_SQL = 'INSERT INTO BadgerMessage(title, content, created) VALUES (?, ?, ?) RETURNING id;'
+const UPDATE_CONTENT = 'UPDATE BadgerMessage SET content = ? WHERE student_id = ?;'
 const DELETE_POST_SQL = "DELETE FROM BadgerMessage WHERE id = ?;"
 
 const FS_DB = process.env['MINI_BADGERCHAT_DB_LOC'] ?? "./db.db";
@@ -54,6 +56,18 @@ app.get('/api/messages', (req, res) => {
     })
 })
 
+app.get('/api/messages/total', (req, res) => {
+    db.prepare(GET_POST_TOTAL_SQL).get().all((err, ret) => {
+        if (err) {
+            res.status(500).send({
+                msg: "Something went wrong!",
+                err: err
+            });
+        } else {
+            res.status(200).send(ret);
+        }
+    })
+})
 app.post('/api/messages', (req, res) => {
     const title = req.body.title;
     const content = req.body.content;
@@ -79,24 +93,24 @@ app.post('/api/messages', (req, res) => {
     }
 })
 
-app.delete('/api/messages/:messageId', (req, res) => {
-    const messageId = req.params.messageId;
-    console.log("I should delete message " + messageId + "...");
+// app.delete('/api/messages/:messageId', (req, res) => {
+//     const messageId = req.params.messageId;
+//     console.log("I should delete message " + messageId + "...");
 
-    db.prepare(DELETE_POST_SQL).get(messageId, (err, ret) => {
-        if (err) {
-            res.status(500).send({
-                msg: "Something went wrong!",
-                err: err
-            });
-        } else {
-            res.status(200).send({
-                msg: "Successfully deleted!",
+//     db.prepare(DELETE_POST_SQL).get(messageId, (err, ret) => {
+//         if (err) {
+//             res.status(500).send({
+//                 msg: "Something went wrong!",
+//                 err: err
+//             });
+//         } else {
+//             res.status(200).send({
+//                 msg: "Successfully deleted!",
                 
-            })
-        }
-    })
-});
+//             })
+//         }
+//     })
+// });
 
 applyErrorCatching(app);
 

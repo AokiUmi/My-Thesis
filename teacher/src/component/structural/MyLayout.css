@@ -1,0 +1,53 @@
+.header {
+    width: 100%;
+    margin: 0px;
+    height: 6vh;
+    line-height: 6vh;
+    color:aliceblue;
+}
+
+
+.comment {
+  
+    width: 60%;
+    line-height: 94vh;
+    max-height: 94vh;
+    height: 94vh;
+    color: black;
+    
+   
+}
+.image {
+    line-height: 100vh;
+    height: 100vh;
+    justify-content: center;
+    text-align: center;
+    background-color: #ededed;
+    color: black;
+}
+
+
+.player{
+    background-color: #7c7c7c;
+    text-align: center;
+    line-height: 55vh;
+    height: 55vh;
+    justify-content: center;
+    max-width: 1000px;
+
+    color: black;
+   
+}
+
+.videoimage{
+    background-color: white;
+  
+    display: flex;
+    justify-content: center;
+    line-height: 39vh;
+    height: 39vh;
+    align-items: center; 
+
+    color: black;
+   
+}

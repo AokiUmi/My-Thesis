@@ -1,0 +1,19 @@
+.input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    background-color: white;
+    width: 1380px;
+  }
+  .username-input {
+    margin: 20px;
+    min-height: 6vh;
+    max-width: 400px;
+  }
+
+  .paragraph {
+    margin-top: 5px; /* Adjust the margin as needed */
+    margin-bottom: 5px; /* Adjust the margin as needed */
+  }

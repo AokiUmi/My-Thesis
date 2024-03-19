@@ -1,0 +1,40 @@
+{
+    "comments":[
+        {
+            "id":1,
+            "time": 100,
+            "content": "I love this course!",
+            "author": "AokiUmi"
+        },
+        {
+            "id":2,
+            "time": 56,
+            "content": "Aliquam auctor, lorem nec euismod ultrices, lorem tellus ullamcorper odio, vitae blandit justo tortor nec dui. Aenean volutpat odio vel.",
+            "author": "Reese"
+        },
+        {
+            "id":3,
+            "time": 347,
+            "content": "A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.",
+            "author": "Harold"
+        },
+        {
+            "id":4,
+            "time": 876,
+            "content": "Curabitur feugiat felis vel euismod iaculis. Pellentesque placerat sapien ante, ac sagittis magna maximus eu. Interdum et malesuada fames ac.",
+            "author": "Shaw"
+        },
+        {
+            "id":5,
+            "time": 900,
+            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia diam ipsum, eget blandit justo tempus at. Sed cursus, purus.",
+            "author": "admin"
+        },
+        {
+            "id":6,
+            "time": 4443,
+            "content": "Vestibulum vitae leo fermentum, molestie nunc a, finibus tellus. Phasellus non gravida urna. Mauris eros nibh, interdum nec enim id.",
+            "author": "root"
+        }
+    ]
+}

@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS BadgerMessage (
+CREATE TABLE IF NOT EXISTS InteractionInfo (
 	id INTEGER PRIMARY KEY UNIQUE,
-	title TEXT NOT NULL,
-	content TEXT NOT NULL,
-	created TIMESTAMP NOT NULL
+	username TEXT NOT NULL,
+	timelist TEXT NOT NULL,
+	
 );
