@@ -41,9 +41,9 @@ function MyImage(props) {
         setHoveredPolygonId(polygonId);
     };
     return (
-        <Layout style={{width:"1380px",maxHeight: "800px",overflow:"hidden"}}>
+        <Layout style={{width:"1380px",maxHeight: "680px",overflow:"hidden"}}>
             <Content className='polygon'>
-                <DrawPolygon data={PolygonData} svgWidth={1076} svgHeight={800} onPolygonClick={handlePolygonClick} />
+                <DrawPolygon data={PolygonData} svgWidth={1076} svgHeight={680} onPolygonClick={handlePolygonClick} />
             </Content>
             <Sider width="22%" style={siderStyle}>
                 <TextBlock username={props.username} clickedId={clickedPolygonId} />

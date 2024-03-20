@@ -86,11 +86,11 @@ function TextBlock(props) {
     return (
         <div>
         
-            <Typography variant="h4" sx={{
+            <Typography variant="h5" sx={{
                 backgroundColor: 'rgb(39, 154, 255)',
                 color: 'white',
                 textAlign: "left",
-                padding:"20px"
+                padding:"16px"
                 }} >
                 Sample Knowledge{props.clickedId}
             </Typography>

@@ -65,8 +65,8 @@ function MyComments(props) {
           textAlign: "left",
           fontSize:"20px",
           paddingLeft: "24px",
-          paddingTop: "18px",
-          paddingBottom:"18px"
+          paddingTop: "16px",
+          paddingBottom:"16px"
           }} >Comments</Typography>
       <div style={{overflowY:"auto",height:"88vh"}}>
         {comments.map((comment) => {

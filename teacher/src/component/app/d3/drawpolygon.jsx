@@ -130,7 +130,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       svg.call(zoom.transform, zoomTransform);
       } else {
         // Otherwise, apply initial translation and scale
-        svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2).scale(2));
+        svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-50).scale(2));
       }
    
 

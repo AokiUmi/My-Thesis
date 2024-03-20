@@ -10,7 +10,7 @@ function MyImage(props) {
 
     return (
         <div style={{maxHeight: "800px", width:"1380px",backgroundColor:"white"}}>
-            <DrawPolygon data={PolygonData} svgWidth={1380} svgHeight={800} />
+            <DrawPolygon data={PolygonData} svgWidth={1380} svgHeight={680} />
         </div>
     );
 
