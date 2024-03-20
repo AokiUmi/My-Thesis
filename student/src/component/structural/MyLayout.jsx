@@ -15,13 +15,16 @@ import MyImage from "../app/image";
 
 function MyLayout(props) {
 
-  const [username, setUsername] = useState('');
+  const previous_user = JSON.parse(sessionStorage.getItem('username'))  ? JSON.parse(sessionStorage.getItem('username')) : '';
+ 
+  const [username, setUsername] = useState(previous_user); 
+  console.log(username);
   const handleUsernameSubmit = (enteredUsername) => {
+
     setUsername(enteredUsername);
+    sessionStorage.setItem('username', JSON.stringify(enteredUsername));
   };
-  const handleUserSubmit = (enteredUsername) => {
-    setUsername(enteredUsername);
-  };
+
   const [selectedKey, setSelectedKey] = useState('');
   const setkeys = (key) => {
     setSelectedKey(key);
@@ -60,7 +63,7 @@ function MyLayout(props) {
             </Menu.Item>
          
             {
-              username != '' && (
+              username !== '' && (
               <Menu.Item key="username" style={{
                     position: 'absolute', right: -20,
                     color: 'white', pointerEvents: 'none',

@@ -27,6 +27,16 @@ function MainPage(props) {
   const handledatachange = (new_data) => {
     setVideo_data(new_data);
   }
+    
+  useEffect(()=>{
+    fetch("http://10.19.74.179:53706/api/cumulativeValues")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setVideo_data(data.video_data);
+      
+    });
+},[]);
   // const [width, setWidth] = useState(0);
   // const [height, setHeight] = useState(0);
 

@@ -76,15 +76,35 @@ function TextBlock(props) {
         else if (value === 3) return {"color":"rgb(250, 175, 0)"};
         else return {"color":"rgb(46, 125, 50)"};
   };
-  const sentValue = (value, id) => {
-   
-    console.log(value, id);
-  };
+
   useEffect(() => {
-    sentValue(value, props.username);
+   
+    // fetch("http://10.19.74.179:53706/api/addRatingData", {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           userid: props.userid,
+    //           knowledgeid: props.clickedId,
+    //           value: value,
+           
+    //         }),
+    //       }).then((res) => {
+    //         if (!res.ok) {
+    //           alert("Error!");
+    //         }
+    //     });
+
+    
+      
+      
    }, [value]);
+   useEffect(() => {
+    setValue(0);
+   }, [props.clickedId]);
     return (
-        <div>
+        <div style={{height: "680px", display: "flex", flexDirection: "column"}}>
         
             <Typography variant="h5" sx={{
                 backgroundColor: 'rgb(39, 154, 255)',
@@ -118,51 +138,54 @@ function TextBlock(props) {
                 )
                 }
             </Typography>
-            <Accordion>
-                <AccordionSummary
-                expandIcon={<ArrowDropDownIcon />}
-                aria-controls="panel1-content"
-                id="panel1-header"
-                >
-                <Typography>Concept</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary
-                expandIcon={<ArrowDropDownIcon />}
-                aria-controls="panel2-content"
-                id="panel2-header"
-                >
-                <Typography>Relative Concepts</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary
-                expandIcon={<ArrowDropDownIcon />}
-                aria-controls="panel2-content"
-                id="panel2-header"
-                >
-                <Typography>Quiz Example</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                    malesuada lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-                </AccordionDetails>
-            </Accordion>
+            <div style={{overflowY:"scroll"}}>
+                <Accordion>
+                  <AccordionSummary
+                  expandIcon={<ArrowDropDownIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                  >
+                  <Typography>Concept</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                  <Typography>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                  </Typography>
+                  </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                  <AccordionSummary
+                  expandIcon={<ArrowDropDownIcon />}
+                  aria-controls="panel2-content"
+                  id="panel2-header"
+                  >
+                  <Typography>Relative Concepts</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                  <Typography>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                  </Typography>
+                  </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                  <AccordionSummary
+                  expandIcon={<ArrowDropDownIcon />}
+                  aria-controls="panel2-content"
+                  id="panel2-header"
+                  >
+                  <Typography>Quiz Example</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                  <Typography>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                  </Typography>
+                  </AccordionDetails>
+              </Accordion>
+            </div>
+            
            
            
         </div>

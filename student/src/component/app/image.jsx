@@ -41,7 +41,7 @@ function MyImage(props) {
         setHoveredPolygonId(polygonId);
     };
     return (
-        <Layout style={{width:"1380px",maxHeight: "680px",overflow:"hidden"}}>
+        <Layout style={{width:"1380px",maxHeight: "680px"}}>
             <Content className='polygon'>
                 <DrawPolygon data={PolygonData} svgWidth={1076} svgHeight={680} onPolygonClick={handlePolygonClick} />
             </Content>
@@ -61,4 +61,5 @@ const siderStyle = {
     display:"flex",justifyContent:"center",alignItems:"center",
     color: 'black',
     background: 'rgb(235, 235, 235)',
+   
 };

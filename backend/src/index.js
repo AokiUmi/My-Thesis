@@ -17,11 +17,14 @@ import {
 const app = express();
 const port = 53706;
 
-const GET_POST_SQL = 'SELECT * FROM BadgerMessage;'
-const GET_POST_TOTAL_SQL = 'SELECT COUNT(id) AS total_post FROM BadgerMessage;'
-const INSERT_POST_SQL = 'INSERT INTO BadgerMessage(title, content, created) VALUES (?, ?, ?) RETURNING id;'
-const UPDATE_CONTENT = 'UPDATE BadgerMessage SET content = ? WHERE student_id = ?;'
-const DELETE_POST_SQL = "DELETE FROM BadgerMessage WHERE id = ?;"
+const INSERT_TIMELIST_SQL = "INSERT INTO cumulative_values (time_index, value) VALUES (?, ?);";
+const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM cumulative_values GROUP BY time_index;";
+const INERST_COMMENT_SQL = "INSERT INTO comments (time, content, author) VALUES (?, ?, ?);";
+const GET_TOTAL_COMMENTS_SQL = "SELECT * FROM comments;";
+const SELECT_RATING_SQL = "SELECT * FROM rating WHERE userid = ? AND knowledgeid = ?;";
+const UPDATE_RATING_SQL = "UPDATE rating SET value = ? WHERE userid = ? AND knowledgeid = ?;";
+const INSERT_RATING_SQL ="INSERT INTO rating (userid, knowledgeid, value) VALUES (?, ?, ?);";
+const GET_TOTAL_RATING_SQL ="SELECT knowledgeid, SUM(value) AS learning_value FROM rating GROUP BY knowledgeid;";
 
 const FS_DB = process.env['MINI_BADGERCHAT_DB_LOC'] ?? "./db.db";
 const FS_INIT_SQL = "./includes/init.sql";
@@ -42,76 +45,131 @@ app.get('/api/hello-world', (req, res) => {
         msg: "Hello! :)"
     })
 })
-
-app.get('/api/messages', (req, res) => {
-    db.prepare(GET_POST_SQL).get().all((err, ret) => {
-        if (err) {
-            res.status(500).send({
-                msg: "Something went wrong!",
-                err: err
-            });
-        } else {
-            res.status(200).send(ret);
-        }
-    })
-})
-
-app.get('/api/messages/total', (req, res) => {
-    db.prepare(GET_POST_TOTAL_SQL).get().all((err, ret) => {
-        if (err) {
-            res.status(500).send({
-                msg: "Something went wrong!",
-                err: err
-            });
-        } else {
-            res.status(200).send(ret);
-        }
-    })
-})
-app.post('/api/messages', (req, res) => {
-    const title = req.body.title;
-    const content = req.body.content;
-
-    if (!title || !content) {
-        res.status(400).send({
-            msg: "A post must have a title and content!"
-        })
-    } else {
-        db.prepare(INSERT_POST_SQL).get(title, content, new Date(), (err, ret) => {
-            if (err) {
-                res.status(500).send({
-                    msg: "Something went wrong!",
-                    err: err
-                });
-            } else {
-                res.status(200).send({
-                    msg: "Successfully posted!",
-                    id: ret.id
-                })
-            }
-        })
+// Function to transform time list into JSON format
+function transformTimeListToJson(timeList) {
+    const videoData = [];
+    for (let i = 0; i < timeList.length; i++) {
+        const hours = Math.floor(i / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((i % 3600) / 60).toString().padStart(2, '0');
+        const seconds = (i % 60).toString().padStart(2, '0');
+        const time = `${hours}:${minutes}:${seconds}`;
+        videoData.push({
+            time: time,
+            value: timeList[i]
+        });
     }
-})
+    return { video_data: videoData };
+}
+// API endpoint to receive time list data
+app.post('/api/addTimeList', (req, res) => {
+    const timeList = req.body.timeList;
+    console.log(timeList);
+    // Assuming timeList is an array of numbers
+    if (!Array.isArray(timeList)) {
+        return res.status(400).json({ error: 'Invalid time list format' });
+    }
 
-// app.delete('/api/messages/:messageId', (req, res) => {
-//     const messageId = req.params.messageId;
-//     console.log("I should delete message " + messageId + "...");
+    db.serialize(() => {
+        const stmt = db.prepare(INSERT_TIMELIST_SQL);
+        for (let i = 0; i < timeList.length; i++) {
+            // Update or insert values into the database
+            stmt.run(i, timeList[i]);
+        }
+        stmt.finalize();
+    });
 
-//     db.prepare(DELETE_POST_SQL).get(messageId, (err, ret) => {
-//         if (err) {
-//             res.status(500).send({
-//                 msg: "Something went wrong!",
-//                 err: err
-//             });
-//         } else {
-//             res.status(200).send({
-//                 msg: "Successfully deleted!",
-                
-//             })
-//         }
-//     })
-// });
+    return res.status(200).json({ message: 'Time list added successfully' });
+});
 
+// Endpoint to get cumulative values from the database
+app.get('/api/cumulativeValues', (req, res) => {
+
+    db.all(GET_SUM_TIMELIST_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        
+        const cumulativeValues = rows.map(row => row.total_value);
+        const jsonData = transformTimeListToJson(cumulativeValues);
+        return res.status(200).json(jsonData);;
+    });
+});
+// API endpoint to receive comment data
+app.post('/api/addComment', (req, res) => {
+    const time = req.body.time;
+    const content = req.body.content;
+    const author = req.body.author;
+    db.run(INERST_COMMENT_SQL, [time, content, author], function(err, ret) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Failed to add comment' });
+        }
+        return res.status(200).json({ message: 'Comment added successfully' });
+    });
+});
+// API endpoint to get all comments from the database
+app.get('/api/getAllComments', (req, res) => {
+  
+
+    db.all(GET_TOTAL_COMMENTS_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        return res.status(200).json({ comments: rows });
+    });
+});
+// API endpoint to receive user data
+app.post('/api/addRatingData', (req, res) => {
+    const userid = req.body.userid;
+    const knowledgeid = req.body.knowledgeid;
+    const value = req.body.value;
+  
+    db.get(SELECT_RATING_SQL, [userid, knowledgeid], (err, row) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (row) {
+            // If the row exists, update the value
+            db.run(UPDATE_RATING_SQL, [value, userid, knowledgeid], function(err) {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).json({ error: 'Failed to update user data' });
+                }
+                return res.status(200).json({ message: 'User data updated successfully' });
+            });
+        } else {
+            // If the row doesn't exist, insert a new row
+            db.run(INSERT_RATING_SQL, [userid, knowledgeid, value], function(err) {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).json({ error: 'Failed to add user data' });
+                }
+                return res.status(200).json({ message: 'User data added successfully' });
+            });
+        }
+    });
+});
+// API endpoint to get all ratings
+app.get('/api/getAllRatings', (req, res) => {
+
+    db.all(GET_TOTAL_RATING_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const ratings = rows.map(row => ({
+            id: row.knowledgeid,
+            learning_value: row.learning_value,
+        }));
+        return res.status(200).json({ ratings: ratings });
+    });
+});
 applyErrorCatching(app);
 
 // Open server for business!

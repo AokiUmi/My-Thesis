@@ -34,9 +34,12 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .style("font-size", "18px")
       .style("position", "absolute");
   
-    const mouseover = function(d) {
+    const mouseover = function(event, d) {
         Tooltip
           .style("opacity", 1)
+          .html("The name of the knowledge is: " + d.name)
+          .style("left", (event.pageX + 20) + "px")
+          .style("top", (event.pageY - 36) + "px");
       }
 
     const polygons = polygonsGroup.selectAll('.polygon')

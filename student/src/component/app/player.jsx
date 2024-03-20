@@ -41,15 +41,7 @@ function MyPlayer(props) {
       localStorage.setItem('current_time', JSON.stringify(current_time));
     }
   };
-  console.log(timelist);
-  // const getCurrentTime = () => {
-  //   if (playerRef.current) {
-  //     let current_time = playerRef.current.getCurrentTime();
-  //     console.log("current time: ", current_time);
-  //     timelist[Math.round(current_time)]++;
-  //     localStorage.setItem('current_time', JSON.stringify(current_time));
-  //   }
-  // };
+
   const setCurrentTime = (time) => {
     console.log('Setting time to:', time);
     playerRef.current.seekTo(time, 'seconds');
@@ -59,9 +51,34 @@ function MyPlayer(props) {
   };
   const handleCommentSubmit = (id) => {
     // Add your logic to handle the comment submission here
-    console.log('Comment submitted:', comment);
-    let now_time = GetCurrentTime();
+    let now_time = playerRef.current.getCurrentTime();
     // post to backend
+    if(props.username === '') {
+       alert("You should Log in first!");
+    }
+    else if (comment === ''){
+      alert("You should write your comment before sending!");
+    }
+    else {
+        fetch("http://10.19.74.179:53706/api/addComment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          time: Math.floor(now_time),
+          author: props.username,
+          content: comment
+        }),
+      }).then((res) => {
+        if (res.ok) {
+        alert("Successfully Upload!");
+        } else {
+          alert("Error!");
+        }
+      });
+    }
+    
 
   };
   const startClock = () => {
@@ -80,6 +97,23 @@ function MyPlayer(props) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+  const UploadDatabase = () => {
+    fetch("http://10.19.74.179:53706/api/addTimeList", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        timeList: timelist
+      }),
+    }).then((res) => {
+      if (res.ok) {
+       alert("Successfully Upload!");
+      } else {
+        alert("Error!");
+      }
+    });
   };
   const stopClock = () => {
     clearInterval(intervalId);
@@ -140,12 +174,7 @@ function MyPlayer(props) {
                   url='https://robotics.shanghaitech.edu.cn/static/ca2020/CA2020_VenusTutorial1.mp4' />
               </Content>
               <Content className="comment">
-                {/* <Card title="Comment"
-                            style={{backgroundColor: "white"}}
-                            bodyStyle={{padding:0, minHeight:"16vh",  flex: 1,}}
-                            headStyle={{ background: "#dfdfdf", borderRadius: 0, minHeight: "5vh" }}
-                            
-                        > */}
+      
                 <Typography component="legend" sx={{
                   backgroundColor: 'rgb(39, 154, 255)',
                   color: 'white',
@@ -175,7 +204,7 @@ function MyPlayer(props) {
 
                 </div>
 
-                {/* </Card> */}
+             
               </Content>
             </Layout>
           </Content>
@@ -183,7 +212,7 @@ function MyPlayer(props) {
             <Content className="button">
 
               {/* <h5  className="paragraph">If you have finished learning, please click the button!</h5> */}
-              <Button variant="contained" onClick={() => downloadJsonFile()}>Finished</Button>
+              <Button variant="contained" onClick={UploadDatabase}>Finished</Button>
 
             </Content>
 

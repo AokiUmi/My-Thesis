@@ -9,6 +9,7 @@ import Comments from './test-data/comments.json';
 import Typography from '@mui/material/Typography';
 import { Card } from 'antd';
 import { Badge, Space } from 'antd';
+import { useRef } from 'react';
 
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -29,9 +30,7 @@ function formatTime(seconds) {
 function MyComments(props) {
     const [chosenComment, setChosenComment] = useState(4);
     const [comments, setComments] = useState([]);
-    useEffect(() => {
-        setComments(Comments.comments); console.log(comments);
-    }, [comments]);
+    
     const isChosenComment = (commentId) => chosenComment === commentId;
 
     const getPanelStyle = (comment) => {
@@ -56,6 +55,15 @@ function MyComments(props) {
          
         };
       };
+      useEffect(()=> {
+        fetch("http://10.19.74.179:53706/api/getAllComments")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setComments(data.comments);
+          
+        });
+      },[]);
 
   return (
     <div>

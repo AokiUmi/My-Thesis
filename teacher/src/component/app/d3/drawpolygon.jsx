@@ -4,7 +4,7 @@
 import React, { useEffect, useRef,useState } from 'react';
 import * as d3 from 'd3';
 
-const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
+const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata }) => {
   const svgRef = useRef();
   const [node, setNode] = useState('');
   const [zoomTransform, setZoomTransform] = useState(null); // State to store zoom transformation
@@ -12,19 +12,20 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
     const svg = d3.select(svgRef.current);
     const svgCenterX = svgWidth / 2;
     const svgCenterY = svgHeight / 2;
+  
     const RedColorScale = d3.scaleSequential()
-      .domain([0, d3.max(data.polygons, d => d.learning_value)])
+      .domain([0, d3.max(data.polygons,d => d.learning_value)])
       .interpolator(d3.interpolateBlues);// Adjust domain based on your data
       // .interpolator(d3.interpolate("rgb(255, 238, 238)", "rgb(160, 0, 0)")); // Interpolate colors from light red to lighter red
         // Filter polygons based on if_shown attribute
     const OrangeColorScale = d3.scaleSequential()
-        .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Adjust domain based on your data
+        .domain([0, d3.max(data.polygons,d => d.learning_value)]) // Adjust domain based on your data
         .interpolator(d3.interpolateOranges); // Interpolate colors from light red to lighter red
           // Filter polygons based on if_shown attribute
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
-    
+    console.log(ratingdata);
     const Tooltip = d3.select("body")
       .append("div")
       .style("opacity", 0)
@@ -38,9 +39,12 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .style("font-size", "18px")
       .style("position", "absolute");
   
-    const mouseover = function(d) {
+    const mouseover = function(event, d) {
         Tooltip
           .style("opacity", 1)
+          .html("The name of the knowledge is: " + d.name)
+          .style("left", (event.pageX + 20) + "px")
+          .style("top", (event.pageY - 36) + "px");
       }
 
     const polygons = polygonsGroup.selectAll('.polygon')
@@ -58,12 +62,12 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .style('stroke-width', '2')
       .style('fill', d => {
         if (d.level === 1) {
+       
           return RedColorScale(d.learning_value);
         } else {
           return OrangeColorScale(d.learning_value);
         }
       })
-      .on('click', handlePolygonClick) 
       .on("mouseover", mouseover )
       .on('mousemove', function (event, d) {
         Tooltip
@@ -100,7 +104,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .attr('cx', d => data.points_dict[d.point][0])
       .attr('cy', d => -data.points_dict[d.point][1])
       .attr('r', 2)
-      .style('fill', 'rgb(255, 221, 221)');
+      .style('fill', 'rgb(213, 237, 255)');
     
      
     // Add text
