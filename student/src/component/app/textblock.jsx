@@ -77,34 +77,11 @@ function TextBlock(props) {
         else return {"color":"rgb(46, 125, 50)"};
   };
 
-  useEffect(() => {
-   
-    // fetch("http://10.19.74.179:53706/api/addRatingData", {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           userid: props.userid,
-    //           knowledgeid: props.clickedId,
-    //           value: value,
-           
-    //         }),
-    //       }).then((res) => {
-    //         if (!res.ok) {
-    //           alert("Error!");
-    //         }
-    //     });
-
-    
-      
-      
-   }, [value]);
    useEffect(() => {
     setValue(0);
    }, [props.clickedId]);
     return (
-        <div style={{height: "680px", display: "flex", flexDirection: "column"}}>
+        <div style={{height: "620px", display: "flex", flexDirection: "column"}}>
         
             <Typography variant="h5" sx={{
                 backgroundColor: 'rgb(39, 154, 255)',
@@ -130,7 +107,7 @@ function TextBlock(props) {
                 getLabelText={(value) => customIcons[value].label}
                 highlightSelectedOnly
                 onChange={(event, newValue) => {
-                        setValue(newValue);}}
+                        setValue(newValue); props.updateUserInfoList(newValue); }}
                 style={{marginTop:"5px"}}
                 />
                 {value !== null && (

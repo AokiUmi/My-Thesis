@@ -63,7 +63,7 @@ function transformTimeListToJson(timeList) {
 // API endpoint to receive time list data
 app.post('/api/addTimeList', (req, res) => {
     const timeList = req.body.timeList;
-    console.log(timeList);
+
     // Assuming timeList is an array of numbers
     if (!Array.isArray(timeList)) {
         return res.status(400).json({ error: 'Invalid time list format' });
@@ -123,36 +123,44 @@ app.get('/api/getAllComments', (req, res) => {
 });
 // API endpoint to receive user data
 app.post('/api/addRatingData', (req, res) => {
-    const userid = req.body.userid;
-    const knowledgeid = req.body.knowledgeid;
-    const value = req.body.value;
-  
-    db.get(SELECT_RATING_SQL, [userid, knowledgeid], (err, row) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
+    const ratingList = req.body.ratinglist; // Assuming the JSON object contains a key named 'ratinglist' with the list of ratings
+    if (!Array.isArray(ratingList)) {
+        return res.status(400).json({ error: 'Invalid rating list format' });
+    }
 
-        if (row) {
-            // If the row exists, update the value
-            db.run(UPDATE_RATING_SQL, [value, userid, knowledgeid], function(err) {
-                if (err) {
-                    console.error(err.message);
-                    return res.status(500).json({ error: 'Failed to update user data' });
-                }
-                return res.status(200).json({ message: 'User data updated successfully' });
-            });
-        } else {
-            // If the row doesn't exist, insert a new row
-            db.run(INSERT_RATING_SQL, [userid, knowledgeid, value], function(err) {
-                if (err) {
-                    console.error(err.message);
-                    return res.status(500).json({ error: 'Failed to add user data' });
-                }
-                return res.status(200).json({ message: 'User data added successfully' });
-            });
-        }
+    // Iterate through each rating in the list
+    ratingList.forEach(rating => {
+        const userid = rating.userid;
+        const knowledgeid = rating.knowledgeid;
+        const value = rating.value;
+
+        db.get(SELECT_RATING_SQL, [userid, knowledgeid], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            if (row) {
+                // If the row exists, update the value
+                db.run(UPDATE_RATING_SQL, [value, userid, knowledgeid], function(err) {
+                    if (err) {
+                        console.error(err.message);
+                        return res.status(500).json({ error: 'Failed to update user data' });
+                    }
+                });
+            } else {
+                // If the row doesn't exist, insert a new row
+                db.run(INSERT_RATING_SQL, [userid, knowledgeid, value], function(err) {
+                    if (err) {
+                        console.error(err.message);
+                        return res.status(500).json({ error: 'Failed to add user data' });
+                    }
+                });
+            }
+        });
     });
+
+    return res.status(200).json({ message: 'User data processed successfully' });
 });
 // API endpoint to get all ratings
 app.get('/api/getAllRatings', (req, res) => {

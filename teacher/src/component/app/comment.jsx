@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Card } from 'antd';
 import { Badge, Space } from 'antd';
 import { useRef } from 'react';
-
+const NOWIP = "10.20.253.193:53706";
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -56,7 +56,7 @@ function MyComments(props) {
         };
       };
       useEffect(()=> {
-        fetch("http://10.19.74.179:53706/api/getAllComments")
+        fetch(`http://${NOWIP}/api/getAllComments`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

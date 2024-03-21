@@ -17,6 +17,7 @@ import VIDEO_DATA from '../app/test-data/video_data.json';
 import VIDEO_DATA2 from '../app/test-data/video_data2.json';
 import LineChart from '../app/d3/linechart';
 // import VIDEO_DATA3 from '../app/test-data/video_data3.json';
+const NOWIP = "10.20.253.193:53706";
 function MainPage(props) {
   const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
 
@@ -29,7 +30,7 @@ function MainPage(props) {
   }
     
   useEffect(()=>{
-    fetch("http://10.19.74.179:53706/api/cumulativeValues")
+    fetch(`http://${NOWIP}/api/cumulativeValues`)
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
@@ -37,27 +38,7 @@ function MainPage(props) {
       
     });
 },[]);
-  // const [width, setWidth] = useState(0);
-  // const [height, setHeight] = useState(0);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const { width, height } = document.querySelector('.videoimage').getBoundingClientRect();
-  //     setWidth(width);
-  //    setHeight(height);
-  //   };
-
-  //   // Initial calculation
-  //   handleResize();
-
-  //   // Listen for window resize event
-  //   window.addEventListener('resize', handleResize);
-
-  //   // Clean up the event listener
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
   return (
     <>
      

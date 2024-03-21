@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS comments (
 CREATE TABLE IF NOT EXISTS rating (
         id INTEGER PRIMARY KEY,
         userid TEXT,
-		knowledgeid INTEGER,
-		level INTEGER,
-		value INTEGER
+        knowledgeid INTEGER,
+        value INTEGER
 );

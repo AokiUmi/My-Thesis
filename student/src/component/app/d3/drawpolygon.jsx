@@ -13,14 +13,14 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
     const svgCenterX = svgWidth / 2;
     const svgCenterY = svgHeight / 2;
     const colorScale = d3.scaleOrdinal()
-      .domain([1, 2, 3])
-      .range(['rgb(247, 159, 159)',  'rgb(255, 213, 170)','rgb(174, 223, 174)']);
+      .domain([1, 2])
+      .range(['rgb(247, 159, 159)','rgb(172, 225, 150)']);
       // Filter polygons based on if_shown attribute
     const shownPolygons = data.polygons.filter(polygon => polygon.if_shown === true);
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
-    
+
     const Tooltip = d3.select("body")
       .append("div")
       .style("opacity", 0)
@@ -55,7 +55,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       })
       .style('stroke', 'white') // Change stroke color if selected
       .style('stroke-width', '2')
-      .style('fill',  d => (d.id === node ? 'rgb(123, 181, 222)' : colorScale(d.color))) // Apply fill after stroke
+      .style('fill',  d => (d.id === node ? 'rgb(123, 181, 222)' : colorScale(d.level))) // Apply fill after stroke
       .on('click', handlePolygonClick) 
       .on("mouseover", mouseover )
       .on('mousemove', function (event, d) {
@@ -69,8 +69,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .on('mouseleave', function (d) {
         Tooltip.style("opacity", 0);
       });
-    
-    const edges = g.selectAll('.edge')
+      const edges = g.selectAll('.edge')
       .data(data.edges)
       .enter()
       .append('line')
@@ -79,42 +78,61 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .attr('y1', d => -data.points_dict[d.from][1])
       .attr('x2', d => data.points_dict[d.to][0])
       .attr('y2', d => -data.points_dict[d.to][1])
-      .style('stroke', 'rgb(133, 84, 84)')
+      .style('stroke', 'rgb(95, 62, 49)')
       .style('stroke-width', '1')
       .style('stroke-dasharray', '5,5');
-
       
     // Add center points for polygons with level 1
     const centerPoints = g.selectAll('.center-point')
-      .data(data.polygons.filter(polygon => polygon.color === 1))
+      .data(data.polygons.filter(polygon => polygon.level=== 1))
       .enter()
       .append('circle')
       .attr('class', 'center-point')
       .attr('cx', d => data.points_dict[d.point][0])
       .attr('cy', d => -data.points_dict[d.point][1])
       .attr('r', 2)
-      .style('fill', 'rgb(255, 221, 221)');
+      .style('fill', 'rgb(255, 221, 221)')
+      
+ 
     
-     // Filter text based on if_shown attribute
-     const shownTexts = data.text.filter(text => text.if_shown === true);
-    // Add text
-    const texts = g.selectAll('.text')
-      .data(shownTexts)
-      .enter()
-      .append('text')
-      .attr('class', 'text')
-      .attr('x', d => d.position[0])
-      .attr('y', d => -d.position[1])
-      .style('text-anchor', 'middle') // Center align the text horizontally
-      .style('dominant-baseline', 'middle') // Center align the text vertically
-      .style('font-size', d => d.size)
-      .style('fill',d => d.color)
-      .text(d => d.content);
-    
-      // Apply pointer-events to text, lines, and points to prevent interaction
-    texts.style('pointer-events', 'none');
+     // Add arrows to the edges
+     const arrowSize = 10; // Size of the arrow
+     edges.each(function (d) {
+         const x1 = data.points_dict[d.from][0];
+         const y1 = -data.points_dict[d.from][1];
+         const x2 = data.points_dict[d.to][0];
+         const y2 = -data.points_dict[d.to][1];
+ 
+         const dx = x2 - x1;
+         const dy = y2 - y1;
+         const angle = Math.atan2(dy, dx);
+ 
+         // Calculate points for the arrowhead
+         const x3 = x2 - arrowSize * Math.cos(angle - Math.PI / 6);
+         const y3 = y2 - arrowSize * Math.sin(angle - Math.PI / 6);
+         const x4 = x2 - arrowSize * Math.cos(angle + Math.PI / 6);
+         const y4 = y2 - arrowSize * Math.sin(angle + Math.PI / 6);
+ 
+         // Draw arrowhead
+         d3.select(this.parentNode)
+             .append('polygon')
+             .attr('points', `${x2},${y2} ${x3},${y3} ${x4},${y4}`)
+             .style('fill', 'rgb(95, 62, 49)');
+     });
+    // Append text element for polygon name
+    centerPoints.each(function (d) {
+     
+      d3.select(this.parentNode)
+          .append("text")
+          .attr("x", data.points_dict[d.point][0])
+          .attr("y", -data.points_dict[d.point][1]-10)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .text(d.name);
+  });
     edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
+    svg.selectAll('text').style('pointer-events', 'none');
     // Initialize zoom behavior
     const zoom = d3.zoom()
       .on('zoom', zoomed);
@@ -127,7 +145,17 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
         svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-60).scale(2));
       }
    
-
+    function calculateHexagonPoints(centerX, centerY, sideLength) {
+      let points = [];
+      for (let i = 0; i < 6; i++) {
+          let angle_deg = 60 * i;
+          let angle_rad = Math.PI / 180 * angle_deg;
+          let x = centerX + sideLength * Math.cos(angle_rad);
+          let y = centerY + sideLength * Math.sin(angle_rad);
+          points.push([x, y]);
+      }
+      return points;
+  }
     function handlePolygonClick(event, d) {
       // console.log(d.id,d.level);// Pass polygon ID to the parent component
       setNode(d.id);

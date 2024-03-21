@@ -14,14 +14,12 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
     const svgCenterY = svgHeight / 2;
   
     const RedColorScale = d3.scaleSequential()
-      .domain([0, d3.max(data.polygons,d => d.learning_value)])
-      .interpolator(d3.interpolateBlues);// Adjust domain based on your data
-      // .interpolator(d3.interpolate("rgb(255, 238, 238)", "rgb(160, 0, 0)")); // Interpolate colors from light red to lighter red
-        // Filter polygons based on if_shown attribute
+    .domain([d3.max(data.polygons, d => d.learning_value), 0]) // Reverse the domain
+    .interpolator(d3.interpolateBlues); // Interpolate colors from light blue to dark blue
+
     const OrangeColorScale = d3.scaleSequential()
-        .domain([0, d3.max(data.polygons,d => d.learning_value)]) // Adjust domain based on your data
-        .interpolator(d3.interpolateOranges); // Interpolate colors from light red to lighter red
-          // Filter polygons based on if_shown attribute
+    .domain([d3.max(data.polygons, d => d.learning_value), 0]) // Reverse the domain
+    .interpolator(d3.interpolateOranges); // Interpolate colors from light orange to dark orange
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
@@ -105,26 +103,43 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
       .attr('cy', d => -data.points_dict[d.point][1])
       .attr('r', 2)
       .style('fill', 'rgb(213, 237, 255)');
+    // Add arrows to the edges
+    const arrowSize = 10; // Size of the arrow
+    edges.each(function (d) {
+        const x1 = data.points_dict[d.from][0];
+        const y1 = -data.points_dict[d.from][1];
+        const x2 = data.points_dict[d.to][0];
+        const y2 = -data.points_dict[d.to][1];
+
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const angle = Math.atan2(dy, dx);
+
+        // Calculate points for the arrowhead
+        const x3 = x2 - arrowSize * Math.cos(angle - Math.PI / 6);
+        const y3 = y2 - arrowSize * Math.sin(angle - Math.PI / 6);
+        const x4 = x2 - arrowSize * Math.cos(angle + Math.PI / 6);
+        const y4 = y2 - arrowSize * Math.sin(angle + Math.PI / 6);
+
+        // Draw arrowhead
+        d3.select(this.parentNode)
+            .append('polygon')
+            .attr('points', `${x2},${y2} ${x3},${y3} ${x4},${y4}`)
+            .style('fill', 'rgb(95, 62, 49)');
+    });
+   // Append text element for polygon name
+   centerPoints.each(function (d) {
     
+     d3.select(this.parentNode)
+         .append("text")
+         .attr("x", data.points_dict[d.point][0])
+         .attr("y", -data.points_dict[d.point][1]-10)
+         .attr("text-anchor", "middle")
+         .attr("dominant-baseline", "middle")
+         .text(d.name);
+ });
      
-    // Add text
-    const texts = g.selectAll('.text')
-      .data(data.text)
-      .enter()
-      .append('text')
-      .attr('class', 'text')
-      .attr('x', d => d.position[0])
-      .attr('y', d => -d.position[1])
-      .style('text-anchor', 'middle') // Center align the text horizontally
-      .style('dominant-baseline', 'middle') // Center align the text vertically
-      .style('font-size', d => d.size)
-      .style('fill',d => d.color)
-      .text(d => d.content);
-    
-      // Apply pointer-events to text, lines, and points to prevent interaction
-    texts.style('pointer-events', 'none');
-    edges.style('pointer-events', 'none');
-    centerPoints.style('pointer-events', 'none');
+ 
     // Initialize zoom behavior
     const zoom = d3.zoom()
       .on('zoom', zoomed);

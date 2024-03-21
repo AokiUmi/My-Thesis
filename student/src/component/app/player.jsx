@@ -11,13 +11,15 @@ import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import Chapters from './test-data/chapter.json'
+import Chapters from './test-data/chapter.json';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { Card, Input } from 'antd';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import MyImage from "./image";
+
+const NOWIP = "10.20.253.193:53706";  
 function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
@@ -37,8 +39,7 @@ function MyPlayer(props) {
         timelist[roundedTime]++;
       sessionStorage.setItem('timelist', JSON.stringify(timelist));
 
-
-      localStorage.setItem('current_time', JSON.stringify(current_time));
+      sessionStorage.setItem('current_time', JSON.stringify(current_time));
     }
   };
 
@@ -60,7 +61,7 @@ function MyPlayer(props) {
       alert("You should write your comment before sending!");
     }
     else {
-        fetch("http://10.19.74.179:53706/api/addComment", {
+        fetch(`http://${NOWIP}/api/addComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,6 +83,7 @@ function MyPlayer(props) {
 
   };
   const startClock = () => {
+
     if (!intervalId) {
       intervalId = setInterval(GetCurrentTime, 1000);
     }
@@ -99,7 +101,7 @@ function MyPlayer(props) {
     URL.revokeObjectURL(url);
   };
   const UploadDatabase = () => {
-    fetch("http://10.19.74.179:53706/api/addTimeList", {
+    fetch(`http://${NOWIP}/api/addTimeList`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,34 +116,16 @@ function MyPlayer(props) {
         alert("Error!");
       }
     });
+
   };
   const stopClock = () => {
+    const current_time = playerRef.current.getCurrentTime();
+    console.log("current time: ", current_time);
+    sessionStorage.setItem('current_time', JSON.stringify(current_time));
     clearInterval(intervalId);
     intervalId = undefined; // Reset intervalId to undefined
     console.log(timelist);
-
-    // const fs = require('fs');
-    // const jsonString = JSON.stringify(timelist );
-    // fs.writeFile('./test-data/video_data.json', jsonString, (err) => {
-    //     if (err) {
-    //       console.error('Error writing file:', err);
-    //       return;
-    //     }
-    //     console.log('List stored successfully!');
-    //   });
-  };
-  //     const loadChapters = () => {
-  //         fetch(
-  //             `./test-data/chapter.json`,
-
-  //           )
-  //             .then((res) => res.json())
-  //             .then((json) => {
-  //                 setChapters(json.chatpers);
-  //             });
-
-  //     }
-  //    useEffect(loadChapters,[]);
+  }
   useEffect(() => {
     setChapters(Chapters.chapters);
   }, [chapters]);
@@ -150,7 +134,7 @@ function MyPlayer(props) {
 
   const reloadProgress = () => {
     if (!onreadybugfix) {
-      const current_time = localStorage.getItem('current_time');
+      const current_time = sessionStorage.getItem('current_time');
       console.log(`Setting to ${current_time}`);
       if (current_time) {
         setCurrentTime(Math.round(current_time));

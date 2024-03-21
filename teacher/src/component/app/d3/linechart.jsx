@@ -108,7 +108,7 @@ const LineChart = (props) => {
 
  
 
-  }, [props.data,props]);
+  }, [props.data]);
 
   return <svg ref={svgRef} ></svg>;
 };

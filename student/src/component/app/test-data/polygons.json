@@ -76,7 +76,6 @@
             "id": 1,
             "point": 1,
             "region": [15, 16, 17, 18, 19, 20],
-            "color": 1,
             "if_shown":true,
             "level": 1,
             "name":"Sample Knowledge1"
@@ -85,16 +84,14 @@
             "id": 2,
             "point": 2,
             "region": [22, 23, 24, 16, 15, 21],
-            "color": 2,
             "if_shown":true,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge2"
         },
         {
             "id": 3,
             "point": 3,
             "region": [24, 25, 26, 27, 17, 16],
-            "color": 2,
             "if_shown":true,
             "level": 2,
             "name":"Sample Knowledge3"
@@ -103,16 +100,14 @@
             "id": 4,
             "point": 4,
             "region": [17, 27, 28, 29, 30, 18],
-            "color": 3,
             "if_shown":true,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge4"
         },
         {
             "id": 5,
             "point": 5,
             "region": [19, 18, 30, 31, 32, 33],
-            "color": 2,
             "if_shown":true,
             "level": 2,
             "name":"Sample Knowledge5"
@@ -121,16 +116,14 @@
             "id": 6,
             "point": 6,
             "region": [41, 20, 19, 33, 34, 35],
-            "color": 3,
             "if_shown":true,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge6"
         },
         {
             "id": 7,
             "point": 7,
             "region": [38, 39, 41, 35, 36, 37],
-            "color": 2,
             "if_shown":true,
             "level": 2,
             "name":"Sample Knowledge7"
@@ -139,16 +132,14 @@
             "id": 8,
             "point": 8,
             "region": [40, 21, 15, 20, 41, 39],
-            "color": 3,
             "if_shown":true,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge8"
         },
         {
             "id": 9,
             "point": 9,
             "region": [42, 43, 44, 45, 46, 47],
-            "color": 1,
             "if_shown":true,
             "level": 1,
             "name":"Sample Knowledge9"
@@ -157,7 +148,6 @@
             "id": 10,
             "point": 10,
             "region": [48, 49, 50, 51, 52, 53],
-            "color": 1,
             "if_shown":true,
             "level": 1,
             "name":"Sample Knowledge10"
@@ -166,16 +156,14 @@
             "id": 11,
             "point": 11,
             "region": [61, 62, 63, 55, 54, 60],
-            "color": 2,
             "if_shown":false,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge11"
         },
         {
             "id": 12,
             "point": 12,
             "region": [54, 55, 56, 57, 58, 59],
-            "color": 1,
             "if_shown":true,
             "level": 1,
             "name":"Sample Knowledge12"
@@ -184,7 +172,6 @@
             "id": 13,
             "point": 13,
             "region": [63, 64, 65, 66, 56, 55],
-            "color": 2,
             "if_shown":false,
             "level": 2,
             "name":"Sample Knowledge13"
@@ -193,9 +180,8 @@
             "id": 14,
             "point": 14,
             "region": [56, 66, 67, 68, 69, 57],
-            "color": 2,
             "if_shown":false,
-            "level": 3,
+            "level": 2,
             "name":"Sample Knowledge14"
         }
     ],
@@ -212,63 +198,6 @@
             "from":10,
             "to": 12
         }
-    ],
-    "text":[
-        {
-            "position":[0.0,0.0],
-            "content":"Sample Knowledge1",
-            "size":"15px",
-            "color":"black",
-            "if_shown":true
-        },
-        {
-            "position":[-120.0, 60.0],
-            "content":"Sample Longer Knowledge2",
-            "size":"10px",
-            "color":"black",
-            "if_shown":true
-        },
-        {
-            "position":[140.0, -100.0],
-            "content":"Shorter3",
-            "size":"20px",
-            "color":"black",
-            "if_shown":true
-        },
-        {
-            "position":[-110.0, -140.0],
-            "content":"Sample Knowledge4",
-            "size":"15px",
-            "color":"black",
-            "if_shown":true
-        },
-        {
-            "position":[-30.0, 30.0],
-            "content":"Group Knowledge1",
-            "size":"10px",
-            "color":"dimgray",
-            "if_shown":true
-        },
-        {
-            "position":[170.0, -80.0],
-            "content":"Group Knowledge2",
-            "size":"10px",
-            "color":"dimgray",
-            "if_shown":false
-        },
-        {
-            "position":[170.0, -120.0],
-            "content":"Knowledge3",
-            "size":"15px",
-            "color":"dimgray",
-            "if_shown":false
-        },
-        {
-            "position":[20.0, -30.0],
-            "content":"Group Longer Knowledge4",
-            "size":"8px",
-            "color":"dimgray",
-            "if_shown":true
-        }
     ]
+  
 }
