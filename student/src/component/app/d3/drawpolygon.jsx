@@ -4,7 +4,7 @@
 import React, { useEffect, useRef,useState } from 'react';
 import * as d3 from 'd3';
 
-const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
+const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
   const svgRef = useRef();
   const [node, setNode] = useState('');
   const [zoomTransform, setZoomTransform] = useState(null); // State to store zoom transformation
@@ -16,7 +16,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .domain([1, 2])
       .range(['rgb(247, 159, 159)','rgb(172, 225, 150)']);
       // Filter polygons based on if_shown attribute
-    const shownPolygons = data.polygons.filter(polygon => polygon.if_shown === true);
+    const shownPolygons = polygonData.polygons.filter(polygon => polygon.if_shown === true);
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
@@ -43,13 +43,13 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       }
 
     const polygons = polygonsGroup.selectAll('.polygon')
-      .data(data.polygons)
+      .data(shownPolygons)
       .enter()
       .append('polygon')
       .attr('class', 'polygon')
       .attr('points', d => {
         return d.region.map(vertexId => {
-          const vertex = data.vertices_dict[vertexId];
+          const vertex = vertexData.vertices_dict[vertexId];
           return `${vertex[0]},${-vertex[1]}`;
         }).join(' ');
       })
@@ -70,26 +70,26 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
         Tooltip.style("opacity", 0);
       });
       const edges = g.selectAll('.edge')
-      .data(data.edges)
+      .data(polygonData.edges)
       .enter()
       .append('line')
       .attr('class', 'edge')
-      .attr('x1', d => data.points_dict[d.from][0])
-      .attr('y1', d => -data.points_dict[d.from][1])
-      .attr('x2', d => data.points_dict[d.to][0])
-      .attr('y2', d => -data.points_dict[d.to][1])
+      .attr('x1', d => vertexData.points_dict[d.from][0])
+      .attr('y1', d => -vertexData.points_dict[d.from][1])
+      .attr('x2', d => vertexData.points_dict[d.to][0])
+      .attr('y2', d => -vertexData.points_dict[d.to][1])
       .style('stroke', 'rgb(153, 116, 115)')
       .style('stroke-width', '1')
       .style('stroke-dasharray', '8,8');
       
     // Add center points for polygons with level 1
     const centerPoints = g.selectAll('.center-point')
-      .data(data.polygons.filter(polygon => polygon.level=== 1 || polygon.level=== 0 ))
+      .data(shownPolygons.filter(polygon => polygon.level=== 1 || polygon.level=== 0 ))
       .enter()
       .append('circle')
       .attr('class', 'center-point')
-      .attr('cx', d => data.points_dict[d.point][0])
-      .attr('cy', d => -data.points_dict[d.point][1])
+      .attr('cx', d => vertexData.points_dict[d.point][0])
+      .attr('cy', d => -vertexData.points_dict[d.point][1])
       .attr('r', 2)
       .style('fill', 'rgb(255, 221, 221)')
       
@@ -98,10 +98,10 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
      // Add arrows to the edges
      const arrowSize = 5; // Size of the arrow
      edges.each(function (d) {
-         const x1 = data.points_dict[d.from][0];
-         const y1 = -data.points_dict[d.from][1];
-         const x2 = data.points_dict[d.to][0];
-         const y2 = -data.points_dict[d.to][1];
+         const x1 = vertexData.points_dict[d.from][0];
+         const y1 = -vertexData.points_dict[d.from][1];
+         const x2 = vertexData.points_dict[d.to][0];
+         const y2 = -vertexData.points_dict[d.to][1];
  
          const dx = x2 - x1;
          const dy = y2 - y1;
@@ -124,8 +124,8 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
      
       d3.select(this.parentNode)
           .append("text")
-          .attr("x", data.points_dict[d.point][0])
-          .attr("y", -data.points_dict[d.point][1]-10)
+          .attr("x", vertexData.points_dict[d.point][0])
+          .attr("y", -vertexData.points_dict[d.point][1]-10)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "middle")
           .text(d.name);

@@ -95,7 +95,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
       
     // Add center points for polygons with level 1
     const centerPoints = g.selectAll('.center-point')
-      .data(data.polygons.filter(polygon => polygon.color === 1))
+      .data(data.polygons.filter(polygon => polygon.level === 1 || polygon.level == 0))
       .enter()
       .append('circle')
       .attr('class', 'center-point')

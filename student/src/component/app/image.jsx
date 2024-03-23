@@ -5,6 +5,7 @@ import './image.css';
 import React, { useEffect, useState } from 'react';
 import DrawPolygon from './d3/drawpolygon';
 import PolygonData from './test-data/final_20.json';
+import VertexData from './test-data/final_20.json';
 import { Layout, Flex,Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
@@ -12,34 +13,52 @@ import Chapters from './test-data/chapter.json';
 
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
-    const [polygonData,setPolygonData] = useState(PolygonData.polygons);
-    const [vertexData,setVertexData] = useState(VertexData);
+    const [polygonData,setPolygonData]= useState({});
+    const [vertexData,setVertexData] = useState({});
     const [clickedPolygonId,setClickedPolygonId] = useState(null);
     // Handler function for click event on polygon
     const [chapterName, setChaptersName] = useState('');
     const [chapterId, setChaptersId] = useState(0);
     const [userInfoList, setUserInfoList] = useState([]);
-
+    const [knowledgeInfo, setKnowledgeInfo] = useState([]);
     const loadVertexData = () => {
-        fetch(`http://xxxx/api/xxxxx`)
+        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setVertexdata(data);
+          setVertexData(data);
           
         });
     }
+    const loadPolygonData = () => {
+        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setPolygonData(data);
+          
+        });
+    }
+    const loadKnowledgeInfo =() => {
+        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}&id=${clickedPolygonId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setKnowledgeInfo(data.knowledge_info);
+          
+        });
+      }
     const handlePolygonClick = async (polygonId) => {
         setClickedPolygonId(polygonId);
-        fetch("http://10.19.74.179:53706/api/addComment", {
+        fetch("http://10.20.98.219:5000/api/userClick", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              time: Math.floor(now_time),
-              author: props.username,
-              content: comment
+              username: props.username,
+              knowledgeid: clickedPolygonId,
+              chapterid: chapterId
             }),
           }).then((res) => {
             if (res.ok) {
@@ -48,12 +67,9 @@ function MyImage(props) {
               alert("Error!");
             }
           });
-        
+        loadPolygonData();
     };
-    // Handler function for hover event on polygon
-    const handlePolygonHover = (polygonId) => {
-        setHoveredPolygonId(polygonId);
-    };
+
     function findChapter(timeInSeconds) {
         for (let chapter of Chapters.chapters) {
             if (timeInSeconds >= chapter.time_begin && timeInSeconds < chapter.time_end) {
@@ -94,10 +110,14 @@ function MyImage(props) {
     }
    
     useEffect(() => { 
+        loadPolygonData();
+        loadVertexData();
         const current_time = sessionStorage.getItem('current_time');
         findChapter(current_time);
     }, []);
-
+    useEffect(() => { 
+        loadKnowledgeInfo();
+    }, [clickedPolygonId]);
     return (
         <Layout style={{ width: "1380px" }}>
             <Content className='top-content'>
@@ -109,7 +129,7 @@ function MyImage(props) {
                 <DrawPolygon data={PolygonData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />
                 </Content>
                 <Sider width="22%" style={siderStyle}>
-                    <TextBlock updateUserInfoList={updateUserInfoList}  clickedId={clickedPolygonId} />
+                    <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
                 </Sider>
             </Layout>
            

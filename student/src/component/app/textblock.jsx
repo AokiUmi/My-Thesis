@@ -66,8 +66,9 @@ function getLabelText(value) {
   }
 function TextBlock(props) {
  
-    const [value, setValue] = React.useState(0);
-    const [hover, setHover] = React.useState(-1); 
+    const [value, setValue] = useState(0);
+    const [hover, setHover] = useState(-1); 
+    const knowledge_info= props.knowledgeInfo;
     const getPanelStyle = (value) => {
         
         if (value === 1)
@@ -79,7 +80,9 @@ function TextBlock(props) {
 
    useEffect(() => {
     setValue(0);
+
    }, [props.clickedId]);
+
     return (
         <div style={{height: "620px", display: "flex", flexDirection: "column"}}>
         
@@ -89,7 +92,7 @@ function TextBlock(props) {
                 textAlign: "left",
                 padding:"16px"
                 }} >
-                Sample Knowledge{props.clickedId}
+                {knowledge_info.name}
             </Typography>
             <Typography variant="body1"  sx={{
                 backgroundColor: 'rgb(197, 231, 255)',
@@ -111,7 +114,7 @@ function TextBlock(props) {
                 style={{marginTop:"5px"}}
                 />
                 {value !== null && (
-                    <Typography component="legend" sx={getPanelStyle(value)}>{labels[hover !== -1 ? hover : value]}</Typography>
+                    <Typography component="legend" sx={getPanelStyle(value)}>{labels[value]}</Typography>
                 )
                 }
             </Typography>
@@ -126,8 +129,7 @@ function TextBlock(props) {
                   </AccordionSummary>
                   <AccordionDetails>
                   <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                    {knowledge_info.concept}
                   </Typography>
                   </AccordionDetails>
               </Accordion>
@@ -141,8 +143,7 @@ function TextBlock(props) {
                   </AccordionSummary>
                   <AccordionDetails>
                   <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                     {knowledge_info.relative_concepts}
                   </Typography>
                   </AccordionDetails>
               </Accordion>
@@ -156,8 +157,7 @@ function TextBlock(props) {
                   </AccordionSummary>
                   <AccordionDetails>
                   <Typography>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                      malesuada lacus ex, sit amet blandit leo lobortis eget.
+                      {knowledge_info.quiz}  
                   </Typography>
                   </AccordionDetails>
               </Accordion>
