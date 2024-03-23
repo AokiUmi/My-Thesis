@@ -40,9 +40,9 @@ function MyImage(props) {
         });
     }
     const loadKnowledgeInfo =() => {
-        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}&id=${clickedPolygonId}`)
+        fetch(`http://10.20.98.219:5000/xxxxx?id=${clickedPolygonId}`)
         .then((res) => res.json())
-        .then((data) => {
+        .then((data) => {   
           console.log(data);
           setKnowledgeInfo(data.knowledge_info);
           
