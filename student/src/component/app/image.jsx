@@ -126,7 +126,7 @@ function MyImage(props) {
             </Content>
             <Layout style={{ width: "1380px", maxHeight: "630px" }}>
                  <Content className='polygon'>
-                <DrawPolygon data={PolygonData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />
+                <DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />
                 </Content>
                 <Sider width="22%" style={siderStyle}>
                     <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />

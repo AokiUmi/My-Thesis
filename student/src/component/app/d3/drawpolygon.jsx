@@ -145,17 +145,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
         svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-60).scale(1));
       }
    
-    function calculateHexagonPoints(centerX, centerY, sideLength) {
-      let points = [];
-      for (let i = 0; i < 6; i++) {
-          let angle_deg = 60 * i;
-          let angle_rad = Math.PI / 180 * angle_deg;
-          let x = centerX + sideLength * Math.cos(angle_rad);
-          let y = centerY + sideLength * Math.sin(angle_rad);
-          points.push([x, y]);
-      }
-      return points;
-  }
+
     function handlePolygonClick(event, d) {
       // console.log(d.id,d.level);// Pass polygon ID to the parent component
       setNode(d.id);
