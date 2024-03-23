@@ -92,7 +92,7 @@ function TextBlock(props) {
                 textAlign: "left",
                 padding:"16px"
                 }} >
-                {knowledge_info.name}
+                {props.clickedId === null ? '' : knowledge_info.name}
             </Typography>
             <Typography variant="body1"  sx={{
                 backgroundColor: 'rgb(197, 231, 255)',
@@ -129,7 +129,7 @@ function TextBlock(props) {
                   </AccordionSummary>
                   <AccordionDetails>
                   <Typography>
-                    {knowledge_info.concept}
+                    {props.clickedId === null ? '' : knowledge_info.concept}
                   </Typography>
                   </AccordionDetails>
               </Accordion>
@@ -157,7 +157,7 @@ function TextBlock(props) {
                   </AccordionSummary>
                   <AccordionDetails>
                   <Typography>
-                      {knowledge_info.quiz}  
+                    {props.clickedId === null ? '' : knowledge_info.quiz}  
                   </Typography>
                   </AccordionDetails>
               </Accordion>

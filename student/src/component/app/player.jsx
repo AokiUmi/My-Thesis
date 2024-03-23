@@ -17,7 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { Card, Input } from 'antd';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import MyImage from "./image";
+
 function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
@@ -63,7 +63,7 @@ function MyPlayer(props) {
         },
         body: JSON.stringify({
           time: Math.floor(now_time),
-          author: props.username,
+          author: id,
           content: comment
         }),
       }).then((res) => {
@@ -82,18 +82,7 @@ function MyPlayer(props) {
       intervalId = setInterval(GetCurrentTime, 1000);
     }
   };
-  const downloadJsonFile = () => {
-    const jsonString = JSON.stringify(timelist);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'timelist.json'; // File name here
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+
   const UploadDatabase = () => {
     fetch("http://10.19.74.179:53706/api/addTimeList", {
       method: "POST",
@@ -115,31 +104,9 @@ function MyPlayer(props) {
     clearInterval(intervalId);
     intervalId = undefined; // Reset intervalId to undefined
     console.log(timelist);
-
-    // const fs = require('fs');
-    // const jsonString = JSON.stringify(timelist );
-    // fs.writeFile('./test-data/video_data.json', jsonString, (err) => {
-    //     if (err) {
-    //       console.error('Error writing file:', err);
-    //       return;
-    //     }
-    //     console.log('List stored successfully!');
-    //   });
-  };
-  //     const loadChapters = () => {
-  //         fetch(
-  //             `./test-data/chapter.json`,
-
-  //           )
-  //             .then((res) => res.json())
-  //             .then((json) => {
-  //                 setChapters(json.chatpers);
-  //             });
-
-  //     }
-  //    useEffect(loadChapters,[]);
+  }
   useEffect(() => {
-      fetch(`http://xxxx/api/xxxxx`)
+      fetch(`http://10.20.98.219:5000/xxxxx`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
