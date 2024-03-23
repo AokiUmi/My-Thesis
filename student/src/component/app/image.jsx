@@ -4,7 +4,7 @@
 import './image.css';
 import React, { useEffect, useState } from 'react';
 import DrawPolygon from './d3/drawpolygon';
-import PolygonData from './test-data/polygons.json';
+import PolygonData from './test-data/final_20.json';
 import { Layout, Flex,Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
@@ -12,14 +12,43 @@ import Chapters from './test-data/chapter.json';
 
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
+    const [polygonData,setPolygonData] = useState(PolygonData.polygons);
+    const [vertexData,setVertexData] = useState(VertexData);
     const [clickedPolygonId,setClickedPolygonId] = useState(null);
     // Handler function for click event on polygon
     const [chapterName, setChaptersName] = useState('');
     const [chapterId, setChaptersId] = useState(0);
     const [userInfoList, setUserInfoList] = useState([]);
+
+    const loadVertexData = () => {
+        fetch(`http://xxxx/api/xxxxx`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setVertexdata(data);
+          
+        });
+    }
     const handlePolygonClick = async (polygonId) => {
         setClickedPolygonId(polygonId);
-     
+        fetch("http://10.19.74.179:53706/api/addComment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              time: Math.floor(now_time),
+              author: props.username,
+              content: comment
+            }),
+          }).then((res) => {
+            if (res.ok) {
+            alert("Successfully Upload!");
+            } else {
+              alert("Error!");
+            }
+          });
+        
     };
     // Handler function for hover event on polygon
     const handlePolygonHover = (polygonId) => {
@@ -38,7 +67,7 @@ function MyImage(props) {
         const newItem = {
             userid: props.username,
             knowledgeid: clickedPolygonId,
-            value: newValue
+            value: 4 - newValue
         };
         const updateList = [...userInfoList, newItem];
         setUserInfoList(updateList);
@@ -72,7 +101,7 @@ function MyImage(props) {
     return (
         <Layout style={{ width: "1380px" }}>
             <Content className='top-content'>
-               <p style={{lineHeight:"18px", marginLeft: "30px",marginRight: "30px",fontSize:"18px" }}> Now Chatper is {chapterName} </p>
+               <p style={{lineHeight:"18px", marginLeft: "30px",marginRight: "30px",fontSize:"18px" }}> Current Chapter is {chapterName} </p>
                 <Button variant="contained" onClick={uploadRating } style={{ marginLeft: "30px",marginRight: "30px" }}> Upload</Button>
             </Content>
             <Layout style={{ width: "1380px", maxHeight: "630px" }}>

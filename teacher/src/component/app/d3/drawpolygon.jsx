@@ -14,11 +14,11 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
     const svgCenterY = svgHeight / 2;
   
     const RedColorScale = d3.scaleSequential()
-    .domain([d3.max(data.polygons, d => d.learning_value), 0]) // Reverse the domain
+    .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
     .interpolator(d3.interpolateBlues); // Interpolate colors from light blue to dark blue
 
     const OrangeColorScale = d3.scaleSequential()
-    .domain([d3.max(data.polygons, d => d.learning_value), 0]) // Reverse the domain
+    .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
     .interpolator(d3.interpolateOranges); // Interpolate colors from light orange to dark orange
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements

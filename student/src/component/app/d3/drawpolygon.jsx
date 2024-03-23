@@ -43,7 +43,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       }
 
     const polygons = polygonsGroup.selectAll('.polygon')
-      .data(shownPolygons)
+      .data(data.polygons)
       .enter()
       .append('polygon')
       .attr('class', 'polygon')
@@ -78,13 +78,13 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       .attr('y1', d => -data.points_dict[d.from][1])
       .attr('x2', d => data.points_dict[d.to][0])
       .attr('y2', d => -data.points_dict[d.to][1])
-      .style('stroke', 'rgb(95, 62, 49)')
+      .style('stroke', 'rgb(153, 116, 115)')
       .style('stroke-width', '1')
-      .style('stroke-dasharray', '5,5');
+      .style('stroke-dasharray', '8,8');
       
     // Add center points for polygons with level 1
     const centerPoints = g.selectAll('.center-point')
-      .data(data.polygons.filter(polygon => polygon.level=== 1))
+      .data(data.polygons.filter(polygon => polygon.level=== 1 || polygon.level=== 0 ))
       .enter()
       .append('circle')
       .attr('class', 'center-point')
@@ -96,7 +96,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
  
     
      // Add arrows to the edges
-     const arrowSize = 10; // Size of the arrow
+     const arrowSize = 5; // Size of the arrow
      edges.each(function (d) {
          const x1 = data.points_dict[d.from][0];
          const y1 = -data.points_dict[d.from][1];
@@ -117,9 +117,9 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
          d3.select(this.parentNode)
              .append('polygon')
              .attr('points', `${x2},${y2} ${x3},${y3} ${x4},${y4}`)
-             .style('fill', 'rgb(95, 62, 49)');
+             .style('fill', 'rgb(153, 116, 115)');
      });
-    // Append text element for polygon name
+    //Append text element for polygon name
     centerPoints.each(function (d) {
      
       d3.select(this.parentNode)
@@ -142,7 +142,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick }) => {
       svg.call(zoom.transform, zoomTransform);
       } else {
         // Otherwise, apply initial translation and scale
-        svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-60).scale(2));
+        svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-60).scale(1));
       }
    
     function calculateHexagonPoints(centerX, centerY, sideLength) {

@@ -32,7 +32,12 @@
         }
 
 
-    ]
-    
+    ],
+    "click_info":{
+        "username": "AokiUmi",
+        "knowledgeid": 200,
+        "chapterid": 3
+    },
+    "knowledge_info" : []
     
 }
