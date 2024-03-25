@@ -9,4 +9,8 @@ function App() {
   return <MyLayout/>
 }
 
+// TODO: 
+export const NOWIP = '10.19.73.251:53706';
+export const PACHONGADDR = '10.20.96.100:5000';
+
 export default App

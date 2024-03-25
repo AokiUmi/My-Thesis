@@ -101,7 +101,7 @@ function TextBlock(props) {
             <p > Click some nodes in the graph to see more</p>
         </div>)
       }
-        <div style={{height: "565px", display: "flex", flexDirection: "column",width:"303.58px"}}>
+        <div style={{height: "580px", display: "flex", flexDirection: "column",width:"303.58px"}}>
           
             <Typography variant="h5" sx={{
                 backgroundColor: 'rgb(39, 154, 255)',

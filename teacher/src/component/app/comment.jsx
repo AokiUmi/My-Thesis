@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { Card } from 'antd';
 import { Badge, Space } from 'antd';
 import { useRef } from 'react';
-const NOWIP = "10.20.253.193:53706";
+import { NOWIP } from '../../App';
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);

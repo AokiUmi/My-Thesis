@@ -1,4 +1,3 @@
-import MyApp from './component/structural/Myapp'
 import './App.css'
 import MyLayout from './component/structural/MyLayout'
 /* eslint-disable react/prop-types */
@@ -11,3 +10,6 @@ function App() {
 }
 
 export default App
+
+export const NOWIP = '10.19.73.251:53706';
+export const PACHONGADDR = '10.20.96.100:5000';

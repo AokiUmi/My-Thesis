@@ -3,14 +3,33 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef,useState,useContext } from 'react';
 import * as d3 from 'd3';
-import d3ZoomContext from '../../context/d3zoomContext';
+
+export function zoomTransformStringToObject(str) {
+  // Parse the translation and scale values from the string
+  const translateRegex = /translate\(([^,]+),([^,]+)\)/g;
+  const scaleRegex = /scale\(([^)]+)\)/g;
+
+  const translateMatch = translateRegex.exec(str);
+  const scaleMatch = scaleRegex.exec(str);
+
+  const translateX = parseFloat(translateMatch[1]);
+  const translateY = parseFloat(translateMatch[2]);
+  const scale = parseFloat(scaleMatch[1]);
+
+  // Create and return a zoom transform object
+  return d3.zoomIdentity.translate(translateX, translateY).scale(scale);
+}
+
 const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
   const svgRef = useRef();
   const [node, setNode] = useState('');
-  // const initial_zoom = sessionStorage.getItem("zoom") ?JSON.parse( sessionStorage.getItem("zoom")) : null;
-  // const [zoomTransform, setZoomTransform] = useContext(d3ZoomContext);
+ 
+  const initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
+  console.log('initial zoom',initial_zoom);
+  const [zoomTransform, setZoomTransform] = useState(initial_zoom);
 
-  const [zoomTransform, setZoomTransform] = useState(null); // State to store zoom transformation
+
+  
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     const colorScale = d3.scaleOrdinal()
@@ -141,12 +160,17 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
 
     svg.call(zoom);
     if (zoomTransform !== null) {
-   
+      // console.log(zoomTransform);
+      // console.log(typeof zoomTransform);
+      // console.log(zoomTransform.toString());
+      
       svg.call(zoom.transform, zoomTransform);
     } else {
       // Otherwise, apply initial translation and scale
       svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2).scale(1));
     }
+
+    
    
 
     function handlePolygonClick(event, d) {
@@ -158,11 +182,13 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       Tooltip.style("opacity", 0);
       onPolygonClick(d.id,d.level);
       sessionStorage.setItem("clickedId", d.id);
- 
+      sessionStorage.setItem("zoom",now_zoom.toString());
     }
 
     function zoomed(event) {
       g.attr('transform', event.transform);
+      const now_zoom=d3.zoomTransform(svg.node());
+      sessionStorage.setItem("zoom",now_zoom.toString());
 
     }
     return () => {
@@ -175,7 +201,8 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
 
   return (
 
-       <svg ref={svgRef} width={svgWidth} height={svgHeight}></svg>
+       <svg ref={svgRef} width={svgWidth} height={svgHeight} />
+       
   
   );
 };

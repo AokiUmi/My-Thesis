@@ -17,7 +17,7 @@ import VIDEO_DATA from '../app/test-data/video_data.json';
 import VIDEO_DATA2 from '../app/test-data/video_data2.json';
 import LineChart from '../app/d3/linechart';
 // import VIDEO_DATA3 from '../app/test-data/video_data3.json';
-const NOWIP = "10.20.253.193:53706";
+import { NOWIP } from "../../App";
 function MainPage(props) {
   const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
 

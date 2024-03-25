@@ -6,13 +6,14 @@ import React, { useState,useEffect } from 'react';
 import { Input } from 'antd';
 
 import DrawPolygon from './d3/drawpolygon';
+import { PACHONGADDR } from '../../App';
 function MyImage(props) {
 
     const [rating,setRating]= useState([]);
     const [polygonData,setPolygonData]= useState(null);
     useEffect(()=> {
     
-        fetch(`http://10.20.96.100:5000/api/getFinalGraph`)
+        fetch(`http://${PACHONGADDR}/api/getFinalGraph`)
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
