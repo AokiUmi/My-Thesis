@@ -9,20 +9,22 @@ import VertexData from './test-data/final_20.json';
 import { Layout, Flex,Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
-import Chapters from './test-data/chapter.json';
+
 
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
-    const [polygonData,setPolygonData]= useState({});
-    const [vertexData,setVertexData] = useState({});
+    const [polygonData,setPolygonData]= useState(null);
+    const [vertexData,setVertexData] = useState(null);
     const [clickedPolygonId,setClickedPolygonId] = useState(null);
     // Handler function for click event on polygon
-    const [chapterName, setChaptersName] = useState('');
-    const [chapterId, setChaptersId] = useState(0);
+    const chapterName= JSON.parse(sessionStorage.getItem('chapter_name'));
+    const chapterId =JSON.parse(sessionStorage.getItem('chapter_id'));
     const [userInfoList, setUserInfoList] = useState([]);
     const [knowledgeInfo, setKnowledgeInfo] = useState([]);
+ 
     const loadVertexData = () => {
-        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}`)
+  
+        fetch(`http://10.20.164.79:5000/api/getVertexInfo?chapter=${chapterId}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -30,17 +32,19 @@ function MyImage(props) {
           
         });
     }
+  
+    
     const loadPolygonData = () => {
-        fetch(`http://10.20.98.219:5000/xxxxx?chapter=${chapterId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setPolygonData(data);
-          
-        });
-    }
+      fetch(`http://10.20.164.79:5000/api/getPolygonInfo?chapter=${chapterId}?username=${props.username}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setPolygonData(data);
+        
+      });
+  }
     const loadKnowledgeInfo =() => {
-        fetch(`http://10.20.98.219:5000/xxxxx?id=${clickedPolygonId}`)
+        fetch(`http://10.20.164.79:5000/api/getKnowledgeInfo?id=${clickedPolygonId}`)
         .then((res) => res.json())
         .then((data) => {   
           console.log(data);
@@ -48,37 +52,35 @@ function MyImage(props) {
           
         });
       }
-    const handlePolygonClick = async (polygonId) => {
+   
+    const handlePolygonClick =  (polygonId) => {
         setClickedPolygonId(polygonId);
-        fetch("http://10.20.98.219:5000/api/userClick", {
+        fetch("http://10.20.164.79:5000/api/userClick", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               username: props.username,
-              knowledgeid: clickedPolygonId,
+              knowledgeid: polygonId,
               chapterid: chapterId
             }),
           }).then((res) => {
-            if (res.ok) {
+            if (res.ok) 
             alert("Successfully Upload!");
-            } else {
+            else 
               alert("Error!");
-            }
+            
+             return res.json();
+          })
+          .then((data) => {   
+            console.log(data);
+            setPolygonData(data);
+            
           });
-        loadPolygonData();
+      
     };
 
-    function findChapter(timeInSeconds) {
-        for (let chapter of Chapters.chapters) {
-            if (timeInSeconds >= chapter.time_begin && timeInSeconds < chapter.time_end) {
-                setChaptersName(chapter.name);
-                setChaptersId(chapter.id);
-            }
-        }
-       
-    }
     const updateUserInfoList = (newValue) => {
         const newItem = {
             userid: props.username,
@@ -109,14 +111,14 @@ function MyImage(props) {
         setUserInfoList([]);
     }
    
-    useEffect(() => { 
+    useEffect(() => {
         loadPolygonData();
         loadVertexData();
-        const current_time = sessionStorage.getItem('current_time');
-        findChapter(current_time);
+       
     }, []);
     useEffect(() => { 
-        loadKnowledgeInfo();
+        if( clickedPolygonId !== null)
+          loadKnowledgeInfo();
     }, [clickedPolygonId]);
     return (
         <Layout style={{ width: "1380px" }}>
@@ -126,7 +128,7 @@ function MyImage(props) {
             </Content>
             <Layout style={{ width: "1380px", maxHeight: "630px" }}>
                  <Content className='polygon'>
-                <DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />
+                   {polygonData !== null && vertexData !== null && (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />)} 
                 </Content>
                 <Sider width="22%" style={siderStyle}>
                     <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />

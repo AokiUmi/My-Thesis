@@ -22,7 +22,7 @@ function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
   let intervalId;
-
+  sessionStorage.setItem('current_time', JSON.stringify(0));
   const [chapters, setChapters] = useState([]);
   const timelist = JSON.parse(sessionStorage.getItem('timelist'))?JSON.parse(sessionStorage.getItem('timelist')) : new Array(props.length).fill(0);
    // Update timelist and localStorage when player time changes
@@ -32,12 +32,24 @@ function MyPlayer(props) {
       console.log("current time: ", current_time);
       const roundedTime = Math.floor(current_time);
 
-        timelist[roundedTime]++;
+      timelist[roundedTime]++;
       sessionStorage.setItem('timelist', JSON.stringify(timelist));
-
+      sessionStorage.setItem('current_time', JSON.stringify(current_time));
+      findChapter(current_time);
     }
   };
+  function findChapter(timeInSeconds) {
 
+    for (let chapter of chapters) {
+      
+        if (timeInSeconds >= chapter.time_begin && timeInSeconds < chapter.time_end) {
+          sessionStorage.setItem('chapter_id', JSON.stringify(chapter.id));
+          sessionStorage.setItem('chapter_name', JSON.stringify(chapter.name));
+          console.log("ok")
+        }
+    }
+   
+}
   const setCurrentTime = (time) => {
     console.log('Setting time to:', time);
     playerRef.current.seekTo(time, 'seconds');
@@ -106,12 +118,13 @@ function MyPlayer(props) {
     console.log(timelist);
   }
   useEffect(() => {
-      fetch(`http://10.20.98.219:5000/xxxxx`)
+      fetch(`http://10.20.164.79:5000/api/chapter`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          setChapters(data);
-        
+          setChapters(data.chapters);
+          const current_time = sessionStorage.getItem('current_time');
+          findChapter(current_time);
       });
 
   }, []);
@@ -120,10 +133,11 @@ function MyPlayer(props) {
 
   const reloadProgress = () => {
     if (!onreadybugfix) {
-      const current_time = localStorage.getItem('current_time');
+      const current_time = sessionStorage.getItem('current_time');
       console.log(`Setting to ${current_time}`);
       if (current_time) {
         setCurrentTime(Math.round(current_time));
+        findChapter(current_time);
       }
       onreadybugfix = true;
     }

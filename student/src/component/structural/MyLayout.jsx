@@ -24,7 +24,9 @@ function MyLayout(props) {
     setUsername(enteredUsername);
     sessionStorage.setItem('username', JSON.stringify(enteredUsername));
   };
-
+      // Handler function for click event on polygon
+  const [chapterName, setChaptersName] = useState('');
+  const [chapterId, setChaptersId] = useState(0);
   const [selectedKey, setSelectedKey] = useState('');
   const setkeys = (key) => {
     setSelectedKey(key);

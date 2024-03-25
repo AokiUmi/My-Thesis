@@ -4,15 +4,15 @@
 
 import React, { useState,useEffect } from 'react';
 import { Input } from 'antd';
-import PolygonData from '../app/test-data/polygons.json';
+
 import DrawPolygon from './d3/drawpolygon';
 function MyImage(props) {
 
     const [rating,setRating]= useState([]);
-    const [polygonData,setPolygonData]= useState({});
+    const [polygonData,setPolygonData]= useState(null);
     useEffect(()=> {
     
-        fetch(`http://10.20.98.219:5000/xxxxx`)
+        fetch(`http://10.20.164.79:5000/api/getFinalGraph`)
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
@@ -23,7 +23,7 @@ function MyImage(props) {
       },[]);
     return (
         <div style={{maxHeight: "800px", width:"1380px",backgroundColor:"white"}}>
-            <DrawPolygon data={PolygonData} svgWidth={1380} svgHeight={680} />
+            {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={1380} svgHeight={680} />)}
         </div>
     );
 

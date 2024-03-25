@@ -163,7 +163,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       svg.on('.zoom', null);
   
     };
-  }, [data, svgWidth, svgHeight,node, zoomTransform]);
+  }, [polygonData, vertexData, svgWidth, svgHeight,node, zoomTransform]);
 
   return (
 
