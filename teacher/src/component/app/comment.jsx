@@ -66,7 +66,7 @@ function MyComments(props) {
       },[]);
 
   return (
-    <div>
+    <div style={{width:"483px"}}>
       <Typography component="legend" sx={{
           backgroundColor: 'rgb(39, 154, 255)',
           color: 'white',
@@ -74,9 +74,10 @@ function MyComments(props) {
           fontSize:"20px",
           paddingLeft: "24px",
           paddingTop: "16px",
-          paddingBottom:"16px"
+        paddingBottom: "16px",
+        width:"483px"
           }} >Comments</Typography>
-      <div style={{overflowY:"auto",height:"88vh"}}>
+      <div style={{overflowY:"auto",height:"88vh",width:"483px"}}>
         {comments.map((comment) => {
                 return (
                   <Card  title={"Posted by " + comment.author} key={comment.id}

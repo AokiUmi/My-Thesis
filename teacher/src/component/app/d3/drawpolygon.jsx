@@ -12,11 +12,11 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
     const svg = d3.select(svgRef.current);
     const RedColorScale = d3.scaleSequential()
     .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
-    .interpolator(d3.interpolateBlues); // Interpolate colors from light blue to dark blue
+    .interpolator(d3.interpolate("rgb(223, 242, 255)", "rgb(19, 157, 255)")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
 
     const OrangeColorScale = d3.scaleSequential()
     .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
-    .interpolator(d3.interpolateOranges); // Interpolate colors from light orange to dark orange
+    .interpolator(d3.interpolate("rgb(255, 236, 218)", "rgb(255, 144, 33)"));  // Interpolate colors from light orange to dark orange
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
@@ -85,7 +85,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
       .attr('y1', d => -data.points_dict[d.from][1])
       .attr('x2', d => data.points_dict[d.to][0])
       .attr('y2', d => -data.points_dict[d.to][1])
-      .style('stroke', 'rgbrgb(153, 116, 115)')
+      .style('stroke', 'rgb(153, 116, 115)')
       .style('stroke-width', '1')
       .style('stroke-dasharray', '8,8');
 
@@ -158,7 +158,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight , onPolygonClick, ratingdata })
     return () => {
       g.selectAll('*').remove();
       svg.on('.zoom', null);
-  
+      d3.selectAll(".tooltip").remove();
     };
   }, [data, svgWidth, svgHeight,node, zoomTransform]);
 

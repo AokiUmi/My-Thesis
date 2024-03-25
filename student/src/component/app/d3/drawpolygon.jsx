@@ -1,25 +1,27 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useRef,useState } from 'react';
+import React, { useEffect, useRef,useState,useContext } from 'react';
 import * as d3 from 'd3';
-
+import d3ZoomContext from '../../context/d3zoomContext';
 const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
   const svgRef = useRef();
   const [node, setNode] = useState('');
+  // const initial_zoom = sessionStorage.getItem("zoom") ?JSON.parse( sessionStorage.getItem("zoom")) : null;
+  // const [zoomTransform, setZoomTransform] = useContext(d3ZoomContext);
+
   const [zoomTransform, setZoomTransform] = useState(null); // State to store zoom transformation
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    const svgCenterX = svgWidth / 2;
-    const svgCenterY = svgHeight / 2;
     const colorScale = d3.scaleOrdinal()
       .domain([1, 2])
-      .range(['rgb(247, 159, 159)','rgb(172, 225, 150)']);
-      // Filter polygons based on if_shown attribute
+      .range(['rgb(247, 159, 159)', 'rgb(172, 225, 150)']);
+    // Filter polygons based on if_shown attribute
     const shownPolygons = polygonData.polygons.filter(polygon => polygon.if_shown === true);
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
+ 
 
     const Tooltip = d3.select("body")
       .append("div")
@@ -34,13 +36,13 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       .style("font-size", "18px")
       .style("position", "absolute");
   
-    const mouseover = function(event, d) {
-        Tooltip
-          .style("opacity", 1)
-          .html("The name of the knowledge is: " + d.name)
-          .style("left", (event.pageX + 20) + "px")
-          .style("top", (event.pageY - 36) + "px");
-      }
+    const mouseover = function (event, d) {
+      Tooltip
+        .style("opacity", 1)
+        .html("The name of the knowledge is: " + d.name)
+        .style("left", (event.pageX + 20) + "px")
+        .style("top", (event.pageY - 36) + "px");
+    }
 
     const polygons = polygonsGroup.selectAll('.polygon')
       .data(shownPolygons)
@@ -55,9 +57,9 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       })
       .style('stroke', 'white') // Change stroke color if selected
       .style('stroke-width', '2')
-      .style('fill',  d => (d.id === node ? 'rgb(123, 181, 222)' : colorScale(d.level))) // Apply fill after stroke
-      .on('click', handlePolygonClick) 
-      .on("mouseover", mouseover )
+      .style('fill', d => (d.id === node ? 'rgb(123, 181, 222)' : colorScale(d.level))) // Apply fill after stroke
+      .on('click', handlePolygonClick)
+      .on("mouseover", mouseover)
       .on('mousemove', function (event, d) {
         Tooltip
           .style("opacity", 1)
@@ -69,8 +71,8 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       .on('mouseleave', function (d) {
         Tooltip.style("opacity", 0);
       });
-      const edges = g.selectAll('.edge')
-      .data(polygonData.edges)
+    const edges = g.selectAll('.edge')
+      .data(vertexData.edges)
       .enter()
       .append('line')
       .attr('class', 'edge')
@@ -84,7 +86,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       
     // Add center points for polygons with level 1
     const centerPoints = g.selectAll('.center-point')
-      .data(shownPolygons.filter(polygon => polygon.level=== 1 || polygon.level=== 0 ))
+      .data(shownPolygons.filter(polygon => polygon.level === 1 || polygon.level === 0))
       .enter()
       .append('circle')
       .attr('class', 'center-point')
@@ -95,41 +97,41 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       
  
     
-     // Add arrows to the edges
-     const arrowSize = 5; // Size of the arrow
-     edges.each(function (d) {
-         const x1 = vertexData.points_dict[d.from][0];
-         const y1 = -vertexData.points_dict[d.from][1];
-         const x2 = vertexData.points_dict[d.to][0];
-         const y2 = -vertexData.points_dict[d.to][1];
+    // Add arrows to the edges
+    const arrowSize = 5; // Size of the arrow
+    edges.each(function (d) {
+      const x1 = vertexData.points_dict[d.from][0];
+      const y1 = -vertexData.points_dict[d.from][1];
+      const x2 = vertexData.points_dict[d.to][0];
+      const y2 = -vertexData.points_dict[d.to][1];
  
-         const dx = x2 - x1;
-         const dy = y2 - y1;
-         const angle = Math.atan2(dy, dx);
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const angle = Math.atan2(dy, dx);
  
-         // Calculate points for the arrowhead
-         const x3 = x2 - arrowSize * Math.cos(angle - Math.PI / 6);
-         const y3 = y2 - arrowSize * Math.sin(angle - Math.PI / 6);
-         const x4 = x2 - arrowSize * Math.cos(angle + Math.PI / 6);
-         const y4 = y2 - arrowSize * Math.sin(angle + Math.PI / 6);
+      // Calculate points for the arrowhead
+      const x3 = x2 - arrowSize * Math.cos(angle - Math.PI / 6);
+      const y3 = y2 - arrowSize * Math.sin(angle - Math.PI / 6);
+      const x4 = x2 - arrowSize * Math.cos(angle + Math.PI / 6);
+      const y4 = y2 - arrowSize * Math.sin(angle + Math.PI / 6);
  
-         // Draw arrowhead
-         d3.select(this.parentNode)
-             .append('polygon')
-             .attr('points', `${x2},${y2} ${x3},${y3} ${x4},${y4}`)
-             .style('fill', 'rgb(153, 116, 115)');
-     });
+      // Draw arrowhead
+      d3.select(this.parentNode)
+        .append('polygon')
+        .attr('points', `${x2},${y2} ${x3},${y3} ${x4},${y4}`)
+        .style('fill', 'rgb(153, 116, 115)');
+    });
     //Append text element for polygon name
     centerPoints.each(function (d) {
      
       d3.select(this.parentNode)
-          .append("text")
-          .attr("x", vertexData.points_dict[d.point][0])
-          .attr("y", -vertexData.points_dict[d.point][1]-10)
-          .attr("text-anchor", "middle")
-          .attr("dominant-baseline", "middle")
-          .text(d.name);
-  });
+        .append("text")
+        .attr("x", vertexData.points_dict[d.point][0])
+        .attr("y", -vertexData.points_dict[d.point][1] - 10)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .text(d.name);
+    });
     edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
     svg.selectAll('text').style('pointer-events', 'none');
@@ -138,28 +140,34 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       .on('zoom', zoomed);
 
     svg.call(zoom);
-    if (zoomTransform) {
+    if (zoomTransform !== null) {
+   
       svg.call(zoom.transform, zoomTransform);
-      } else {
-        // Otherwise, apply initial translation and scale
-        svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2-60).scale(1));
-      }
+    } else {
+      // Otherwise, apply initial translation and scale
+      svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2).scale(1));
+    }
    
 
     function handlePolygonClick(event, d) {
       // console.log(d.id,d.level);// Pass polygon ID to the parent component
       setNode(d.id);
       // Save current zoom transform state
-      setZoomTransform(d3.zoomTransform(svg.node()));
+      const now_zoom=d3.zoomTransform(svg.node())
+      setZoomTransform(now_zoom);
       Tooltip.style("opacity", 0);
-      onPolygonClick(d.id);
+      onPolygonClick(d.id,d.level);
+      sessionStorage.setItem("clickedId", d.id);
+ 
     }
 
     function zoomed(event) {
       g.attr('transform', event.transform);
+
     }
     return () => {
       g.selectAll('*').remove();
+      d3.selectAll(".tooltip").remove();
       svg.on('.zoom', null);
   
     };

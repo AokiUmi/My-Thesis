@@ -65,7 +65,9 @@ function getLabelText(value) {
     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
   }
 function TextBlock(props) {
- 
+    const [expanded_1, setExpanded_1] = useState(false); 
+    const [expanded_2, setExpanded_2] = useState(false); 
+    const [expanded_3, setExpanded_3] = useState(false); 
     const [value, setValue] = useState(0);
     const [hover, setHover] = useState(-1); 
     const knowledge_info= props.knowledgeInfo;
@@ -77,20 +79,36 @@ function TextBlock(props) {
         else if (value === 3) return {"color":"rgb(250, 175, 0)"};
         else return {"color":"rgb(46, 125, 50)"};
   };
-
+  const handleAccordionChange1 = () => {
+    setExpanded_1(!expanded_1);
+  };
+  const handleAccordionChange2 = () => {
+    setExpanded_2(!expanded_2);
+  };
+  const handleAccordionChange3 = () => {
+    setExpanded_3(!expanded_3);
+  };
    useEffect(() => {
     setValue(0);
-
+     setExpanded_1(false);
+     setExpanded_2(false);
+     setExpanded_3(false);
    }, [props.clickedId]);
 
-    return (
-        <div style={{height: "620px", display: "flex", flexDirection: "column"}}>
-        
+  return (
+    <>
+      {props.clickedId === null && (<div>
+            <p > Click some nodes in the graph to see more</p>
+        </div>)
+      }
+        <div style={{height: "565px", display: "flex", flexDirection: "column",width:"303.58px"}}>
+          
             <Typography variant="h5" sx={{
                 backgroundColor: 'rgb(39, 154, 255)',
                 color: 'white',
                 textAlign: "left",
-                padding:"16px"
+                padding: "16px",
+                width:"303.58px"
                 }} >
                 {props.clickedId === null ? '' : knowledge_info.name}
             </Typography>
@@ -119,7 +137,7 @@ function TextBlock(props) {
                 }
             </Typography>
             <div style={{overflowY:"scroll"}}>
-                <Accordion>
+                <Accordion expanded={expanded_1} onChange={handleAccordionChange1}>
                   <AccordionSummary
                   expandIcon={<ArrowDropDownIcon />}
                   aria-controls="panel1-content"
@@ -133,7 +151,7 @@ function TextBlock(props) {
                   </Typography>
                   </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion expanded={expanded_2} onChange={handleAccordionChange2}>
                   <AccordionSummary
                   expandIcon={<ArrowDropDownIcon />}
                   aria-controls="panel2-content"
@@ -147,7 +165,7 @@ function TextBlock(props) {
                   </Typography>
                   </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion expanded={expanded_3} onChange={handleAccordionChange3}>
                   <AccordionSummary
                   expandIcon={<ArrowDropDownIcon />}
                   aria-controls="panel2-content"
@@ -166,6 +184,8 @@ function TextBlock(props) {
            
            
         </div>
+    </>
+      
     );
 }
 

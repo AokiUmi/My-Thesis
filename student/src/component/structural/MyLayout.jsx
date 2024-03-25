@@ -4,7 +4,8 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import './MyLayout.css'
-import { BrowserRouter as Router, Route, Routes,Link,  Navigate, useLocation   } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,  Navigate, useLocation } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { Layout, Flex,Menu } from 'antd';
 import ReactPlayer from 'react-player';
 const { Header, Footer, Sider, Content } = Layout;

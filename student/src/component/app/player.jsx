@@ -53,6 +53,7 @@ function MyPlayer(props) {
   const setCurrentTime = (time) => {
     console.log('Setting time to:', time);
     playerRef.current.seekTo(time, 'seconds');
+    playerRef.current.getInternalPlayer().play(); 
   };
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -96,7 +97,7 @@ function MyPlayer(props) {
   };
 
   const UploadDatabase = () => {
-    fetch("http://10.19.74.179:53706/api/addTimeList", {
+    fetch("http://10.20.253.193:53706/api/addTimeList", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +119,7 @@ function MyPlayer(props) {
     console.log(timelist);
   }
   useEffect(() => {
-      fetch(`http://10.20.164.79:5000/api/chapter`)
+      fetch(`http://10.20.96.100:5000/api/chapter`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -136,7 +137,7 @@ function MyPlayer(props) {
       const current_time = sessionStorage.getItem('current_time');
       console.log(`Setting to ${current_time}`);
       if (current_time) {
-        setCurrentTime(Math.round(current_time));
+        playerRef.current.seekTo(Math.round(current_time), 'seconds');
         findChapter(current_time);
       }
       onreadybugfix = true;
@@ -155,7 +156,7 @@ function MyPlayer(props) {
               <Content className="player">
                 <ReactPlayer width='100%' height='100%' onPlay={startClock} onPause={stopClock}
                   onEnded={stopClock} ref={playerRef} controls={true} onReady={reloadProgress}
-                  url='https://robotics.shanghaitech.edu.cn/static/ca2020/CA2020_VenusTutorial1.mp4' />
+                  url='https://upos-sz-mirrorali.bilivideo.com/upgcxcode/53/69/552096953/552096953-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1711383570&gen=playurlv2&os=alibv&oi=17621919&trid=11b34e1db4a4465fa3cc7f10e4308a1ch&mid=0&platform=html5&upsig=9ebf5903f0d667bed751b5ff93c71807&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&f=h_0_0&bw=24207&logo=80000000' />
               </Content>
               <Content className="comment">
       

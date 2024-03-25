@@ -12,7 +12,7 @@ function MyImage(props) {
     const [polygonData,setPolygonData]= useState(null);
     useEffect(()=> {
     
-        fetch(`http://10.20.164.79:5000/api/getFinalGraph`)
+        fetch(`http://10.20.96.100:5000/api/getFinalGraph`)
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);

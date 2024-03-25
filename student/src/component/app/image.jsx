@@ -10,21 +10,21 @@ import { Layout, Flex,Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
 
-
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
     const [polygonData,setPolygonData]= useState(null);
-    const [vertexData,setVertexData] = useState(null);
-    const [clickedPolygonId,setClickedPolygonId] = useState(null);
+    const [vertexData, setVertexData] = useState(null);
+    const lastClickedId = JSON.parse(sessionStorage.getItem('clickedId')) ?JSON.parse(sessionStorage.getItem('clickedId')) : null ;
+    const [clickedPolygonId,setClickedPolygonId] = useState(lastClickedId);
     // Handler function for click event on polygon
     const chapterName= JSON.parse(sessionStorage.getItem('chapter_name'));
     const chapterId =JSON.parse(sessionStorage.getItem('chapter_id'));
     const [userInfoList, setUserInfoList] = useState([]);
     const [knowledgeInfo, setKnowledgeInfo] = useState([]);
- 
+
     const loadVertexData = () => {
   
-        fetch(`http://10.20.164.79:5000/api/getVertexInfo?chapter=${chapterId}`)
+        fetch(`http://10.20.96.100:5000/api/getVertexInfo?chapter=${chapterId}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -35,7 +35,7 @@ function MyImage(props) {
   
     
     const loadPolygonData = () => {
-      fetch(`http://10.20.164.79:5000/api/getPolygonInfo?chapter=${chapterId}?username=${props.username}`)
+      fetch(`http://10.20.96.100:5000/api/getPolygonInfo?chapter=${chapterId}&username=${props.username}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -44,7 +44,7 @@ function MyImage(props) {
       });
   }
     const loadKnowledgeInfo =() => {
-        fetch(`http://10.20.164.79:5000/api/getKnowledgeInfo?id=${clickedPolygonId}`)
+        fetch(`http://10.20.96.100:5000/api/getKnowledgeInfo?id=${clickedPolygonId}`)
         .then((res) => res.json())
         .then((data) => {   
           console.log(data);
@@ -53,9 +53,11 @@ function MyImage(props) {
         });
       }
    
-    const handlePolygonClick =  (polygonId) => {
-        setClickedPolygonId(polygonId);
-        fetch("http://10.20.164.79:5000/api/userClick", {
+    const handlePolygonClick =  (polygonId, polygonLevel) => {
+      setClickedPolygonId(polygonId);
+      if (polygonLevel === 1 || polygonLevel === 0)
+      {
+        fetch("http://10.20.96.100:5000/api/userClick", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -66,11 +68,6 @@ function MyImage(props) {
               chapterid: chapterId
             }),
           }).then((res) => {
-            if (res.ok) 
-            alert("Successfully Upload!");
-            else 
-              alert("Error!");
-            
              return res.json();
           })
           .then((data) => {   
@@ -78,8 +75,11 @@ function MyImage(props) {
             setPolygonData(data);
             
           });
-      
-    };
+ 
+      }
+
+  }
+        
 
     const updateUserInfoList = (newValue) => {
         const newItem = {
@@ -121,20 +121,21 @@ function MyImage(props) {
           loadKnowledgeInfo();
     }, [clickedPolygonId]);
     return (
-        <Layout style={{ width: "1380px" }}>
+        <Layout style={{ width: "1380px",overflow:"hidden" }}>
             <Content className='top-content'>
                <p style={{lineHeight:"18px", marginLeft: "30px",marginRight: "30px",fontSize:"18px" }}> Current Chapter is {chapterName} </p>
                 <Button variant="contained" onClick={uploadRating } style={{ marginLeft: "30px",marginRight: "30px" }}> Upload</Button>
             </Content>
-            <Layout style={{ width: "1380px", maxHeight: "630px" }}>
+            <Layout style={{ width: "1380px", maxHeight: "600px" }}>
                  <Content className='polygon'>
-                   {polygonData !== null && vertexData !== null && (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={630} onPolygonClick={handlePolygonClick} />)} 
+            {polygonData !== null && vertexData !== null &&
+              (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)} 
                 </Content>
                 <Sider width="22%" style={siderStyle}>
                     <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
                 </Sider>
             </Layout>
-           
+     
         </Layout>
        
     );
@@ -144,10 +145,11 @@ export default MyImage;
 
 const siderStyle = {
     textAlign: 'center',
-    lineHeight: '630px',
-    maxHeight: '630px',
+    lineHeight: '600px',
+    maxHeight: '600px',
     display:"flex",justifyContent:"center",alignItems:"center",
     color: 'black',
-    background: 'rgb(235, 235, 235)',
+  background: 'rgb(235, 235, 235)',
+  height: "600px"
    
 };
