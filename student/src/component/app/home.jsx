@@ -18,7 +18,9 @@ function Home(props) {
 
   };
   const resetUser = () => {
+    sessionStorage.clear();
     props.handleUserSubmit('');
+    
   };
 
 

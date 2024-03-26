@@ -25,7 +25,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
   const [node, setNode] = useState('');
  
   const initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
-  console.log('initial zoom',initial_zoom);
+
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);
 
 
@@ -58,7 +58,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
     const mouseover = function (event, d) {
       Tooltip
         .style("opacity", 1)
-        .html("The name of the knowledge is: " + d.name)
+        .html( d.name)
         .style("left", (event.pageX + 20) + "px")
         .style("top", (event.pageY - 36) + "px");
     }
@@ -82,7 +82,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       .on('mousemove', function (event, d) {
         Tooltip
           .style("opacity", 1)
-          .html("The name of the knowledge is: " + d.name)
+          .html(d.name)
           .style("left", (event.pageX + 20) + "px")
           .style("top", (event.pageY - 36) + "px");
         // console.log(event.pageX, event.pageY);
@@ -127,7 +127,13 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       const dx = x2 - x1;
       const dy = y2 - y1;
       const angle = Math.atan2(dy, dx);
- 
+       // Ensure angle is within the range of -π to π
+      if (angle < -Math.PI) {
+        angle += 2 * Math.PI;
+      } else if (angle > Math.PI) {
+        angle -= 2 * Math.PI;
+      }
+
       // Calculate points for the arrowhead
       const x3 = x2 - arrowSize * Math.cos(angle - Math.PI / 6);
       const y3 = y2 - arrowSize * Math.sin(angle - Math.PI / 6);

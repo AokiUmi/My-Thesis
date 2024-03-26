@@ -24,9 +24,9 @@ function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
   let intervalId;
-  sessionStorage.setItem('current_time', JSON.stringify(0));
+  const initial_time= sessionStorage.getItem('current_time') ? sessionStorage.getItem('current_time') : '0';
   const [chapters, setChapters] = useState([]);
-  const timelist = JSON.parse(sessionStorage.getItem('timelist')) ? JSON.parse(sessionStorage.getItem('timelist')) : new Array(props.length).fill(0);
+  const timelist = JSON.parse(sessionStorage.getItem('timelist')) ? JSON.parse(sessionStorage.getItem('timelist')) : Array(props.length).fill(0);
   // Update timelist and localStorage when player time changes
   const GetCurrentTime = () => {
     if (playerRef.current) {
@@ -36,11 +36,7 @@ function MyPlayer(props) {
 
       timelist[roundedTime]++;
       sessionStorage.setItem('timelist', JSON.stringify(timelist));
- 
       sessionStorage.setItem('current_time', JSON.stringify(current_time));
-      
-      console.log(JSON.parse(sessionStorage.getItem('current_time')));
-      console.log(typeof JSON.parse(sessionStorage.getItem('current_time')));
       findChapter(current_time);
     }
   };
@@ -118,6 +114,7 @@ function MyPlayer(props) {
         alert("Error!");
       }
     });
+    sessionStorage.removeItem("timelist");  
   };
   const stopClock = () => {
     clearInterval(intervalId);
@@ -130,8 +127,8 @@ function MyPlayer(props) {
       .then((data) => {
         console.log(data);
         setChapters(data.chapters);
-        const current_time = sessionStorage.getItem('current_time');
-        findChapter(current_time);
+        sessionStorage.setItem("chapter_name",JSON.stringify(data.chapters[0].name));
+        sessionStorage.setItem("chapter_id",JSON.stringify(1));
       });
 
   }, []);
@@ -140,7 +137,7 @@ function MyPlayer(props) {
 
   const reloadProgress = () => {
     if (!onreadybugfix) {
-      const current_time = JSON.parse(sessionStorage.getItem('current_time'));
+      const current_time = JSON.parse(sessionStorage.getItem('current_time'))?  JSON.parse(sessionStorage.getItem('current_time')) : 0;
       console.log(`Setting to ${current_time}`);
       if (current_time) {
         playerRef.current.seekTo(current_time, 'seconds');
@@ -162,8 +159,8 @@ function MyPlayer(props) {
               <Content className="player">
                 <ReactPlayer width='100%' height='100%' onPlay={startClock} onPause={stopClock}
                   onEnded={stopClock} ref={playerRef} controls={true} onReady={reloadProgress}
-                  // url='https://upos-sz-mirrorali.bilivideo.com/upgcxcode/53/69/552096953/552096953-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&uipk=5&nbs=1&deadline=1711383570&gen=playurlv2&os=alibv&oi=17621919&trid=11b34e1db4a4465fa3cc7f10e4308a1ch&mid=0&platform=html5&upsig=9ebf5903f0d667bed751b5ff93c71807&uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&bvc=vod&nettype=0&f=h_0_0&bw=24207&logo=80000000' />
-                  url='http://10.19.73.251/552096953-1-16.mp4' />
+                  url='http://10.20.96.100:5000/api/video' />
+                  {/* url='http://10.19.73.251/552096953-1-16.mp4' /> */}
               </Content>
               <Content className="comment">
 

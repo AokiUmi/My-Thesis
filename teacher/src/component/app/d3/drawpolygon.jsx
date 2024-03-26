@@ -33,11 +33,11 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
     const svg = d3.select(svgRef.current);
     const RedColorScale = d3.scaleSequential()
       .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
-      .interpolator(d3.interpolate("rgb(223, 242, 255)", "rgb(19, 157, 255)")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
+      .interpolator(d3.interpolate("rgb(212, 237, 255)", "rgb(0, 149, 255)")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
 
     const OrangeColorScale = d3.scaleSequential()
       .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
-      .interpolator(d3.interpolate("rgb(255, 236, 218)", "rgb(255, 144, 33)"));  // Interpolate colors from light orange to dark orange
+      .interpolator(d3.interpolate("rgb(255, 241, 228)", "rgb(255, 128, 0)"));  // Interpolate colors from light orange to dark orange
     const g = svg.append('g');
     // Append a group for polygons to ensure they are below other elements
     const polygonsGroup = g.append('g');
@@ -58,7 +58,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
     const mouseover = function (event, d) {
       Tooltip
         .style("opacity", 1)
-        .html("The name of the knowledge is: " + d.name)
+        .html(d.name)
         .style("left", (event.pageX + 20) + "px")
         .style("top", (event.pageY - 36) + "px");
     }
@@ -88,7 +88,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
       .on('mousemove', function (event, d) {
         Tooltip
           .style("opacity", 1)
-          .html("The name of the knowledge is: " + d.name)
+          .html(d.name)
           .style("left", (event.pageX + 20) + "px")
           .style("top", (event.pageY - 36) + "px");
         // console.log(event.pageX, event.pageY);

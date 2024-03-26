@@ -62,7 +62,7 @@ const LineChart = (props) => {
       // Add x-axis
       svg.append("g")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat(formatTime));
+        .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%H:%M:%S")));
 
       // Add y-axis
       svg.append("g")

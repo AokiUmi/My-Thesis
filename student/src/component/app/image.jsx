@@ -20,7 +20,7 @@ function MyImage(props) {
   const [clickedPolygonId, setClickedPolygonId] = useState(lastClickedId);
   // Handler function for click event on polygon
   const chapterName = JSON.parse(sessionStorage.getItem('chapter_name'));
-  const chapterId = JSON.parse(sessionStorage.getItem('chapter_id'));
+  const chapterId = JSON.parse(sessionStorage.getItem('chapter_id')) ? JSON.parse(sessionStorage.getItem('chapter_id')) : 1 ;
   const [userInfoList, setUserInfoList] = useState([]);
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
 
@@ -58,7 +58,7 @@ function MyImage(props) {
   const handlePolygonClick = (polygonId, polygonLevel) => {
     setClickedPolygonId(polygonId);
     if (polygonLevel === 1 || polygonLevel === 0) {
-      fetch("http://${PACHONGADDR}/api/userClick", {
+      fetch(`http://${PACHONGADDR}/api/userClick`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
