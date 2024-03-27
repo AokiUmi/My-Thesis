@@ -16,7 +16,7 @@ const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
   const [polygonData, setPolygonData] = useState(null);
   const [vertexData, setVertexData] = useState(null);
-  const lastClickedId = JSON.parse(sessionStorage.getItem('clickedId')) ? JSON.parse(sessionStorage.getItem('clickedId')) : null;
+  const lastClickedId = sessionStorage.getItem('clickedId') ? JSON.parse(sessionStorage.getItem('clickedId')) : null;
   const [clickedPolygonId, setClickedPolygonId] = useState(lastClickedId);
   // Handler function for click event on polygon
   const chapterName = JSON.parse(sessionStorage.getItem('chapter_name'));
@@ -37,7 +37,7 @@ function MyImage(props) {
 
 
   const loadPolygonData = () => {
-    fetch(`http://${PACHONGADDR}/api/getPolygonInfo?chapter=${chapterId}&username=${props.username}`)
+    fetch(`http://${PACHONGADDR}/api/getPolygonGroup?chapter=${chapterId}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -57,27 +57,27 @@ function MyImage(props) {
 
   const handlePolygonClick = (polygonId, polygonLevel) => {
     setClickedPolygonId(polygonId);
-    if (polygonLevel === 1 || polygonLevel === 0) {
-      fetch(`http://${PACHONGADDR}/api/userClick`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: props.username,
-          knowledgeid: polygonId,
-          chapterid: chapterId
-        }),
-      }).then((res) => {
-        return res.json();
-      })
-        .then((data) => {
-          console.log(data);
-          setPolygonData(data);
+    // if (polygonLevel === 1 || polygonLevel === 0) {
+    //   fetch(`http://${PACHONGADDR}/api/userClick`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       username: props.username,
+    //       knowledgeid: polygonId,
+    //       chapterid: chapterId
+    //     }),
+    //   }).then((res) => {
+    //     return res.json();
+    //   })
+    //     .then((data) => {
+    //       console.log(data);
+    //       setPolygonData(data);
 
-        });
+    //     });
 
-    }
+    // }
 
   }
 
