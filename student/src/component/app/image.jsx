@@ -4,8 +4,7 @@
 import './image.css';
 import React, { useEffect, useState } from 'react';
 import DrawPolygon from './d3/drawpolygon';
-import PolygonData from './test-data/final_20.json';
-import VertexData from './test-data/final_20.json';
+
 import { Layout, Flex, Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
