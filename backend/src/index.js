@@ -19,8 +19,10 @@ const port = 53706;
 
 const INSERT_TIMELIST_SQL = "INSERT INTO cumulative_values (time_index, value) VALUES (?, ?);";
 const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM cumulative_values GROUP BY time_index;";
-const INERST_COMMENT_SQL = "INSERT INTO comments (time, content, author) VALUES (?, ?, ?);";
-const GET_TOTAL_COMMENTS_SQL = "SELECT * FROM comments;";
+const INERST_COMMENT_SQL = "INSERT INTO comment (time, content, author, real_time) VALUES (?, ?, ?, ?);";
+const DELETE_COMMENT_SQL = "DELETE FROM comment WHERE id = ?;";
+const GET_COMMENTS_BY_AUTHOR_SQL = 'SELECT * FROM comment WHERE author = ? ORDER BY time;';
+const GET_TOTAL_COMMENTS_SQL = "SELECT * FROM comment;";
 const SELECT_RATING_SQL = "SELECT * FROM rating WHERE userid = ? AND knowledgeid = ?;";
 const UPDATE_RATING_SQL = "UPDATE rating SET value = ? WHERE userid = ? AND knowledgeid = ?;";
 const INSERT_RATING_SQL ="INSERT INTO rating (userid, knowledgeid, value) VALUES (?, ?, ?);";
@@ -100,12 +102,44 @@ app.post('/api/addComment', (req, res) => {
     const time = req.body.time;
     const content = req.body.content;
     const author = req.body.author;
-    db.run(INERST_COMMENT_SQL, [time, content, author], function(err, ret) {
+    const currentTime = new Date(); // Get the current real time
+    db.run(INERST_COMMENT_SQL, [time, content, author, currentTime], function(err, ret) {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Failed to add comment' });
         }
         return res.status(200).json({ message: 'Comment added successfully' });
+    });
+});
+// API endpoint to get all comments from the database for a specific author
+app.get('/api/getCommentsByAuthor', (req, res) => {
+    // Extract author name from request query parameters
+    const author = req.query.user; // Use req.query.user to get the author name
+
+    // Execute SQL query with the provided author name
+    db.all(GET_COMMENTS_BY_AUTHOR_SQL, [author], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        return res.status(200).json({ comments: rows });
+    });
+});
+
+app.delete('/api/deleteComment', (req, res) => {
+    // Extract author name from request query parameters
+    const id = req.query.id; // Use req.query.id to get the author name
+
+    // Execute SQL query to delete the comment by its ID
+    db.run(DELETE_COMMENT_SQL, [id], (err) => {
+        if (err) {
+        console.error(err.message);
+        return res.status(500).json({ error: 'Internal server error' });
+        }
+
+       
+        return res.status(200).json({ message: 'Comment deleted successfully' });
     });
 });
 // API endpoint to get all comments from the database

@@ -9,7 +9,7 @@ import { Layout, Flex,Menu } from 'antd';
 import ReactPlayer from 'react-player';
 const { Header, Footer, Sider, Content } = Layout;
 import MyPlayer from '../app/player';
-import { MenuOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
 
@@ -31,11 +31,11 @@ function MyLayout(props) {
 
   return (
     <Router >
-      <Layout style={{display:"flex",justifyContent:"center",alignItems:"center",overflow:"hidden"}} >
+      <Layout style={{display:"flex",justifyContent:"center",alignItems:"center", width:"100%"}} >
         <Header className="header">
   
           <Menu
-            theme="dark"
+            theme="light"
             mode="horizontal"
             selectedKeys={[selectedKey]}
             style={{
@@ -44,8 +44,9 @@ function MyLayout(props) {
               position: 'relative'
             }}
           >
-            <Menu.Item key="Icon" style={{pointerEvents: 'none' }}>
-            <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+            <Menu.Item key="system" style={{pointerEvents: 'none' }}>
+            {/* <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} /> */}
+              System Name / Studend-End
             </Menu.Item>
             <Menu.Item key="1">
             <Link to="/" onClick={() => { setkeys('1');}}>Home</Link>
@@ -55,10 +56,10 @@ function MyLayout(props) {
                 <Menu.Item key="2">
                 <Link to="/courses" onClick={() => { setkeys('2'); }}>Course</Link>
                 </Menu.Item>
-
+{/* 
                   <Menu.Item key="3">
                     <Link to="/image" onClick={() => { setkeys('3'); }}>Image</Link>
-                  </Menu.Item>
+                  </Menu.Item> */}
               
                 
               </>)
@@ -70,14 +71,16 @@ function MyLayout(props) {
               username !== '' && (
               <Menu.Item key="username" style={{
                     position: 'absolute', right: -20,
-                    color: 'white', pointerEvents: 'none',
-                    opacity: 0.75
+                    color: 'black', pointerEvents: 'none',
+                    opacity: 1
               }}>
           
                 {"Hello "+username+" !"}
+                <UserOutlined style={{ fontSize: '25px', margin: "10px"}}  />
               </Menu.Item>
               )
             }
+ 
        
             </Menu>
             </Header>

@@ -3,17 +3,17 @@
     height: 21vh;
     line-height: 21vh;
     border-radius: 0px;
-    color: black;
+    color: #191919;
 }
 
 .player {
     background-color: #454545;
     text-align: center;
-    line-height: 73vh;
-    height: 73vh;
+    line-height: 89vh;
+    height: 89vh;
     justify-content: center;
-   
-    color: black;
+    width: 100%;
+    color: #191919;
    
 }
 .button{
@@ -21,35 +21,49 @@
     line-height: 6vh;
     height: 6vh;
   
-    color: black;
+    color: #191919;
    
 }
 .chapter{
     text-align: left;
-    line-height: 88vh;
-    height: 88vh;
-  background-color: rgb(226, 226, 226);
-    color: black;
+    line-height: 89vh;
+    height: 89vh;
+    background-color: rgb(245, 245, 245);
+    color: #191919;
+    align-items: center;
+    justify-content: center;
    
+}
+.css-129gly2-MuiButtonBase-root-MuiListItemButton-root.Mui-selected {
+    background-color: var(--background);
 }
 .image {
     line-height: 690px;
     height: 690px;
     justify-content: center;
     text-align: center;
-    color: black;
+    color: #191919;
 }
 .paragraph {
    margin-top: 0px;
    margin-bottom: 0px;
     max-height: 3vh;
     line-height: 3vh;
+    color: #191919;
   }
-
+.headline {
+    line-height: 5vh;
+    height: 5vh;
+    font-size: 24px;
+    color: #191919;
+    width: 100%;
+    background-color: rgb(245, 245, 245);
+    padding: 0;
+}
 .test {
-    background-color: rgb(255, 227, 210);
-    color:rgb(172, 225, 150);
-    color :rgb(223, 242, 255);
-    color: rgb(255, 236, 218);
-    color:rgb(19, 157, 255)
+    background-color: rgb(255, 142, 142);
+    color:rgb(0, 149, 255);
+    color :rgb(212, 237, 255);
+    color: rgb(255, 128, 0);
+    color:rgb(255, 241, 228)
 }

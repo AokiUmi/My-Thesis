@@ -17,9 +17,28 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { Card, Input } from 'antd';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-
+import Collapse from '@mui/material/Collapse';
 import { NOWIP, PACHONGADDR } from "../../App";
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import {List as Ant_List } from 'antd';
+function formatTime(seconds) {
 
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const formattedHours = String(hours).padStart(2, '0');
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+  if (hours > 0) {
+      return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  } else {
+      return `${formattedMinutes}:${formattedSeconds}`;
+  }
+}
 function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
@@ -28,6 +47,13 @@ function MyPlayer(props) {
   const [chapters, setChapters] = useState([]);
   const timelist = JSON.parse(sessionStorage.getItem('timelist')) ? JSON.parse(sessionStorage.getItem('timelist')) : Array(props.length).fill(0);
   // Update timelist and localStorage when player time changes
+  const [selectedChapter, setSelectedChapter] = useState(null);
+  const [open, setOpen] = React.useState(true);
+  const [user_comments, setUser_comments]=useState([]);
+  const handleClick = () => {
+    setOpen(!open);
+  };
+ 
   const GetCurrentTime = () => {
     if (playerRef.current) {
       const current_time = playerRef.current.getCurrentTime();
@@ -54,12 +80,19 @@ function MyPlayer(props) {
   }
   const setCurrentTime = (time) => {
     console.log('Setting time to:', time);
+    sessionStorage.setItem('current_time', JSON.stringify(time));
+    findChapter(time);
     playerRef.current.seekTo(time, 'seconds');
     playerRef.current.getInternalPlayer().play();
+  };
+  const handleChapterClick = (chapter) => {
+    setSelectedChapter(chapter);
+    setCurrentTime(chapter.time_begin); // Assuming setCurrentTime is defined elsewhere
   };
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
+
   const handleCommentSubmit = (id) => {
     // Add your logic to handle the comment submission here
     let now_time = playerRef.current.getCurrentTime();
@@ -84,12 +117,15 @@ function MyPlayer(props) {
       }).then((res) => {
         if (res.ok) {
           alert("Successfully Upload!");
+          loadMyComments();
+          setComment('');
         } else {
           alert("Error!");
         }
       });
     }
-
+   
+   
 
   };
   const startClock = () => {
@@ -118,18 +154,32 @@ function MyPlayer(props) {
   };
   const stopClock = () => {
     clearInterval(intervalId);
-    intervalId = undefined; // Reset intervalId to undefined
+
+    intervalId = null; // Reset intervalId to undefined
     console.log(timelist);
   }
-  useEffect(() => {
+  const loadMyComments = () => {
+    fetch(`http://${NOWIP}/api/getCommentsByAuthor?user=${props.username}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data.comments);
+     setUser_comments(data.comments);
+
+    });
+  };
+  const loadChapters = () => {
     fetch(`http://${PACHONGADDR}/api/chapter`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setChapters(data.chapters);
-        sessionStorage.setItem("chapter_name",JSON.stringify(data.chapters[0].name));
-        sessionStorage.setItem("chapter_id",JSON.stringify(1));
-      });
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setChapters(data.chapters);
+      sessionStorage.setItem("chapter_name",JSON.stringify(data.chapters[0].name));
+      sessionStorage.setItem("chapter_id",JSON.stringify(1));
+    });
+  };
+  useEffect(() => {
+      loadChapters();
+      loadMyComments();
 
   }, []);
 
@@ -146,104 +196,155 @@ function MyPlayer(props) {
       onreadybugfix = true;
     }
   };
-
+  const deletePost = (meg_id) => {
+    fetch(`http://${NOWIP}/api/deleteComment?id=${meg_id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) {
+        alert("Successfully delete post!");
+        loadMyComments();
+     
+      } else {
+        alert("Something went wrong!");
+      }
+    });
+  };
 
 
   return (
 
-    <Layout style={{ overflow: "hidden" }} >
-      <Content style={{ width: "1380px" }}>
-        <Layout>
-          <Content>
-            <Layout>
-              <Content className="player">
-                <ReactPlayer width='100%' height='100%' onPlay={startClock} onPause={stopClock}
-                  onEnded={stopClock} ref={playerRef} controls={true} onReady={reloadProgress}
-                  url='http://10.20.96.100:5000/api/video' />
-                  {/* url='http://10.19.73.251/552096953-1-16.mp4' /> */}
-              </Content>
-              <Content className="comment">
+ 
+        <Layout style={{ width: "86%"}} >
+          <Header className="headline">
+     
+           Course Name
+          
+          </Header>
+          <Layout>
+            <Content>
+              <Layout>
+          
+                <Content className="player">
+        
+                  <ReactPlayer width='100%' height='100%' onPlay={startClock} onPause={stopClock}
+                    onEnded={stopClock} ref={playerRef} controls={true} onReady={reloadProgress}
+                    url='http://10.20.96.100:5000/api/video' />
+                    {/* url='http://10.19.73.251/552096953-1-16.mp4' /> */}
+                </Content>
+           
+              </Layout>
+            </Content>
+            <Sider width="30%" style={siderStyle}>
+              {/* <Content className="button">
 
-                <Typography component="legend" sx={{
-                  backgroundColor: 'rgb(39, 154, 255)',
-                  color: 'white',
-                  textAlign: "left",
-                  fontSize: "18px",
-                  paddingLeft: "20px",
-                  paddingTop: "5px",
-                  paddingBottom: "5px"
-                }} >Comment</Typography>
-                <div style={{ display: 'flex', flexDirection: 'column', height: '21vh' }}>
+                <h5  className="paragraph">If you have finished learning, please click the button!</h5>
+                <Button variant="contained" onClick={UploadDatabase}>Finished</Button>
+
+              </Content> */}
+
+              <Content className="chapter">
+
+            
+                  <List
+                    sx={{ width: '100%', bgcolor: '#F1F2F3', overflow: 'auto', '& ul': { padding: 10 }, }}
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                    subheader={
+                      <Typography component="legend" fontWeight="bold" sx={{
+                        backgroundColor: '#F1F2F3',
+                        color: '#191919',
+                        textAlign: "left",
+                        fontSize: "16px",
+                        padding: " 20px 16px 8px 16px",
+                      
+                      }} >Chapter Selection</Typography>
+                    }
+                  >
+                    {chapters.map((chapter) => (
+                        <ListItemButton
+                          key={chapter.id}
+                          onClick={() => handleChapterClick(chapter)}
+                          selected={selectedChapter === chapter}
+                          sx={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            width: '100%',
+                            maxWidth: '100%',
+                            backgroundColor: selectedChapter === chapter ? 'white' : '#F1F2F3',
+                          }}
+                        >
+                          <ListItemText
+                            primary={chapter.name}
+                            sx={{ color: selectedChapter === chapter ? '#00AEEC' : 'inherit',  }}
+                          />
+                        </ListItemButton>
+                      ))}
+
+                  </List>
+                  <div style={{ marginTop: "18px" ,display: 'flex', flexDirection: 'column'}}>
+                  <List  sx={{ width: '100%', bgcolor: '#F1F2F3',marginTop:"18px" }}>
+                      <ListItemButton onClick={handleClick}   sx={{
+                                backgroundColor:  '#F1F2F3',
+                              
+                              }}>
+                            <ListItemIcon>
+                                  <PlayArrowIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={<Typography variant="body1" fontWeight="bold">Your comments</Typography>}
+                            />
+                            {open ? <ExpandLess /> : <ExpandMore />}
+                          </ListItemButton>
+                          <Collapse in={open} timeout="auto" unmountOnExit>
+                          <Ant_List
+                            itemLayout="horizontal"
+                            dataSource={user_comments}
+                            style={{ overflow: 'auto', maxHeight: '45vh' }} 
+                            renderItem={(item) => (
+                                <Ant_List.Item style={{ background: 'white', padding: '16px' }}>
+                                  <Ant_List.Item.Meta
+                                    title={`Posted on ${formatTime(Math.floor(item.time))}`}
+                                    description={item.content}
+                                  />
+                                  <Button variant="outlined"style={{marginLeft:"10px"}} onClick={() => deletePost(item.id)}>Delete</Button>
+                                </Ant_List.Item>
+                              )}
+                            />
+                          </Collapse>
+                  </List>
+              
                   <Input.TextArea
-                    rows={2}
-                    placeholder="Please leave your comment if you have problems"
+                    placeholder="Comment here ..."
                     value={comment}
                     onChange={handleCommentChange}
-                    style={{ padding: "10px 18px 0 18px", minHeight: "9.8vh", borderRadius: 0, fontSize: "18px" }}
+                    autoSize={{ minRows: 3, maxRows: 7 }}
+                    style={{ display: "flex", marginTop:"18px",fontSize:"16px"}}
                   />
-                  <Button variant="contained"
-                    onClick={() => handleCommentSubmit(props.username)}
+                   <Button variant="contained"
+                      onClick={() => handleCommentSubmit(props.username)}
 
-                    style={{
-                      alignSelf: 'flex-end', marginRight: "20px",
-                      height: "4vh", paddingTop: "0.2vh", paddingBottom: "0.2vh", paddingLeft: "3vh", paddingRight: "3vh", marginTop: "0.25vh"
-                    }} >
-                    Send
-                  </Button>
-
+                      style={{
+                        display: "flex",
+                        alignSelf: 'flex-end', marginTop:"10px",
+                        backgroundColor:"#00AEEC"
+                       
+                      }} >
+                      Send
+                    </Button>
                 </div>
-
-
+         
+                           
               </Content>
-            </Layout>
-          </Content>
-          <Sider width="22%" style={siderStyle}>
-            <Content className="button">
+       
+             
 
-              {/* <h5  className="paragraph">If you have finished learning, please click the button!</h5> */}
-              <Button variant="contained" onClick={UploadDatabase}>Finished</Button>
+            </Sider>
 
-            </Content>
-
-            <Content className="chapter">
-
-              <div style={{ padding: "5px" }}>
-                <List
-                  sx={{ width: '100%', maxHeight: '94vh', bgcolor: '#e8e8e8', overflow: 'auto', '& ul': { padding: 10 }, }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <Typography component="legend" sx={{
-                      backgroundColor: 'rgb(39, 154, 255)',
-                      color: 'white',
-                      textAlign: "left",
-                      fontSize: "20px",
-                      padding: "12px"
-                    }} >Chapter List</Typography>
-                  }
-                >
-                  {chapters.map((chapter) => {
-                    return (
-                      <ListItemButton sx={{ backgroundColor: "white" }} key={chapter.id} onClick={() => { setCurrentTime(chapter.time_begin) }}>
-                        <ListItemIcon>
-                          <BookmarkIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={chapter.name} />
-                      </ListItemButton>
-                    );
-                  })}
-                </List>
-
-              </div>
-
-            </Content>
-
-          </Sider>
+          </Layout>
+          
         </Layout>
-      </Content>
-
-
-    </Layout>
+ 
 
 
 
@@ -257,7 +358,10 @@ function MyPlayer(props) {
 export default MyPlayer;
 const siderStyle = {
   textAlign: 'center',
-  lineHeight: '76vh',
+  alignContent: 'center',
+  lineHeight: '88vh',
   color: '#fff',
-  background: '#d2d2d2',
+  background: 'white',
+  marginLeft: "30px",
+
 };

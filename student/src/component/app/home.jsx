@@ -31,7 +31,6 @@ function Home(props) {
         {
           props.username === '' && (
             <>
-              <p className="paragraph">This is a demo page, so there is no real login system.</p>
               <p className="paragraph">Please enter your user name. Just a few letters are ok :)</p>
               <Input
                 placeholder="Enter your username"

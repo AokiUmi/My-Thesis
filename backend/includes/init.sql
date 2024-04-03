@@ -6,14 +6,16 @@ CREATE TABLE IF NOT EXISTS cumulative_values (
 
 CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY,
-        time TEXT,
+        time INTEGER,
         content TEXT,
-        author TEXT
+        author TEXT,
+        real_time DATETIME
 );
+
 
 CREATE TABLE IF NOT EXISTS rating (
         id INTEGER PRIMARY KEY,
         userid TEXT,
-        knowledgeid INTEGER,
-        value INTEGER
+	knowledgeid INTEGER,
+	value INTEGER
 );
