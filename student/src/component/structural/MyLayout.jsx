@@ -12,7 +12,15 @@ import MyPlayer from '../app/player';
 import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
+function MainPage(props) {
 
+   return (
+    <>
+      <MyPlayer username={props.username} length={6221} />
+      <MyImage username={props.username} />
+    </>
+   );
+}
 function MyLayout(props) {
 
   const previous_user = JSON.parse(sessionStorage.getItem('username'))  ? JSON.parse(sessionStorage.getItem('username')) : '';
@@ -46,7 +54,7 @@ function MyLayout(props) {
           >
             <Menu.Item key="system" style={{pointerEvents: 'none' }}>
             {/* <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} /> */}
-              System Name / Studend-End
+              System Name / Student-End
             </Menu.Item>
             <Menu.Item key="1">
             <Link to="/" onClick={() => { setkeys('1');}}>Home</Link>
@@ -87,8 +95,8 @@ function MyLayout(props) {
         
               <Routes>
                 <Route path="/" element={<Home handleUserSubmit={handleUsernameSubmit} username={username} setkey={setkeys} />} />
-                <Route path="/courses" element={<MyPlayer username={username} length={6221} />} />
-              <Route path="/image" element={<MyImage username={username} />} />
+                <Route path="/courses" element={<MainPage username={username} />} />
+            
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
          

@@ -6,12 +6,12 @@
    
 }
 .top-content{
-    height: 50px;
-    line-height: 50px;
-    background-color: rgb(219, 240, 255);
+    height: 80px;
+    line-height: 80px;
+    background-color: rgb(245,245,245);
     display: flex; 
     align-items: center;
-    justify-content: space-between 
+
 
 
 }

@@ -22,6 +22,7 @@ import { NOWIP, PACHONGADDR } from "../../App";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+
 import {List as Ant_List } from 'antd';
 function formatTime(seconds) {
 
@@ -159,10 +160,11 @@ function MyPlayer(props) {
     console.log(timelist);
   }
   const loadMyComments = () => {
+
     fetch(`http://${NOWIP}/api/getCommentsByAuthor?user=${props.username}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data.comments);
+      console.log(data);
      setUser_comments(data.comments);
 
     });
@@ -300,14 +302,14 @@ function MyPlayer(props) {
                           <Ant_List
                             itemLayout="horizontal"
                             dataSource={user_comments}
-                            style={{ overflow: 'auto', maxHeight: '45vh' }} 
+                            style={{ overflow: 'auto', maxHeight: '37vh' }} 
                             renderItem={(item) => (
                                 <Ant_List.Item style={{ background: 'white', padding: '16px' }}>
                                   <Ant_List.Item.Meta
                                     title={`Posted on ${formatTime(Math.floor(item.time))}`}
                                     description={item.content}
                                   />
-                                  <Button variant="outlined"style={{marginLeft:"10px"}} onClick={() => deletePost(item.id)}>Delete</Button>
+                                  <Button variant="text" style={{color:"#00AEEC"}} onClick={() => deletePost(item.id)}>Delete</Button>
                                 </Ant_List.Item>
                               )}
                             />
@@ -332,6 +334,20 @@ function MyPlayer(props) {
                       }} >
                       Send
                     </Button>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', margin: '10px'  }}>
+                    <Typography variant="body1" >If you have finished learning, please click the button!  </Typography>
+                  
+                      <Button variant="contained" style={{
+                            display: "flex",
+                            alignSelf: 'center',
+                            backgroundColor:"#00AEEC",
+                            marginTop:"10px"
+                          
+                          }}
+                      onClick={UploadDatabase}>Finished</Button>
+                    </div>
+                   
+
                 </div>
          
                            

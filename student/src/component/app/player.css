@@ -3,7 +3,7 @@
     height: 21vh;
     line-height: 21vh;
     border-radius: 0px;
-    color: #191919;
+  
 }
 
 .player {
@@ -13,7 +13,7 @@
     height: 89vh;
     justify-content: center;
     width: 100%;
-    color: #191919;
+    
    
 }
 .button{
@@ -21,15 +21,20 @@
     line-height: 6vh;
     height: 6vh;
   
-    color: #191919;
+   
    
 }
+.paragraph {
+    margin-top: 10px; /* Adjust the margin as needed */
+    margin-bottom: 10px; /* Adjust the margin as needed */
+    align-self: center;
+  }
 .chapter{
     text-align: left;
     line-height: 89vh;
     height: 89vh;
     background-color: rgb(245, 245, 245);
-    color: #191919;
+    
     align-items: center;
     justify-content: center;
    
@@ -42,20 +47,20 @@
     height: 690px;
     justify-content: center;
     text-align: center;
-    color: #191919;
+    
 }
 .paragraph {
    margin-top: 0px;
    margin-bottom: 0px;
     max-height: 3vh;
     line-height: 3vh;
-    color: #191919;
+   
   }
 .headline {
     line-height: 5vh;
     height: 5vh;
     font-size: 24px;
-    color: #191919;
+ 
     width: 100%;
     background-color: rgb(245, 245, 245);
     padding: 0;

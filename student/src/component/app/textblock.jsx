@@ -101,89 +101,96 @@ function TextBlock(props) {
             <p > Click some nodes in the graph to see more</p>
         </div>)
       }
-        <div style={{height: "580px", display: "flex", flexDirection: "column",width:"303.58px"}}>
+      {
+        props.clickedId !== null &&(
+
+          <div style={{height: "580px", display: "flex", flexDirection: "column",width:"303.58px"}}>
           
-            <Typography variant="h5" sx={{
-                backgroundColor: 'rgb(39, 154, 255)',
-                color: 'white',
-                textAlign: "left",
-                padding: "16px",
-                width:"303.58px"
-                }} >
-                {props.clickedId === null ? '' : knowledge_info.name}
-            </Typography>
-            <Typography variant="body1"  sx={{
-                backgroundColor: 'rgb(197, 231, 255)',
-                color: 'black',
-                textAlign: "left",
-                padding:"10px"
-            }} >
-               <Typography component="legend">Evaluate your own level of knowledge</Typography> 
-                <StyledRating
-                max={4}
-                value={value}
-                name="highlight-selected-only"
-                defaultValue={0}
-                IconContainerComponent={IconContainer}
-                getLabelText={(value) => customIcons[value].label}
-                highlightSelectedOnly
-                onChange={(event, newValue) => {
-                        setValue(newValue); props.updateUserInfoList(newValue); }}
-                style={{marginTop:"5px"}}
-                />
-                {value !== null && (
-                    <Typography component="legend" sx={getPanelStyle(value)}>{labels[value]}</Typography>
-                )
-                }
-            </Typography>
-            <div style={{overflowY:"scroll"}}>
-                <Accordion expanded={expanded_1} onChange={handleAccordionChange1}>
-                  <AccordionSummary
-                  expandIcon={<ArrowDropDownIcon />}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
-                  >
-                  <Typography>Concept</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                  <Typography>
-                    {props.clickedId === null ? '' : knowledge_info.concept}
-                  </Typography>
-                  </AccordionDetails>
-              </Accordion>
-              <Accordion expanded={expanded_2} onChange={handleAccordionChange2}>
-                  <AccordionSummary
-                  expandIcon={<ArrowDropDownIcon />}
-                  aria-controls="panel2-content"
-                  id="panel2-header"
-                  >
-                  <Typography>Relative Concepts</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                  <Typography>
-                     {knowledge_info.relative_concepts}
-                  </Typography>
-                  </AccordionDetails>
-              </Accordion>
-              <Accordion expanded={expanded_3} onChange={handleAccordionChange3}>
-                  <AccordionSummary
-                  expandIcon={<ArrowDropDownIcon />}
-                  aria-controls="panel2-content"
-                  id="panel2-header"
-                  >
-                  <Typography>Quiz Example</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                  <Typography>
-                    {props.clickedId === null ? '' : knowledge_info.quiz}  
-                  </Typography>
-                  </AccordionDetails>
-              </Accordion>
-            </div>
-            
-           
-           
-        </div>
+          <Typography variant="h5" sx={{
+              backgroundColor: 'rgb(39, 154, 255)',
+              color: 'white',
+              textAlign: "left",
+              padding: "16px",
+              width:"303.58px"
+              }} >
+              {props.clickedId === null ? '' : knowledge_info.name}
+          </Typography>
+          <Typography variant="body1"  sx={{
+              backgroundColor: 'rgb(197, 231, 255)',
+              color: 'black',
+              textAlign: "left",
+              padding:"10px"
+          }} >
+             <Typography component="legend">Evaluate your own level of knowledge</Typography> 
+              <StyledRating
+              max={4}
+              value={value}
+              name="highlight-selected-only"
+              defaultValue={0}
+              IconContainerComponent={IconContainer}
+              getLabelText={(value) => customIcons[value].label}
+              highlightSelectedOnly
+              onChange={(event, newValue) => {
+                      setValue(newValue); props.updateUserInfoList(newValue); }}
+              style={{marginTop:"5px"}}
+              />
+              {value !== null && (
+                  <Typography component="legend" sx={getPanelStyle(value)}>{labels[value]}</Typography>
+              )
+              }
+          </Typography>
+          <div style={{overflowY:"scroll"}}>
+              <Accordion expanded={expanded_1} onChange={handleAccordionChange1}>
+                <AccordionSummary
+                expandIcon={<ArrowDropDownIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+                >
+                <Typography>Concept</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                <Typography>
+                  {props.clickedId === null ? '' : knowledge_info.concept}
+                </Typography>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded_2} onChange={handleAccordionChange2}>
+                <AccordionSummary
+                expandIcon={<ArrowDropDownIcon />}
+                aria-controls="panel2-content"
+                id="panel2-header"
+                >
+                <Typography>Relative Concepts</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                <Typography>
+                   {knowledge_info.relative_concepts}
+                </Typography>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={expanded_3} onChange={handleAccordionChange3}>
+                <AccordionSummary
+                expandIcon={<ArrowDropDownIcon />}
+                aria-controls="panel2-content"
+                id="panel2-header"
+                >
+                <Typography>Quiz Example</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                <Typography>
+                  {props.clickedId === null ? '' : knowledge_info.quiz}  
+                </Typography>
+                </AccordionDetails>
+            </Accordion>
+          </div>
+          
+         
+         
+      </div>
+
+        )
+      }
+       
     </>
       
     );

@@ -9,7 +9,15 @@ import VertexData from './test-data/final_20.json';
 import { Layout, Flex, Menu } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
+import { Typography } from 'antd';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HexagonIcon from '@mui/icons-material/Hexagon';
 
+const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -122,20 +130,55 @@ function MyImage(props) {
       loadKnowledgeInfo();
   }, [clickedPolygonId]);
   return (
-    <Layout style={{ width: "1380px", overflow: "hidden" }}>
-      <Content className='top-content'>
-        <p style={{ lineHeight: "18px", marginLeft: "30px", marginRight: "30px", fontSize: "18px" }}> Current Chapter is {chapterName} </p>
-        <Button variant="contained" onClick={uploadRating} style={{ marginLeft: "30px", marginRight: "30px" }}> Upload</Button>
+    <Layout style={{ width: "86%", overflow: "hidden" }}>
+      <Content>
+        <Layout>
+          <Content className='top-content'>
+            <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>Network View</Text>
+            <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',height:"80px",padding:0 ,overflow:"auto"}}>
+                <ListItem sx={{padding:"0 10px 0 10px"}}>
+                    <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
+                      <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#C39EFF"}}/>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Your are learning"
+                      sx={{width:"150px"}}
+                    />
+                </ListItem>
+                <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
+                    <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
+                      <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#E1E1E1"}}/>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Your should already know"
+                        sx={{width:"200px"}}
+                    />
+                </ListItem>
+                <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
+                    <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
+                      <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#FFDFAF"}}/>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Your have marked"
+                        sx={{width:"150px"}}
+                    />
+                </ListItem>
+            </List>
+              
+              {/* <p style={{ lineHeight: "18px", marginLeft: "30px", marginRight: "30px", fontSize: "18px" }}> Current Chapter is {chapterName} </p>
+              <Button variant="contained" onClick={uploadRating} style={{ marginLeft: "30px", marginRight: "30px" }}> Upload</Button> */}
+          </Content>
+            <Content className='polygon'>
+            {/* {polygonData !== null && vertexData !== null &&
+              (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)} */}
+          </Content>
+        </Layout>
       </Content>
-      <Layout style={{ width: "1380px", maxHeight: "600px" }}>
-        <Content className='polygon'>
-          {polygonData !== null && vertexData !== null &&
-            (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)}
-        </Content>
-        <Sider width="22%" style={siderStyle}>
+      
+      <Sider width="30%" style={siderStyle}>
           <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
         </Sider>
-      </Layout>
+ 
 
     </Layout>
 
