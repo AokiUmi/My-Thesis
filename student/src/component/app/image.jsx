@@ -169,20 +169,44 @@ function MyImage(props) {
               {/* <p style={{ lineHeight: "18px", marginLeft: "30px", marginRight: "30px", fontSize: "18px" }}> Current Chapter is {chapterName} </p>
               <Button variant="contained" onClick={uploadRating} style={{ marginLeft: "30px", marginRight: "30px" }}> Upload</Button> */}
           </Content>
-          <Content className='polygon'>
-            <div className='mask'>
-                {polygonData !== null && vertexData !== null &&
-                (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)}
+          <Layout>
+              <Content className='chapterName'>
+              <Text level={2} style={{ alignItems:"center",whiteSpace: 'nowrap', fontSize: "24px", minWidth: "100px", alignSelf: "flex-start",marginTop:"10px" }}>
+                Current Chapter: {chapterName}
+              </Text>
 
-            </div>
+              </Content>    
+              <Content className='polygon'>
             
-          </Content>
+              <div className='mask'>
+                  {polygonData !== null && vertexData !== null &&
+                  (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={960} onPolygonClick={handlePolygonClick} />)}
+
+              </div>
+              
+            </Content>
+            </Layout>
+       
 
         </Layout>
       </Content>
       
       <Sider width="30%" style={siderStyle}>
-          <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
+   
+            <Layout>
+              <Content className='knowledge-view'>
+                  <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px",lineHeight:"8vh"}}>Knowledge View</Text>
+
+              </Content>
+              <Content className='knowledge-detail'>
+                  <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
+            </Content>
+            </Layout>
+          
+             
+      
+        
+
         </Sider>
  
 
@@ -193,13 +217,13 @@ function MyImage(props) {
 
 export default MyImage;
 
+
 const siderStyle = {
   textAlign: 'center',
+  alignContent: 'center',
   lineHeight: '100vh',
-  maxHeight: '100vh',
-  display: "flex", justifyContent: "center", alignItems: "center",
-  color: 'black',
-  background: 'rgb(235, 235, 235)',
-  height: "100vh"
+  color: '#fff',
+  background: 'white',
+  marginLeft: "30px",
 
 };

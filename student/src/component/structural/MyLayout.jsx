@@ -56,7 +56,6 @@ function MyLayout(props) {
             }}
           >
             <Menu.Item key="system" style={{pointerEvents: 'none' }}>
-            {/* <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} /> */}
               System Name / Student-End
             </Menu.Item>
             <Menu.Item key="1">

@@ -49,7 +49,7 @@ function MyPlayer(props) {
   const timelist = JSON.parse(sessionStorage.getItem('timelist')) ? JSON.parse(sessionStorage.getItem('timelist')) : Array(props.length).fill(0);
   // Update timelist and localStorage when player time changes
   const [selectedChapter, setSelectedChapter] = useState(null);
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [user_comments, setUser_comments]=useState([]);
   const handleClick = () => {
     setOpen(!open);
@@ -59,12 +59,16 @@ function MyPlayer(props) {
     if (playerRef.current) {
       const current_time = playerRef.current.getCurrentTime();
       console.log("current time: ", current_time);
-      const roundedTime = Math.floor(current_time);
-
-      timelist[roundedTime]++;
-      sessionStorage.setItem('timelist', JSON.stringify(timelist));
-      sessionStorage.setItem('current_time', JSON.stringify(current_time));
-      findChapter(current_time);
+ 
+      if(JSON.parse(sessionStorage.getItem("current_time")) !== current_time){
+          console.log("memorize timelist");
+         const roundedTime = Math.floor(current_time);
+          timelist[roundedTime]++;
+          sessionStorage.setItem('timelist', JSON.stringify(timelist));
+          sessionStorage.setItem('current_time', JSON.stringify(current_time));
+          findChapter(current_time);
+      }
+     
     }
   };
   function findChapter(timeInSeconds) {

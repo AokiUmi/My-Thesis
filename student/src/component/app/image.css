@@ -1,8 +1,9 @@
 .polygon{
-    height: 80vh;
-    line-height: 80vh;
+    height: 87vh;
+    line-height: 87vh;
     background-color: white;
     width: 100%;
+    overflow: hidden; /* Hide the overflow content */
    
 }
 .top-content{
@@ -12,10 +13,42 @@
     display: flex; 
     align-items: center;
 }
+.chapterName{
+    height: 5vh;
+    line-height: 5vh;
+    background-color: rgb(255,255,255);
+    display: flex;
+    align-items: center; /* Vertically center align the content */
 
+    justify-content: flex-start; /* Align items to the start of the container */
+}
 .mask {
 
     width: 100%; /* Cover the entire .polygon container */
     height: 100%; /* Cover the entire .polygon container */
     background-color: rgba(255, 255, 255); /* Adjust opacity or color as needed */
+    display: flex;
+    align-items: center; /* Vertically center align the content */
+
+    justify-content: center;
   }
+
+
+.knowledge-view {
+    height: 8vh;
+    line-height: 8vh;
+    background-color: rgb(245,245,245);
+    display: flex; 
+    width: 100%; 
+
+}
+.knowledge-detail{
+    border-color: #a8a8a8;
+    border-width: 1px;
+    height: 92vh;
+    line-height: 92vh;
+    background-color: white;
+    display: flex; 
+    width: 100%; 
+
+}

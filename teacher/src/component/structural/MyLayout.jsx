@@ -42,7 +42,7 @@ function MainPage(props) {
   return (
     <>
      
-      <Content style={{width:"1380px"}}>
+      <Content style={{ width: "86%"}}>
        <Layout >
           <Sider width= "65%" style={siderStyle}>
             <Content className="player">
@@ -77,7 +77,7 @@ function MyLayout(props) {
 
             <Header className="header">
             <Menu
-              theme="dark"
+             theme="light"
               mode="horizontal"
               selectedKeys={[selectedKey]}
               style={{
@@ -86,8 +86,8 @@ function MyLayout(props) {
                 position: 'relative'
               }}
             >
-              <Menu.Item key="Icon" style={{pointerEvents: 'none' }}>
-              <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+              <Menu.Item key="system" style={{pointerEvents: 'none' }}>
+                System Name / Teacher-End
               </Menu.Item>
                 <Menu.Item key="1" onClick={() => { setkeys('1'); setPage(1); }}>
                     Home
