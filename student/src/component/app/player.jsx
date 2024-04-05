@@ -43,7 +43,7 @@ function formatTime(seconds) {
 function MyPlayer(props) {
   const playerRef = useRef(null);
   const [comment, setComment] = useState('');
-  let intervalId;
+  let intervalId = null;
   const initial_time= sessionStorage.getItem('current_time') ? sessionStorage.getItem('current_time') : '0';
   const [chapters, setChapters] = useState([]);
   const timelist = JSON.parse(sessionStorage.getItem('timelist')) ? JSON.parse(sessionStorage.getItem('timelist')) : Array(props.length).fill(0);
@@ -72,6 +72,8 @@ function MyPlayer(props) {
     for (let chapter of chapters) {
 
       if (timeInSeconds >= chapter.time_begin && timeInSeconds < chapter.time_end) {
+        if(sessionStorage.getItem("chapter_id") !== chapter.id)
+            props.updateChapter(chapter.id);
         sessionStorage.setItem('chapter_id', JSON.stringify(chapter.id));
         sessionStorage.setItem('chapter_name', JSON.stringify(chapter.name));
         console.log("ok")

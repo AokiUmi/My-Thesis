@@ -13,11 +13,14 @@ import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
 function MainPage(props) {
-
+  const [chapter,setChapter]=useState(1);
+  const handerChapterChange = (newchapter) => {
+    setChapter(newchapter);
+  };
    return (
     <>
-      <MyPlayer username={props.username} length={6221} />
-      <MyImage username={props.username} />
+      <MyPlayer username={props.username} length={6221} updateChapter={handerChapterChange} />
+      <MyImage username={props.username} chapter={chapter}/>
     </>
    );
 }

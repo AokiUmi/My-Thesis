@@ -26,8 +26,10 @@ function MyImage(props) {
   const lastClickedId = sessionStorage.getItem('clickedId') ? JSON.parse(sessionStorage.getItem('clickedId')) : null;
   const [clickedPolygonId, setClickedPolygonId] = useState(lastClickedId);
   // Handler function for click event on polygon
+ 
   const chapterName = JSON.parse(sessionStorage.getItem('chapter_name'));
   const chapterId = JSON.parse(sessionStorage.getItem('chapter_id')) ? JSON.parse(sessionStorage.getItem('chapter_id')) : 1 ;
+
   const [userInfoList, setUserInfoList] = useState([]);
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
 
@@ -123,7 +125,7 @@ function MyImage(props) {
     loadPolygonData();
     loadVertexData();
 
-  }, []);
+  }, [props.chapter]);
   useEffect(() => {
     if (clickedPolygonId !== null)
       loadKnowledgeInfo();
@@ -168,8 +170,8 @@ function MyImage(props) {
               <Button variant="contained" onClick={uploadRating} style={{ marginLeft: "30px", marginRight: "30px" }}> Upload</Button> */}
           </Content>
             <Content className='polygon'>
-            {/* {polygonData !== null && vertexData !== null &&
-              (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)} */}
+            {polygonData !== null && vertexData !== null &&
+              (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)}
           </Content>
         </Layout>
       </Content>
