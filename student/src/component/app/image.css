@@ -1,17 +1,21 @@
 .polygon{
-    height: 630px;
-    line-height: 630px;
+    height: 80vh;
+    line-height: 80vh;
     background-color: white;
-
+    width: 100%;
    
 }
 .top-content{
-    height: 80px;
-    line-height: 80px;
+    height: 8vh;
+    line-height: 8vh;
     background-color: rgb(245,245,245);
     display: flex; 
     align-items: center;
-
-
-
 }
+
+.mask {
+
+    width: 100%; /* Cover the entire .polygon container */
+    height: 100%; /* Cover the entire .polygon container */
+    background-color: rgba(255, 255, 255); /* Adjust opacity or color as needed */
+  }

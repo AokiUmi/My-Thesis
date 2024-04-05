@@ -169,10 +169,15 @@ function MyImage(props) {
               {/* <p style={{ lineHeight: "18px", marginLeft: "30px", marginRight: "30px", fontSize: "18px" }}> Current Chapter is {chapterName} </p>
               <Button variant="contained" onClick={uploadRating} style={{ marginLeft: "30px", marginRight: "30px" }}> Upload</Button> */}
           </Content>
-            <Content className='polygon'>
-            {polygonData !== null && vertexData !== null &&
-              (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)}
+          <Content className='polygon'>
+            <div className='mask'>
+                {polygonData !== null && vertexData !== null &&
+                (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={600} onPolygonClick={handlePolygonClick} />)}
+
+            </div>
+            
           </Content>
+
         </Layout>
       </Content>
       
@@ -190,11 +195,11 @@ export default MyImage;
 
 const siderStyle = {
   textAlign: 'center',
-  lineHeight: '600px',
-  maxHeight: '600px',
+  lineHeight: '100vh',
+  maxHeight: '100vh',
   display: "flex", justifyContent: "center", alignItems: "center",
   color: 'black',
   background: 'rgb(235, 235, 235)',
-  height: "600px"
+  height: "100vh"
 
 };
