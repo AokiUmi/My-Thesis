@@ -7,14 +7,14 @@ import "./textblock.css";
 import { Divider, Typography } from "antd";
 import Typography_Mui from "@mui/material/Typography";
 const { Title, Paragraph, Text, Link } = Typography;
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -87,13 +87,21 @@ function TextBlock(props) {
 
   useEffect(() => {
     setValue(0);
-    setOpen(false)
+    setOpen(false);
   }, [props.clickedId]);
 
   return (
     <>
       {props.clickedId === null && (
-        <div style={{display:"flex",alignContent:"center", width: "100%",  justifyContent: 'center', alignItems: 'center'}}>
+        <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <p> Click some nodes in the graph to see more</p>
         </div>
       )}
@@ -135,54 +143,62 @@ function TextBlock(props) {
                 {knowledge_info.concept}
               </Paragraph>
             </Typography>
-            <List  sx={{ width: '100%', bgcolor: '#F1F2F3',marginTop:"18px" }}>
-                <ListItemButton onClick={handleClick}   sx={{
-                          backgroundColor:  '#F1F2F3',
-                        
-                        }}>
-                      <ListItemIcon>
-                            <PlayArrowIcon />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={<Typography_Mui variant="body1" fontWeight="bold">Quiz</Typography_Mui>}
-                      />
-                      {open ? <ExpandLess /> : <ExpandMore />}
-                    </ListItemButton>
-                    <Collapse in={open} timeout="auto" unmountOnExit style={{background:"white"}}>
-                        <Typography >
-                        <Paragraph style={{ fontSize: "16px", marginTop: "16px" }}>
-                        {knowledge_info.quiz}
-                      </Paragraph>
-                        </Typography>
-                    </Collapse>
-                  </List>
+            <List sx={{ width: "100%", bgcolor: "#F1F2F3", marginTop: "18px" }}>
+              <ListItemButton
+                onClick={handleClick}
+                sx={{
+                  backgroundColor: "#F1F2F3",
+                }}
+              >
+                <ListItemIcon>
+                  <PlayArrowIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography_Mui variant="body1" fontWeight="bold">
+                      Quiz
+                    </Typography_Mui>
+                  }
+                />
+                {open ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse
+                in={open}
+                timeout="auto"
+                unmountOnExit
+                style={{ background: "white" }}
+              >
+                <Typography>
+                  <Paragraph style={{ fontSize: "16px", marginTop: "16px" }}>
+                    {knowledge_info.quiz}
+                  </Paragraph>
+                </Typography>
+              </Collapse>
+            </List>
           </div>
           <div style={ratingStyle}>
-        
-               <Typography_Mui component="legend"  fontWeight="bold">
-                  Have you mastered it?
-                </Typography_Mui>
-                <StyledRating
-                  max={4}
-                  value={value}
-                  name="highlight-selected-only"
-                  defaultValue={0}
-                  IconContainerComponent={IconContainer}
-                  getLabelText={(value) => customIcons[value].label}
-                  highlightSelectedOnly
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                    props.updateUserInfoList(newValue);
-                  }}
-                  style={{ margin:"5px 0px 5px 0px  " }}
-                />
-                {value !== null && (
-                  <Typography_Mui component="legend" sx={getPanelStyle(value)}>
-                    {labels[value]}
-                  </Typography_Mui>
-                )}
-         
-           
+            <Typography_Mui component="legend" fontWeight="bold">
+              Have you mastered it?
+            </Typography_Mui>
+            <StyledRating
+              max={4}
+              value={value}
+              name="highlight-selected-only"
+              defaultValue={0}
+              IconContainerComponent={IconContainer}
+              getLabelText={(value) => customIcons[value].label}
+              highlightSelectedOnly
+              onChange={(event, newValue) => {
+                setValue(newValue);
+                props.updateUserInfoList(newValue);
+              }}
+              style={{ margin: "5px 0px 5px 0px  " }}
+            />
+            {value !== null && (
+              <Typography_Mui component="legend" sx={getPanelStyle(value)}>
+                {labels[value]}
+              </Typography_Mui>
+            )}
           </div>
         </div>
       )}
@@ -200,5 +216,6 @@ const ratingStyle = {
   height: "10vh",
   display: "flex",
   flexDirection: "column",
-  justifyContent: 'center', alignItems: 'center'
+  justifyContent: "center",
+  alignItems: "center",
 };
