@@ -25,7 +25,9 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
   const svgRef = useRef();
   const previousClickedGroup = sessionStorage.getItem("clickedGroup") ? JSON.parse(sessionStorage.getItem("clickedGroup")) : null;
   const [clickedGroup, setClickedGroup] = useState(previousClickedGroup);
-  const initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
+  const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
+  let initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
+ console.log(initial_zoom);
   const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
   const [node, setNode] = useState(initial_clicked);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);
@@ -151,13 +153,13 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
           // Save current zoom transform state
           const now_zoom = d3.zoomTransform(svg.node())
           setZoomTransform(now_zoom);
+          sessionStorage.setItem("zoom", now_zoom.toString());
           Tooltip.style("opacity", 0);
           now_edgelist = edges;
           sessionStorage.setItem("clickedGroup", groupData.group_id);
           setClickedGroup(groupData.group_id);
           sessionStorage.setItem("clickedId", d.id);
-          sessionStorage.setItem("zoom", now_zoom.toString());
-          onPolygonClick(d.id, d.level);
+          onPolygonClick(d.id);
         })
         .on('mouseover', function (event, d) {
           Tooltip
@@ -180,6 +182,27 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
        
       
     });
+    function StoreZoomInStorage(zoom) {
+      console.log("update zoom", zoom);
+      const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
+      let previous_zoomInfo = sessionStorage.getItem("zoomlist") ? JSON.parse(sessionStorage.getItem("zoomlist")) : null;
+       // Check if previous_zoomInfo contains an object with chapterid equal to now_chapter
+      if (previous_zoomInfo) {
+        const index = previous_zoomInfo.findIndex(item => item.chapterid === now_chapter);
+        if (index !== -1) {
+            // If chapterid exists, update the zoom value
+            previous_zoomInfo[index].zoom = zoom;
+        } else {
+            // If chapterid does not exist, add a new object to the zoomlist
+            previous_zoomInfo.push({ chapterid: now_chapter, zoom: zoom });
+        }
+
+      }
+      else  previous_zoomInfo=[{ chapterid: now_chapter, zoom: zoom }];
+      
+      // Store the updated zoomlist back into sessionStorage
+      sessionStorage.setItem("zoomlist", JSON.stringify(previous_zoomInfo));
+    }
     // Function to add a new attribute to the polygon data
     function handleAddAttributeToPolygon(polygonId) {
 
@@ -312,21 +335,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       // Otherwise, apply initial translation and scale
       svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2).scale(1));
     }
-    
-    function handleCenterPolygonClick(event, d) {
-      
-      // console.log(d.id,d.level);// Pass polygon ID to the parent component
-      setNode(d.id);
-      // Save current zoom transform state
-      const now_zoom=d3.zoomTransform(svg.node())
-      setZoomTransform(now_zoom);
-      Tooltip.style("opacity", 0);
-      onPolygonClick(d.id,d.level);
-      sessionStorage.setItem("clickedId", d.id);
-      sessionStorage.setItem("zoom",now_zoom.toString());
-    }
-    
-   
+
 
     function handlePolygonClick(event, d) {
       // console.log(d.id,d.level);// Pass polygon ID to the parent component
@@ -342,8 +351,9 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
 
     function zoomed(event) {
       g.attr('transform', event.transform);
-      const now_zoom=d3.zoomTransform(svg.node());
+      const now_zoom = d3.zoomTransform(svg.node());
       sessionStorage.setItem("zoom",now_zoom.toString());
+    
 
     }
     return () => {
@@ -352,7 +362,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       svg.on('.zoom', null);
   
     };
-  }, [polygonData, vertexData, svgWidth, svgHeight,node, zoomTransform, mark]);
+  }, [polygonData, node, mark]);
 
   return (
 

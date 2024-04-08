@@ -139,9 +139,14 @@ function TextBlock(props) {
               >
                 {knowledge_info.name}
               </Text>
-              <Paragraph style={{ fontSize: "16px", marginTop: "16px" }}>
-                {knowledge_info.concept}
-              </Paragraph>
+              {
+                knowledge_info.concept.map((paragraph,index) =>  (
+                  <Paragraph style={{ fontSize: "16px", marginTop: "16px" }} key={index}>
+                    {paragraph}
+                  </Paragraph>
+                ))
+              }
+         
             </Typography>
             <List sx={{ width: "100%", bgcolor: "#F1F2F3", marginTop: "18px" }}>
               <ListItemButton

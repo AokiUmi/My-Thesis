@@ -80,7 +80,7 @@ function MyPlayer(props) {
             props.updateChapter(chapter.id);
         sessionStorage.setItem('chapter_id', JSON.stringify(chapter.id));
         sessionStorage.setItem('chapter_name', JSON.stringify(chapter.name));
-        console.log("ok")
+        console.log("ok");
       }
     }
 

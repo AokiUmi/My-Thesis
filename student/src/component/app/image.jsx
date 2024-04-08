@@ -4,10 +4,11 @@
 import './image.css';
 import React, { useEffect, useState } from 'react';
 import DrawPolygon from './d3/drawpolygon';
-
-import { Layout, Flex, Menu } from 'antd';
+import { styled } from '@mui/material/styles';
+import { Layout, Flex, Menu,  Tooltip } from 'antd';
 import TextBlock from './textblock';
 import Button from '@mui/material/Button';
+import Typography_Mui from '@mui/material/Typography';
 import { Typography } from 'antd';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,10 +16,22 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HexagonIcon from '@mui/icons-material/Hexagon';
+
 import { flash } from '../../App';
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
 
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
   const [polygonData, setPolygonData] = useState(null);
@@ -32,7 +45,7 @@ function MyImage(props) {
   const [markedId, setMarkedId] = useState(null);
   const [userInfoList, setUserInfoList] = useState(null);
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
-
+  const [if_load, setIf_load] = useState(false);
   const loadVertexData = () => {
 
     fetch(`http://${PACHONGADDR}/api/getVertexInfo?chapter=${chapterId}`)
@@ -40,7 +53,7 @@ function MyImage(props) {
       .then((data) => {
         console.log(data);
         setVertexData(data);
-
+        setIf_load(true);
       });
   }
 
@@ -64,29 +77,9 @@ function MyImage(props) {
       });
   }
 
-  const handlePolygonClick = (polygonId, polygonLevel) => {
+  const handlePolygonClick = (polygonId) => {
     setClickedPolygonId(polygonId);
-    // if (polygonLevel === 1 || polygonLevel === 0) {
-    //   fetch(`http://${PACHONGADDR}/api/userClick`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       username: props.username,
-    //       knowledgeid: polygonId,
-    //       chapterid: chapterId
-    //     }),
-    //   }).then((res) => {
-    //     return res.json();
-    //   })
-    //     .then((data) => {
-    //       console.log(data);
-    //       setPolygonData(data);
 
-    //     });
-
-    // }
 
   }
 
@@ -127,6 +120,7 @@ function MyImage(props) {
 
   }
   useEffect(() => {
+    setIf_load(false);
     if (userInfoList !== null) // upload local cache first
       uploadRating();
     setInitialRatingList();
@@ -146,32 +140,53 @@ function MyImage(props) {
           <Content className='top-content'>
             <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>Network View</Text>
             <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',height:"80px",padding:0 ,overflow:"auto"}}>
-                <ListItem sx={{padding:"0 10px 0 10px"}}>
+          
+              <ListItem sx={{ padding: "0 0 0 10px" }}>
                     <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                       <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#C39EFF"}}/>
                     </ListItemIcon>
+                    <Tooltip title="Knowledge learned from this class" placement="bottom" color="black">
                     <ListItemText
-                      primary="Your are learning"
-                      sx={{width:"150px"}}
-                    />
+                      primary="Advanced knowledge"
+                      sx={{width:"170px"}}
+                      />
+                    </Tooltip>
                 </ListItem>
+             
                 <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
                     <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                       <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#E1E1E1"}}/>
-                    </ListItemIcon>
+                </ListItemIcon>
+                  <Tooltip title="Basic knowledge you should know befor advanced knowledge" placement="bottom" color="black">
                     <ListItemText
-                      primary="Your should already know"
-                        sx={{width:"200px"}}
-                    />
+                      primary="Prerequisite knowledge"
+                        sx={{width:"170px"}}
+                      />
+                      </Tooltip>
                 </ListItem>
                 <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
                     <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                       <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#FFDFAF"}}/>
-                    </ListItemIcon>
+                </ListItemIcon>
+                <Tooltip title="You only marked this knowledge" placement="bottom" color="black">
+
                     <ListItemText
-                      primary="Your have marked"
-                        sx={{width:"150px"}}
-                    />
+                      primary="Marked one knowledge"
+                        sx={{width:"170px"}}
+                />
+                    </Tooltip>
+              </ListItem>
+              <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
+                    <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
+                      <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#FF9F6C"}}/>
+                </ListItemIcon>
+                <Tooltip title="You marked this knowledge and its prerequisite knowledge" placement="bottom" color="black">
+
+                    <ListItemText
+                      primary="Marked more than one knowledge"
+                        sx={{width:"260px"}}
+                  />
+                    </Tooltip>
                 </ListItem>
             </List>
               
@@ -188,7 +203,7 @@ function MyImage(props) {
               <Content className='polygon'>
             
               <div className='mask'>
-                  {polygonData !== null && vertexData !== null &&
+                  {polygonData !== null && vertexData !== null && if_load === true && 
                   (<DrawPolygon initial_rating={ initial_list} mark={markedId} polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={960} onPolygonClick={handlePolygonClick} />)}
 
               </div>

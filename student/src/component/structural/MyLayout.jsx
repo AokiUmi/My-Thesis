@@ -17,6 +17,7 @@ function MainPage(props) {
   const [chapter,setChapter]=useState(1);
   const handerChapterChange = (newchapter) => {
     setChapter(newchapter);
+
   };
    return (
     <div style={{ paddingTop: "6vh", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
