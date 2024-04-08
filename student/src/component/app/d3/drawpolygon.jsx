@@ -21,20 +21,45 @@ export function zoomTransformStringToObject(str) {
   return d3.zoomIdentity.translate(translateX, translateY).scale(scale);
 }
 
-const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
+const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
   const svgRef = useRef();
   const previousClickedGroup = sessionStorage.getItem("clickedGroup") ? JSON.parse(sessionStorage.getItem("clickedGroup")) : null;
   const [clickedGroup, setClickedGroup] = useState(previousClickedGroup);
   const initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
-  const [node, setNode] = useState(null);
+  const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
+  const [node, setNode] = useState(initial_clicked);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);
+  let if_initial = false;
   let now_edgelist= [];
   useEffect(() => {
     const svg = d3.select(svgRef.current);
+
+    // Function to deepen the color
+    const deepenColor = (originalColor) => {
+      // Create a color object from the hexadecimal string
+      const colorObj = d3.color(originalColor);
+      // Darken the color by 0.5 (50%)
+      const deepenedColor = colorObj.darker(0.5).toString();
+      // Return the deepened color as a hexadecimal string
+      return deepenedColor;
+};
     const colorScale = d3.scaleOrdinal()
       .domain([0, 1, 2])
-      .range(['#C39EFF','#C39EFF', '#E1E1E1']);
+      .range(['#C39EFF', '#C39EFF', '#E1E1E1']);
     // Filter polygons based on if_shown attribute
+
+    const colorselect = (d) => {
+      let color = '';
+      if (d.if_self_marked === true && d.if_second_marked === true)
+        color = "#FF9F6C";
+      else if (d.if_self_marked || d.if_second_marked === true)
+        color = "#FFDFAF";
+      else color = colorScale(d.level);
+      if (d.id === node)
+        color = deepenColor(color);
+      return color;
+    };
+
     const g = svg.append('g');
 
     // const polygonsGroup = g.append('g');
@@ -62,39 +87,40 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
     groupSelection.each(function (groupData) {
     
       const group = d3.select(this);
-      const centerPoly = groupData.center_poly;
+      const centerPoly = [groupData.center_poly];
       const level2Polygons = groupData.margin_polygons;
-      const combinedEdges = [...groupData.edges.in_edges, ...groupData.edges.out_edges];
-      if(clickedGroup === groupData.group_id )
-          now_edgelist=combinedEdges;
+      const edges = groupData.edges;
+      if (clickedGroup === groupData.group_id)
+        now_edgelist = edges;
         
       // Draw level 2 polygons
       group.selectAll('.margin-polygon')
         .data(level2Polygons)
         .enter().append('polygon')
         .attr('class', 'margin-polygon')
+        .attr('id', d => `polygon-${d.id}`)
         .attr('points', d => d.region.map(vertexId => {
           const vertex = vertexData.vertices_dict[vertexId];
           return `${vertex[0]},${-vertex[1]}`;
         }).join(' '))
         .style('stroke', 'white') // Change stroke color if needed
-        .style('opacity',(clickedGroup === groupData.group_id ? 1 : 0)) // Set opacity based on comparison
+        .style('opacity', (clickedGroup === groupData.group_id ? 1 : 0)) // Set opacity based on comparison
         .style('stroke-width', '2') // Adjust stroke width if needed
-        .style('fill', d => (d.id === node ? 'rgb(123, 181, 222)' : colorScale(d.level))) // Apply fill after stroke
+        .style('fill', colorselect) // Apply fill after stroke
         .on('click', handlePolygonClick) // Handle click event
-        .on('mouseover',function (event, d) {
-          if(clickedGroup === groupData.group_id ){
+        .on('mouseover', function (event, d) {
+          if (clickedGroup === groupData.group_id) {
             Tooltip
-            .style("opacity", 1)
-            .html( d.name)
-            .style("left", (event.pageX + 20) + "px")
-            .style("top", (event.pageY - 36) + "px");
+              .style("opacity", 1)
+              .html(d.name)
+              .style("left", (event.pageX + 20) + "px")
+              .style("top", (event.pageY - 36) + "px");
 
           }
           
         }) // Handle mouseover event
         .on('mousemove', function (event, d) {
-          if(clickedGroup === groupData.group_id ){
+          if (clickedGroup === groupData.group_id) {
             Tooltip
               .style('opacity', 1)
               .html(d.name)
@@ -105,52 +131,105 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
         })
         .on('mouseleave', function (d) {
           Tooltip.style('opacity', 0);
-        });
+        })
+        .datum(d => d); // Bind data to each polygon
       // Draw center polygon
       group.append('polygon')
+        .data(centerPoly)
         .attr('class', 'center-polygon')
-        .attr('points', centerPoly.region.map(vertexId => {
+        .attr("id", d => `polygon-${d.id}`)
+        .attr('points', d => d.region.map(vertexId => {
           const vertex = vertexData.vertices_dict[vertexId];
           return `${vertex[0]},${-vertex[1]}`;
         }).join(' '))
         .style('stroke', 'white') // Change stroke color if needed
         .style('stroke-width', '2') // Adjust stroke width if needed
-        .style('fill',(centerPoly.id === node ? 'rgb(123, 181, 222)' : colorScale(centerPoly.level))) // Apply fill after stroke
-        .on('click', () => {
-         
-          setNode(centerPoly.id);
+        .style('fill', colorselect) // Apply fill after stroke
+        .on('click', (event, d) => {
+   
+          setNode(d.id);
           // Save current zoom transform state
-          const now_zoom=d3.zoomTransform(svg.node())
+          const now_zoom = d3.zoomTransform(svg.node())
           setZoomTransform(now_zoom);
           Tooltip.style("opacity", 0);
-          now_edgelist=combinedEdges;
+          now_edgelist = edges;
           sessionStorage.setItem("clickedGroup", groupData.group_id);
           setClickedGroup(groupData.group_id);
-          sessionStorage.setItem("clickedId", centerPoly.id);
+          sessionStorage.setItem("clickedId", d.id);
           sessionStorage.setItem("zoom", now_zoom.toString());
-          onPolygonClick(centerPoly.id,centerPoly.level);
+          onPolygonClick(d.id, d.level);
         })
-        .on('mouseover', function (event) {
+        .on('mouseover', function (event, d) {
           Tooltip
             .style("opacity", 1)
-            .html( centerPoly.name)
+            .html(d.name)
             .style("left", (event.pageX + 20) + "px")
             .style("top", (event.pageY - 36) + "px");
         }) // Handle mouseover event
-        .on('mousemove', function (event) {
+        .on('mousemove', function (event, d) {
           Tooltip
             .style('opacity', 1)
-            .html(centerPoly.name)
+            .html(d.name)
             .style('left', (event.pageX + 20) + 'px')
             .style('top', (event.pageY - 36) + 'px');
         })
         .on('mouseleave', function () {
           Tooltip.style('opacity', 0);
-        });
+        })
+        .datum(d => d); // Bind data to each polygon
        
       
     });
+    // Function to add a new attribute to the polygon data
+    function handleAddAttributeToPolygon(polygonId) {
 
+      const polygon = d3.select(`#polygon-${polygonId}`); // Select the polygon by its unique ID
+      if (!polygon.empty()) {
+         const data = polygon.datum();
+        if (data.level === 1 || data.level === 0) {
+            polygon.datum(function(d) {
+              // Add a new attribute to the data
+              d.if_self_marked = true;
+              return d;
+            });
+            polygon.style("fill", colorselect);
+        }
+        else if (data.level === 2) {
+      
+            polygon.datum(function(d) {
+              // Add a new attribute to the data
+              d.if_self_marked = true;
+              return d;
+            });
+            polygon.style("fill", colorselect);
+          const father = d3.select(`#polygon-${data.center_id}`);
+          father.style("fill", "#FF9F6C");
+          father.datum(function(d) {
+            // Add a new attribute to the data
+            d.if_second_marked = true;
+            return d;
+          });
+          father.style("fill", colorselect);
+        }
+
+
+      }
+     
+
+    }
+
+    if (!if_initial) {
+
+      if (initial_rating !== null) {
+        initial_rating.map((rating) => {
+          handleAddAttributeToPolygon(rating.id);
+         });
+      }
+      if_initial = true;
+    }
+    if (mark !== null) {
+      handleAddAttributeToPolygon(mark);
+    }
     const edges=g.selectAll('.edges')
     .data(now_edgelist)
     .enter()
@@ -202,7 +281,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
     .attr('cx', d => vertexData.points_dict[d.center_poly.point][0])
     .attr('cy', d => -vertexData.points_dict[d.center_poly.point][1])
     .attr('r', 2)
-         .style('fill', 'rgb(255, 221, 221)');
+    .style('fill', 'rgb(255, 221, 221)');
   //Append text element for polygon name
     centerPoints.each(function (d) {
       
@@ -273,7 +352,7 @@ const DrawPolygon = ({ polygonData, vertexData, svgWidth, svgHeight , onPolygonC
       svg.on('.zoom', null);
   
     };
-  }, [polygonData, vertexData, svgWidth, svgHeight,node, zoomTransform]);
+  }, [polygonData, vertexData, svgWidth, svgHeight,node, zoomTransform, mark]);
 
   return (
 

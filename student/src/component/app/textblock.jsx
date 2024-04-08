@@ -116,7 +116,7 @@ function TextBlock(props) {
         >
           <div
             className="knowledgecontent"
-            style={{ maxHeight: "82vh", overflow: "auto", flexGrow: 1 }}
+            style={{ maxHeight: "76vh", overflow: "auto", flexGrow: 1 }}
           >
             <Typography style={{ margin: "10px 10px 0px 10px " }}>
               <HexagonIcon
@@ -190,7 +190,10 @@ function TextBlock(props) {
               highlightSelectedOnly
               onChange={(event, newValue) => {
                 setValue(newValue);
-                props.updateUserInfoList(newValue);
+                if (newValue > 0)
+                  props.updateUserInfoList(newValue);
+                
+                  
               }}
               style={{ margin: "5px 0px 5px 0px  " }}
             />
@@ -211,7 +214,7 @@ export default TextBlock;
 const ratingStyle = {
   background: "#E1E1E1",
   position: "absolute",
-  bottom: 0,
+  bottom: "6vh",
   width: "100%",
   height: "10vh",
   display: "flex",

@@ -12,16 +12,17 @@ import MyPlayer from '../app/player';
 import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
+import { flash } from "../../App";
 function MainPage(props) {
   const [chapter,setChapter]=useState(1);
   const handerChapterChange = (newchapter) => {
     setChapter(newchapter);
   };
    return (
-    <>
+    <div style={{ paddingTop: "6vh", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
       <MyPlayer username={props.username} length={6221} updateChapter={handerChapterChange} />
       <MyImage username={props.username} chapter={chapter}/>
-    </>
+    </div>
    );
 }
 function MyLayout(props) {
@@ -59,14 +60,14 @@ function MyLayout(props) {
               System Name / Student-End
             </Menu.Item>
             <Menu.Item key="1">
-            <Link to="/" onClick={() => { setkeys('1');}}>Home</Link>
+              <Link to="/" onClick={() => { setkeys('1'); flash(); }}>Home</Link>
             </Menu.Item>
             { username !== '' && (
               <> 
                 <Menu.Item key="2">
-                <Link to="/courses" onClick={() => { setkeys('2'); }}>Course</Link>
+                <Link to="/courses" onClick={() => { setkeys('2'); flash();}}>Course</Link>
                 </Menu.Item>
-{/* 
+                  {/* 
                   <Menu.Item key="3">
                     <Link to="/image" onClick={() => { setkeys('3'); }}>Image</Link>
                   </Menu.Item> */}

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS cumulative_values (
         value INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE IF NOT EXISTS comment (
         id INTEGER PRIMARY KEY,
         time INTEGER,
         content TEXT,

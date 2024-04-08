@@ -39,9 +39,7 @@
     justify-content: center;
    
 }
-.css-129gly2-MuiButtonBase-root-MuiListItemButton-root.Mui-selected {
-    background-color: var(--background);
-}
+
 .image {
     line-height: 690px;
     height: 690px;
@@ -69,6 +67,6 @@
     background-color: rgb(255, 142, 142);
     color:rgb(0, 149, 255);
     color :rgb(212, 237, 255);
-    color: rgb(255, 128, 0);
+    color: #ff9f6c;
     color:rgb(255, 241, 228)
 }

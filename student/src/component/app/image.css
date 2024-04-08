@@ -1,6 +1,6 @@
 .polygon{
-    height: 87vh;
-    line-height: 87vh;
+    height: 81vh;
+    line-height: 81vh;
     background-color: white;
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
@@ -45,8 +45,8 @@
 .knowledge-detail{
     border-color: #a8a8a8;
     border-width: 1px;
-    height: 92vh;
-    line-height: 92vh;
+    height: 86vh;
+    line-height: 86vh;
     background-color: white;
     display: flex; 
     width: 100%; 

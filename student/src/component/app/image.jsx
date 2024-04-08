@@ -15,7 +15,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HexagonIcon from '@mui/icons-material/Hexagon';
-
+import { flash } from '../../App';
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
 
@@ -26,11 +26,11 @@ function MyImage(props) {
   const lastClickedId = sessionStorage.getItem('clickedId') ? JSON.parse(sessionStorage.getItem('clickedId')) : null;
   const [clickedPolygonId, setClickedPolygonId] = useState(lastClickedId);
   // Handler function for click event on polygon
- 
+  const [initial_list, setInitial_list] = useState(null);
   const chapterName = JSON.parse(sessionStorage.getItem('chapter_name'));
   const chapterId = JSON.parse(sessionStorage.getItem('chapter_id')) ? JSON.parse(sessionStorage.getItem('chapter_id')) : 1 ;
-
-  const [userInfoList, setUserInfoList] = useState([]);
+  const [markedId, setMarkedId] = useState(null);
+  const [userInfoList, setUserInfoList] = useState(null);
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
 
   const loadVertexData = () => {
@@ -92,38 +92,47 @@ function MyImage(props) {
 
 
   const updateUserInfoList = (newValue) => {
+    setMarkedId(clickedPolygonId);
     const newItem = {
       userid: props.username,
       knowledgeid: clickedPolygonId,
       value: 4 - newValue
     };
-    const updateList = [...userInfoList, newItem];
+    let updateList;
+    if (userInfoList === null) updateList = [newItem];
+    else {
+      const updatedList = userInfoList.filter(item => 
+        item.knowledgeid !== clickedPolygonId || item.userid !== props.username
+    );
+       updateList = [...updatedList, newItem];
+    } 
     setUserInfoList(updateList);
+    sessionStorage.setItem("rating_list", JSON.stringify(updateList));
 
   };
   const uploadRating = () => {
-    fetch(`http://${NOWIP}/api/addRatingData`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ratinglist: userInfoList
-
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        alert("Upload Successfully!");
-      } else {
-        alert("error!");
-      }
-    });
-    setUserInfoList([]);
+    flash();
+    setUserInfoList(null);
+ 
   }
+  const setInitialRatingList = () => {
+    console.log("set initial list");
+    fetch(`http://${NOWIP}/api/getRatingsByUser?user=${props.username}`)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      setInitial_list(data.ratings);
+      
+    });
 
+  }
   useEffect(() => {
+    if (userInfoList !== null) // upload local cache first
+      uploadRating();
+    setInitialRatingList();
     loadPolygonData();
     loadVertexData();
+   
 
   }, [props.chapter]);
   useEffect(() => {
@@ -180,7 +189,7 @@ function MyImage(props) {
             
               <div className='mask'>
                   {polygonData !== null && vertexData !== null &&
-                  (<DrawPolygon polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={960} onPolygonClick={handlePolygonClick} />)}
+                  (<DrawPolygon initial_rating={ initial_list} mark={markedId} polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={960} onPolygonClick={handlePolygonClick} />)}
 
               </div>
               
@@ -199,7 +208,7 @@ function MyImage(props) {
 
               </Content>
               <Content className='knowledge-detail'>
-                  <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
+            <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
             </Content>
             </Layout>
           

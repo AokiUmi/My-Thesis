@@ -22,7 +22,7 @@ import { NOWIP, PACHONGADDR } from "../../App";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-
+import { flash } from "../../App";
 import {List as Ant_List } from 'antd';
 function formatTime(seconds) {
 
@@ -142,6 +142,7 @@ function MyPlayer(props) {
   };
 
   const UploadDatabase = () => {
+    flash();
     fetch(`http://${NOWIP}/api/addTimeList`, {
       method: "POST",
       headers: {

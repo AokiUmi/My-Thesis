@@ -25,7 +25,8 @@ const GET_COMMENTS_BY_AUTHOR_SQL = 'SELECT * FROM comment WHERE author = ? ORDER
 const GET_TOTAL_COMMENTS_SQL = "SELECT * FROM comment;";
 const SELECT_RATING_SQL = "SELECT * FROM rating WHERE userid = ? AND knowledgeid = ?;";
 const UPDATE_RATING_SQL = "UPDATE rating SET value = ? WHERE userid = ? AND knowledgeid = ?;";
-const INSERT_RATING_SQL ="INSERT INTO rating (userid, knowledgeid, value) VALUES (?, ?, ?);";
+const INSERT_RATING_SQL = "INSERT INTO rating (userid, knowledgeid, value) VALUES (?, ?, ?);";
+const GET_RATING_BY_USER_SQL = 'SELECT * FROM rating WHERE userid = ?;';
 const GET_TOTAL_RATING_SQL ="SELECT knowledgeid, SUM(value) AS learning_value FROM rating GROUP BY knowledgeid;";
 
 const FS_DB = process.env['MINI_BADGERCHAT_DB_LOC'] ?? "./db.db";
@@ -196,6 +197,26 @@ app.post('/api/addRatingData', (req, res) => {
 
     return res.status(200).json({ message: 'User data processed successfully' });
 });
+// API endpoint to get all ratings from the database for a specific author
+app.get('/api/getRatingsByUser', (req, res) => {
+    // Extract author name from request query parameters
+    const user = req.query.user; // Use req.query.user to get the author name
+
+    // Execute SQL query with the provided author name
+    db.all(GET_RATING_BY_USER_SQL, [user], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const ratings = rows.map(row => ({
+            id: row.knowledgeid,
+            learning_value: row.learning_value,
+        }));
+        return res.status(200).json({ ratings: ratings });
+    });
+});
+
 // API endpoint to get all ratings
 app.get('/api/getAllRatings', (req, res) => {
 

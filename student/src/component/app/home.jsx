@@ -25,7 +25,8 @@ function Home(props) {
 
 
   return (
-    <div style={{ height: "100vh", background: "white" }}>
+    <div style={{ paddingTop: "6vh",height:"100vh",background:"white", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
+
       <div className='input'>
         <h1>Welcome to our experiment!</h1>
         {
