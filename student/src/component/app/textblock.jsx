@@ -78,6 +78,7 @@ function TextBlock(props) {
     setOpen(!open);
   };
   const knowledge_info = props.knowledgeInfo;
+
   const getPanelStyle = (value) => {
     if (value === 1) return { color: "rgba(0, 0, 0, 0.54)" };
     else if (value === 2) return { color: "rgb(195 ,62 ,55)" };
@@ -140,6 +141,7 @@ function TextBlock(props) {
                 {knowledge_info.name}
               </Text>
               {
+              
                 knowledge_info.concept.map((paragraph,index) =>  (
                   <Paragraph style={{ fontSize: "16px", marginTop: "16px" }} key={index}>
                     {paragraph}

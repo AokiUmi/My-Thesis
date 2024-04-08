@@ -44,7 +44,7 @@ function MyImage(props) {
   const chapterId = JSON.parse(sessionStorage.getItem('chapter_id')) ? JSON.parse(sessionStorage.getItem('chapter_id')) : 1 ;
   const [markedId, setMarkedId] = useState(null);
   const [userInfoList, setUserInfoList] = useState(null);
-  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
+  const [knowledgeInfo, setKnowledgeInfo] = useState(null);
   const [if_load, setIf_load] = useState(false);
   const loadVertexData = () => {
 
@@ -223,7 +223,7 @@ function MyImage(props) {
 
               </Content>
               <Content className='knowledge-detail'>
-            <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
+            { knowledgeInfo !== null && <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />}
             </Content>
             </Layout>
           
