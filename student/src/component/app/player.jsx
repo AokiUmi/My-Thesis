@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import { NOWIP, PACHONGADDR } from "../../App";
+import { VIDEO_URL } from "../../App";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -76,8 +77,8 @@ function MyPlayer(props) {
     for (let chapter of chapters) {
 
       if (timeInSeconds >= chapter.time_begin && timeInSeconds < chapter.time_end) {
-        if(sessionStorage.getItem("chapter_id") !== chapter.id)
-            props.updateChapter(chapter.id);
+        if(JSON.parse(sessionStorage.getItem("chapter_id") !== chapter.id))
+            console.log("change chapter to: ",chapter.id),props.updateChapter(chapter.id);
         sessionStorage.setItem('chapter_id', JSON.stringify(chapter.id));
         sessionStorage.setItem('chapter_name', JSON.stringify(chapter.name));
         console.log("ok");
@@ -183,7 +184,7 @@ function MyPlayer(props) {
       console.log(data);
       setChapters(data.chapters);
       sessionStorage.setItem("chapter_name",JSON.stringify(data.chapters[0].name));
-      sessionStorage.setItem("chapter_id",JSON.stringify(1));
+      sessionStorage.setItem("chapter_id",JSON.stringify(data.chapters[0].id));
     });
   };
   useEffect(() => {
@@ -237,8 +238,8 @@ function MyPlayer(props) {
         
                   <ReactPlayer width='100%' height='100%' onPlay={startClock} onPause={stopClock}
                     onEnded={stopClock} ref={playerRef} controls={true} onReady={reloadProgress}
-                    url='http://10.20.96.100:5000/api/video' />
-                    {/* url='http://10.19.73.251/552096953-1-16.mp4' /> */}
+                    url={VIDEO_URL} />
+                
                 </Content>
            
               </Layout>

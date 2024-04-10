@@ -27,7 +27,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
 
 
   const initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
-  console.log('initial zoom',initial_zoom);
+  // console.log('initial zoom',initial_zoom);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom); 
   useEffect(() => {
     const svg = d3.select(svgRef.current);

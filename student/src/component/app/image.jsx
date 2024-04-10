@@ -223,7 +223,7 @@ function MyImage(props) {
 
               </Content>
               <Content className='knowledge-detail'>
-            { knowledgeInfo !== null && <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />}
+            <TextBlock updateUserInfoList={updateUserInfoList} knowledgeInfo={knowledgeInfo} clickedId={clickedPolygonId} />
             </Content>
             </Layout>
           

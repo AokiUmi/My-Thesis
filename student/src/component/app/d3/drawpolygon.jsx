@@ -27,7 +27,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
   const [clickedGroup, setClickedGroup] = useState(previousClickedGroup);
   const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
   let initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
- console.log(initial_zoom);
+//  console.log(initial_zoom);
   const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
   const [node, setNode] = useState(initial_clicked);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);

@@ -106,7 +106,7 @@ function TextBlock(props) {
           <p> Click some nodes in the graph to see more</p>
         </div>
       )}
-      {props.clickedId !== null && (
+      {props.clickedId !== null && knowledge_info !== null && (
         <div
           style={{
             display: "flex",

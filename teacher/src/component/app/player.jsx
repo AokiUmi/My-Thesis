@@ -5,13 +5,13 @@
 import React, { useState } from 'react';
 import { Input } from 'antd';
 import ReactPlayer from 'react-player';
-
+import { VIDEO_URL } from '../../App';
 function MyPlayer(props) {
 
 
     return (
         <ReactPlayer width='100%' height='100%' controls={true} 
-        url='http://10.20.96.100:5000/api/video' />
+        url={VIDEO_URL} />
     );
 
 }

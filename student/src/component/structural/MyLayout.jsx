@@ -14,7 +14,7 @@ import Home from '../app/home';
 import MyImage from "../app/image";
 import { flash } from "../../App";
 function MainPage(props) {
-  const [chapter,setChapter]=useState(1);
+  const [chapter,setChapter]=useState(-1);
   const handerChapterChange = (newchapter) => {
     setChapter(newchapter);
 

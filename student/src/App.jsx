@@ -11,9 +11,9 @@ function App() {
 
 export default App;
 
-export const NOWIP = '10.20.221.148:53706';
-export const PACHONGADDR = '10.20.96.100:5000';
-
+export const NOWIP = '10.19.74.179:53706';
+export const PACHONGADDR = '10.20.161.96:5000';
+export const VIDEO_URL = `http://${PACHONGADDR}/api/video`;
 
 export function flash() { 
   const data = sessionStorage.getItem("rating_list") ? JSON.parse(sessionStorage.getItem("rating_list")) : null;
