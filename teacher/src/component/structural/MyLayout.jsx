@@ -5,12 +5,13 @@
 
 import React, { useState, useEffect, useContext,useRef } from "react";
 import './MyLayout.css'
-
+import { Typography } from 'antd';
+const { Text} = Typography;
 import { Layout, Menu } from 'antd';
 import MyPlayer from "../app/player";
 import MyComments from "../app/comment";
 import MyImage from "../app/image";
-import { MenuOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 const { Header, Footer, Sider, Content } = Layout;
 import { Button } from "antd";
 import VIDEO_DATA from '../app/test-data/video_data.json';
@@ -40,26 +41,50 @@ function MainPage(props) {
 },[]);
 
   return (
-    <>
+    <div style={{ paddingTop: "6vh", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
+
      
       <Content style={{ width: "86%"}}>
        <Layout >
-          <Sider width= "65%" style={siderStyle}>
-            <Content className="player">
-              <MyPlayer />
-            </Content>
-            <Content className="videoimage">
+      
+          <Layout>
+            <Header className="headline">
+                Course Name 
+            </Header>
+              <Content className="player">
+                <MyPlayer />
+              </Content>
+              <Content className="videoimage">
               <LineChart width={900} height={250} onTimeIntervalSelection={handleTimeIntervalSelection} data={video_data}  />
             </Content>
+              <Content className='polygon'>
+                <div className='mask'>
+                  
+                    <MyImage />
+
+                </div>
+              </Content>
+
+          </Layout>
+          
+            
+          <Sider style={siderStyle} width="30%">
+            <Layout>
+              <Header className="headline">
+              Student Comments
+              </Header>
+              <Content className="comment">
+                <MyComments />
+              </Content>
+            </Layout>
+             
           </Sider>
-          <Content className="comment">
-            <MyComments selectedInterval={selectedTimeInterval}  />
-          </Content>
+         
       
         </Layout> 
       </Content>
 
-    </>
+    </div>
 
     
   );
@@ -72,8 +97,9 @@ function MyLayout(props) {
   };
   const [page, setPage] = useState(1);
   return (
-  
-      <Layout style={{display:"flex",justifyContent:"center",alignItems:"center"}} >
+
+
+    <Layout style={{display:"flex",justifyContent:"center",alignItems:"center", width:"100%"}} >
 
             <Header className="header">
             <Menu
@@ -95,7 +121,14 @@ function MyLayout(props) {
                 <Menu.Item key="2" onClick={() => { setkeys('2'); setPage(2); }}>
                    Image
                 </Menu.Item>
-             
+                <Menu.Item key="username" style={{
+                    position: 'absolute', right: -20,
+                    color: 'black', pointerEvents: 'none',
+                    opacity: 1
+              }}>
+          
+                <UserOutlined style={{ fontSize: '25px', margin: "10px"}}  />
+              </Menu.Item>
         
             </Menu>
       </Header>
@@ -114,9 +147,10 @@ function MyLayout(props) {
 
 export default MyLayout;
 const siderStyle = {
-  textAlign: 'center',
-  lineHeight: '95vh',
-  color: 'black',
-  background: '#d2d2d2',
-};
 
+  lineHeight: '88vh',
+  color: '#fff',
+  background: 'white',
+  marginLeft: "30px",
+
+};

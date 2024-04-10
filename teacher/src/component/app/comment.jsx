@@ -77,24 +77,7 @@ function MyComments(props) {
         paddingBottom: "16px",
         width:"483px"
           }} >Comments</Typography>
-      <div style={{overflowY:"auto",height:"88vh",width:"483px"}}>
-        {comments.map((comment) => {
-                return (
-                  <Card  title={"Posted by " + comment.author} key={comment.id}
-                        style={getPanelStyle(comment)}className='card' >
-                        <div >
-                           <Space>
-                                <Badge count={formatTime(comment.time)} />
-                                <Badge color="rgb(255, 122, 171)" count={comment.author} /> 
-                            </Space>
-                        
-                         <p>{comment.content}</p> 
-                        </div>
-                        
-                    </Card>
-                );  })}
-            </div>
-            
+     
                               
             
           

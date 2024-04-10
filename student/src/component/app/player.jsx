@@ -245,12 +245,6 @@ function MyPlayer(props) {
               </Layout>
             </Content>
             <Sider width="30%" style={siderStyle}>
-              {/* <Content className="button">
-
-                <h5  className="paragraph">If you have finished learning, please click the button!</h5>
-                <Button variant="contained" onClick={UploadDatabase}>Finished</Button>
-
-              </Content> */}
 
               <Content className="chapter">
 

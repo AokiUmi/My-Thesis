@@ -1,38 +1,61 @@
 .header {
-    width: 100%;
+   
     margin: 0px;
     height: 6vh;
     line-height: 6vh;
+    width: 100%;
     color:aliceblue;
     background-color: white;
+    position: fixed;
+    top: 0;
+    z-index: 99999;
+    
 }
 
+.polygon{
+    height: 81vh;
+    line-height: 81vh;
+    background-color: white;
+    width: 100%;
+    overflow: hidden; /* Hide the overflow content */
+}
+.mask {
 
+    width: 100%; /* Cover the entire .polygon container */
+    height: 100%; /* Cover the entire .polygon container */
+    background-color: rgba(255, 255, 255); /* Adjust opacity or color as needed */
+    display: flex;
+    align-items: center; /* Vertically center align the content */
+
+    justify-content: center;
+  }
+.headline {
+    line-height: 5vh;
+    height: 5vh;
+    font-size: 24px;
+ 
+    width: 100%;
+    background-color: rgb(245, 245, 245);
+    padding: 0;
+}
 .comment {
-  
-    width: 60%;
-    line-height: 94vh;
-    max-height: 94vh;
-    height: 94vh;
-    color: black;
+    text-align: left;
+    line-height: 100%;
+    height: 100%;
+    background-color: rgb(245, 245, 245);
     
+    align-items: center;
+    justify-content: center;
+ 
+
    
 }
-.image {
-    line-height: 100vh;
-    height: 100vh;
-    justify-content: center;
-    text-align: center;
-    background-color: #ededed;
-    color: black;
-}
-
 
 .player{
     background-color: #7c7c7c;
     text-align: center;
-    line-height: 55vh;
-    height: 55vh;
+    line-height: 89vh;
+    height: 89vh;
     justify-content: center;
     max-width: 1000px;
 

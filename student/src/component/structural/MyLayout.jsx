@@ -68,11 +68,7 @@ function MyLayout(props) {
                 <Menu.Item key="2">
                 <Link to="/courses" onClick={() => { setkeys('2'); flash();}}>Course</Link>
                 </Menu.Item>
-                  {/* 
-                  <Menu.Item key="3">
-                    <Link to="/image" onClick={() => { setkeys('3'); }}>Image</Link>
-                  </Menu.Item> */}
-              
+       
                 
               </>)
              
