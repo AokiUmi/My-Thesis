@@ -19,76 +19,7 @@ import VIDEO_DATA2 from '../app/test-data/video_data2.json';
 import LineChart from '../app/d3/linechart';
 // import VIDEO_DATA3 from '../app/test-data/video_data3.json';
 import { NOWIP } from "../../App";
-function MainPage(props) {
-  const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
-
-  const handleTimeIntervalSelection = (newTimeInterval) => {
-    setSelectedTimeInterval(newTimeInterval);
-  };
-  const [video_data, setVideo_data] = useState(VIDEO_DATA.video_data);
-  const handledatachange = (new_data) => {
-    setVideo_data(new_data);
-  }
-    
-  useEffect(()=>{
-    fetch(`http://${NOWIP}/api/cumulativeValues`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      setVideo_data(data.video_data);
-      
-    });
-},[]);
-
-  return (
-    <div style={{ paddingTop: "6vh", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
-
-     
-      <Content style={{ width: "86%"}}>
-       <Layout >
-      
-          <Layout>
-            <Header className="headline">
-                Course Name 
-            </Header>
-              <Content className="player">
-                <MyPlayer />
-              </Content>
-              <Content className="videoimage">
-              <LineChart width={900} height={250} onTimeIntervalSelection={handleTimeIntervalSelection} data={video_data}  />
-            </Content>
-              <Content className='polygon'>
-                <div className='mask'>
-                  
-                    <MyImage />
-
-                </div>
-              </Content>
-
-          </Layout>
-          
-            
-          <Sider style={siderStyle} width="30%">
-            <Layout>
-              <Header className="headline">
-              Student Comments
-              </Header>
-              <Content className="comment">
-                <MyComments />
-              </Content>
-            </Layout>
-             
-          </Sider>
-         
-      
-        </Layout> 
-      </Content>
-
-    </div>
-
-    
-  );
-}
+import MainPage from "../app/mainpage";
 function MyLayout(props) {
 
   const [selectedKey, setSelectedKey] = useState('');
@@ -118,9 +49,7 @@ function MyLayout(props) {
                 <Menu.Item key="1" onClick={() => { setkeys('1'); setPage(1); }}>
                     Home
                 </Menu.Item>
-                <Menu.Item key="2" onClick={() => { setkeys('2'); setPage(2); }}>
-                   Image
-                </Menu.Item>
+            
                 <Menu.Item key="username" style={{
                     position: 'absolute', right: -20,
                     color: 'black', pointerEvents: 'none',
@@ -134,7 +63,7 @@ function MyLayout(props) {
       </Header>
       
       {page === 1 && <MainPage />}
-       {page === 2 && <MyImage />}
+ 
    
     </Layout>
 

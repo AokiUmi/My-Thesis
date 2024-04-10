@@ -362,7 +362,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       svg.on('.zoom', null);
   
     };
-  }, [polygonData, node, mark]);
+  }, [polygonData, node, mark,svgHeight,svgWidth]);
 
   return (
 

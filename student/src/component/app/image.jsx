@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import './image.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import DrawPolygon from './d3/drawpolygon';
 import { styled } from '@mui/material/styles';
 import { Layout, Flex, Menu,  Tooltip } from 'antd';
@@ -34,6 +34,9 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 const { Header, Footer, Sider, Content } = Layout;
 function MyImage(props) {
+  const polygonRef = useRef(null);
+  const [width,setWidth]=useState(0);
+  const [height,setHeight]=useState(0);
   const [polygonData, setPolygonData] = useState(null);
   const [vertexData, setVertexData] = useState(null);
   const lastClickedId = sessionStorage.getItem('clickedId') ? JSON.parse(sessionStorage.getItem('clickedId')) : null;
@@ -46,6 +49,27 @@ function MyImage(props) {
   const [userInfoList, setUserInfoList] = useState(null);
   const [knowledgeInfo, setKnowledgeInfo] = useState(null);
   const [if_load, setIf_load] = useState(false);
+  useEffect(() => {
+    function updateDimensions() {
+  
+      if (polygonRef.current) {
+        const { width, height } = polygonRef.current.getBoundingClientRect();
+        console.log(width,height);
+        setHeight(height);
+        setWidth(width);
+      }
+    }
+
+    // Call the updateDimensions function initially and add event listener for window resize
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+
+    // Remove event listener when component unmounts
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+    };
+    
+  }, []);
   const loadVertexData = () => {
 
     fetch(`http://${PACHONGADDR}/api/getVertexInfo?chapter=${chapterId}`)
@@ -200,11 +224,11 @@ function MyImage(props) {
               </Text>
 
               </Content>    
-              <Content className='polygon'>
+              <Content className='polygon' ref={polygonRef}>
             
               <div className='mask'>
                   {polygonData !== null && vertexData !== null && if_load === true && 
-                  (<DrawPolygon initial_rating={ initial_list} mark={markedId} polygonData={polygonData} vertexData={vertexData} svgWidth={1076} svgHeight={960} onPolygonClick={handlePolygonClick} />)}
+                  (<DrawPolygon initial_rating={ initial_list} mark={markedId} polygonData={polygonData} vertexData={vertexData} svgWidth={width} svgHeight={height} onPolygonClick={handlePolygonClick} />)}
 
               </div>
               
