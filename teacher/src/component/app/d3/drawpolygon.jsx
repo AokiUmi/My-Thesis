@@ -29,7 +29,7 @@ const deepenColor = (originalColor) => {
   // Return the deepened color as a hexadecimal string
   return deepenedColor;
 }
-const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) => {
+const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
   const svgRef = useRef();
   let initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
   const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
@@ -43,12 +43,14 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
   
   useEffect(() => {
     const svg = d3.select(svgRef.current);
+    const min=Math.min(data.rating_range.center.min,data.rating_range.margin.min);
+    const max= Math.max( data.rating_range.center.max,data.rating_range.margin.max);
     const PurpleColorScale = d3.scaleSequential()
-      .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
+      .domain([data.rating_range.center.min, data.rating_range.center.max]) // Reverse the domain
       .interpolator(d3.interpolate("#EBDFFF", "#9250FF")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
 
     const GreyColorScale = d3.scaleSequential()
-      .domain([0, d3.max(data.polygons, d => d.learning_value)]) // Reverse the domain
+      .domain([data.rating_range.margin.min, data.rating_range.margin.max]) // Reverse the domain
       .interpolator(d3.interpolate("#EEEEEE", "#888888"));  // Interpolate colors from light orange to dark orange
       const g = svg.append('g');
     const colorselect = (d) => {
@@ -103,10 +105,22 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
             return `${vertex[0]},${-vertex[1]}`;
           }).join(' '))
           .style('stroke', 'white') // Change stroke color if needed
-          .style('opacity', (clickedGroup === groupData.group_id ? 1 : 0)) // Set opacity based on comparison
+          .style('opacity', 1) // Set opacity based on comparison
           .style('stroke-width', '2') // Adjust stroke width if needed
           .style('fill', colorselect) // Apply fill after stroke
-          .on('click', handlePolygonClick) // Handle click event
+          .on('click', (event, d) => {
+     
+         
+            // Save current zoom transform state
+            const now_zoom = d3.zoomTransform(svg.node());
+            setZoomTransform(now_zoom);
+            sessionStorage.setItem("zoom", now_zoom.toString());
+            sessionStorage.setItem("clickedGroup", groupData.group_id);
+            setClickedGroup(groupData.group_id);
+            now_edgelist = edges;
+         
+          
+          })
           .on('mouseover', function (event, d) {
               Tooltip
                 .style("opacity", 1)
@@ -241,7 +255,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
   
       // Add center points
       const centerPoints = g.selectAll('.center-point')
-      .data(polygonData.polygons)
+      .data(data.polygons)
       .enter()
       .append('circle')
       .attr('class', 'center-point')
@@ -277,18 +291,6 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
       svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2 - 50).scale(2));
     }
 
-
-    function handlePolygonClick(event, d) {
-      // console.log(d.id,d.level);// Pass polygon ID to the parent component
-      setNode(d.id);
-      // Save current zoom transform state
-      const now_zoom=d3.zoomTransform(svg.node())
-      setZoomTransform(now_zoom);
-      Tooltip.style("opacity", 0);
-      sessionStorage.setItem("clickedId", d.id);
-      sessionStorage.setItem("zoom",now_zoom.toString());
-    }
-
     function zoomed(event) {
       g.attr('transform', event.transform);
       const now_zoom = d3.zoomTransform(svg.node());
@@ -308,7 +310,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight, onPolygonClick, ratingdata }) 
       svg.on('.zoom', null);
       d3.selectAll(".tooltip").remove();
     };
-  }, [data, svgWidth, svgHeight, node, zoomTransform]);
+  }, [data, svgWidth, svgHeight, node, zoomTransform,clickedGroup]);
 
   return (
 

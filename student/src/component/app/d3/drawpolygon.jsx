@@ -109,7 +109,19 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
         .style('opacity', (clickedGroup === groupData.group_id ? 1 : 0)) // Set opacity based on comparison
         .style('stroke-width', '2') // Adjust stroke width if needed
         .style('fill', colorselect) // Apply fill after stroke
-        .on('click', handlePolygonClick) // Handle click event
+        .on('click', function(event, d) {
+          if (clickedGroup === groupData.group_id) {
+          // console.log(d.id,d.level);// Pass polygon ID to the parent component
+            setNode(d.id);
+            // Save current zoom transform state
+            const now_zoom=d3.zoomTransform(svg.node())
+            setZoomTransform(now_zoom);
+            Tooltip.style("opacity", 0);
+            onPolygonClick(d.id,d.level);
+            sessionStorage.setItem("clickedId", d.id);
+            sessionStorage.setItem("zoom",now_zoom.toString());
+          }
+        }) // Handle click event
         .on('mouseover', function (event, d) {
           if (clickedGroup === groupData.group_id) {
             Tooltip
@@ -334,19 +346,6 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
     } else {
       // Otherwise, apply initial translation and scale
       svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2).scale(1));
-    }
-
-
-    function handlePolygonClick(event, d) {
-      // console.log(d.id,d.level);// Pass polygon ID to the parent component
-      setNode(d.id);
-      // Save current zoom transform state
-      const now_zoom=d3.zoomTransform(svg.node())
-      setZoomTransform(now_zoom);
-      Tooltip.style("opacity", 0);
-      onPolygonClick(d.id,d.level);
-      sessionStorage.setItem("clickedId", d.id);
-      sessionStorage.setItem("zoom",now_zoom.toString());
     }
 
     function zoomed(event) {

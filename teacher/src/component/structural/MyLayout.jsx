@@ -5,20 +5,10 @@
 
 import React, { useState, useEffect, useContext,useRef } from "react";
 import './MyLayout.css'
-import { Typography } from 'antd';
-const { Text} = Typography;
 import { Layout, Menu } from 'antd';
-import MyPlayer from "../app/player";
-import MyComments from "../app/comment";
-import MyImage from "../app/image";
 import { UserOutlined } from '@ant-design/icons';
 const { Header, Footer, Sider, Content } = Layout;
-import { Button } from "antd";
-import VIDEO_DATA from '../app/test-data/video_data.json';
-import VIDEO_DATA2 from '../app/test-data/video_data2.json';
-import LineChart from '../app/d3/linechart';
-// import VIDEO_DATA3 from '../app/test-data/video_data3.json';
-import { NOWIP } from "../../App";
+
 import MainPage from "../app/mainpage";
 function MyLayout(props) {
 
@@ -75,11 +65,3 @@ function MyLayout(props) {
 }
 
 export default MyLayout;
-const siderStyle = {
-
-  lineHeight: '88vh',
-  color: '#fff',
-  background: 'white',
-  marginLeft: "30px",
-
-};

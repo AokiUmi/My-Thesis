@@ -181,7 +181,7 @@ function MyImage(props) {
                     <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                       <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#E1E1E1"}}/>
                 </ListItemIcon>
-                  <Tooltip title="Basic knowledge you should know befor advanced knowledge" placement="bottom" color="black">
+                  <Tooltip title="Basic knowledge you should know before advanced knowledge" placement="bottom" color="black">
                     <ListItemText
                       primary="Prerequisite knowledge"
                         sx={{width:"170px"}}

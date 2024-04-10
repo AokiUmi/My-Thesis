@@ -13,6 +13,7 @@ import {
     applyLogging,
     applyErrorCatching
 } from './api-middleware.js'
+import { type } from 'os';
 
 const app = express();
 const port = 53706;
@@ -22,13 +23,15 @@ const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM c
 const INERST_COMMENT_SQL = "INSERT INTO comment (time, content, author, real_time) VALUES (?, ?, ?, ?);";
 const DELETE_COMMENT_SQL = "DELETE FROM comment WHERE id = ?;";
 const GET_COMMENTS_BY_AUTHOR_SQL = 'SELECT * FROM comment WHERE author = ? ORDER BY time;';
-const GET_TOTAL_COMMENTS_SQL = "SELECT * FROM comment;";
+const GET_TOTAL_COMMENTS_SQL_By_TIME = "SELECT * FROM comment ORDER BY time;";
+const GET_TOTAL_COMMENTS_SQL_By_REAL_TIME = "SELECT * FROM comment ORDER BY real_time;";
+const GET_TOTAL_COMMENTS_SQL_By_AUTHOR = "SELECT * FROM comment ORDER BY author;";
 const SELECT_RATING_SQL = "SELECT * FROM rating WHERE userid = ? AND knowledgeid = ?;";
 const UPDATE_RATING_SQL = "UPDATE rating SET value = ? WHERE userid = ? AND knowledgeid = ?;";
 const INSERT_RATING_SQL = "INSERT INTO rating (userid, knowledgeid, value) VALUES (?, ?, ?);";
 const GET_RATING_BY_USER_SQL = 'SELECT * FROM rating WHERE userid = ?;';
 const GET_TOTAL_RATING_SQL ="SELECT knowledgeid, SUM(value) AS learning_value FROM rating GROUP BY knowledgeid;";
-
+const GET_MINMAX_RATING_SQL = 'SELECT knowledgeid, SUM(value) AS sum, MAX(sum) AS maxValue,MIN(sum) AS minValue FROM rating GROUP BY knowledgeid;'; // Define your SQL query
 const FS_DB = process.env['MINI_BADGERCHAT_DB_LOC'] ?? "./db.db";
 const FS_INIT_SQL = "./includes/init.sql";
 
@@ -146,15 +149,39 @@ app.delete('/api/deleteComment', (req, res) => {
 // API endpoint to get all comments from the database
 app.get('/api/getAllComments', (req, res) => {
   
+    const key = req.query.key; // Use req.query.user to get the author name
 
-    db.all(GET_TOTAL_COMMENTS_SQL, [], (err, rows) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
+    if(key == 1){
+        console.log("ok");
+        db.all(GET_TOTAL_COMMENTS_SQL_By_TIME, [], (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
 
-        return res.status(200).json({ comments: rows });
-    });
+            return res.status(200).json({ comments: rows });
+        }); 
+    }
+    else if(key == 2){
+        db.all(GET_TOTAL_COMMENTS_SQL_By_REAL_TIME, [], (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            return res.status(200).json({ comments: rows });
+        }); 
+    }
+    else if(key == 3){
+        db.all(GET_TOTAL_COMMENTS_SQL_By_AUTHOR, [], (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            return res.status(200).json({ comments: rows });
+        }); 
+    }
 });
 // API endpoint to receive user data
 app.post('/api/addRatingData', (req, res) => {
@@ -231,6 +258,21 @@ app.get('/api/getAllRatings', (req, res) => {
             learning_value: row.learning_value,
         }));
         return res.status(200).json({ ratings: ratings });
+    });
+});
+
+// Endpoint to get the maximum rating
+app.get('/api/getMinMaxRating', (req, res) => {
+
+    db.get(GET_MINMAX_RATING_SQL, [], (err, row) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const maxValue = row.maxValue;
+        const minValue = row.minValue;
+        return res.status(200).json({ maxValue: maxValue, minValue: minValue });
     });
 });
 applyErrorCatching(app);

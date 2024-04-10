@@ -6,17 +6,11 @@ import React, { useEffect, useState,useRef } from 'react';
 import MyPlayer from "../app/player";
 import MyComments from "../app/comment";
 import MyImage from "../app/image";
-import { styled } from '@mui/material/styles';
-import { Layout, Flex, Menu,  Tooltip } from 'antd';
-import Button from '@mui/material/Button';
-import Typography_Mui from '@mui/material/Typography';
+
+import { Layout, Flex,} from 'antd';
+
 import { Typography } from 'antd';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import HexagonIcon from '@mui/icons-material/Hexagon';
+
 const { Header, Footer, Sider, Content } = Layout;
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
@@ -81,9 +75,15 @@ function MainPage(props) {
                 <Content className="player">
                   <MyPlayer />
                 </Content>
-                <Content className="videoimage"  ref={videoImageRef}>
-                {video_data !== null && <LineChart width={width} height={height} onTimeIntervalSelection={handleTimeIntervalSelection} data={video_data} /> }
-              </Content>
+                <Layout>
+                    <Header className="headline">
+                        VideoData View
+                    </Header>   
+                    <Content className="videoimage"  ref={videoImageRef}>
+                        {video_data !== null && <LineChart width={width} height={height} onTimeIntervalSelection={handleTimeIntervalSelection} data={video_data} /> }
+                    </Content>
+                </Layout>
+             
                 <MyImage />
   
             </Layout>
@@ -94,9 +94,9 @@ function MainPage(props) {
                 <Header className="headline">
                 Student Comments
                 </Header>
-                <Content className="comment">
-                  <MyComments />
-                </Content>
+    
+                <MyComments />
+             
               </Layout>
                
             </Sider>
@@ -116,7 +116,7 @@ function MainPage(props) {
 
     lineHeight: '88vh',
     color: '#fff',
-    background: 'white',
+    background: 'rgb(245, 245, 245)',
     marginLeft: "30px",
   
   };

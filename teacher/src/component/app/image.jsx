@@ -19,12 +19,13 @@ function MyImage(props) {
     const polygonRef = useRef(null);
     const [width,setWidth]=useState(0);
     const [height,setHeight]=useState(0);
+    const [range,setRange]=useState({});
     useEffect(() => {
         function updateDimensions() {
     
         if (polygonRef.current) {
             const { width, height } = videoImageRef.current.getBoundingClientRect();
-            console.log(width,height);
+  
             setHeight(height);
             setWidth(width);
         }
@@ -51,21 +52,21 @@ function MyImage(props) {
                 setPolygonData(data);
                 
             });
-     
+   
       },[]);
     return (
         <>
           <Content className='top-content'>
               <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>Network View</Text>
-              <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',height:"80px",padding:0 ,overflow:"auto"}}>
+              <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '40px',height:"80px",padding:0 ,overflow:"auto"}}>
             
                 <ListItem sx={{ padding: "0 0 0 10px" }}>
                       <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                         <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#C39EFF"}}/>
                       </ListItemIcon>
-                      <Tooltip title="Knowledge learned from this class" placement="bottom" color="black">
+                      <Tooltip title="Knowledge taught from this class" placement="bottom" color="black">
                       <ListItemText
-                        primary="Advanced knowledge"
+                        primary="You are teaching"
                         sx={{width:"170px"}}
                         />
                       </Tooltip>
@@ -75,44 +76,21 @@ function MyImage(props) {
                       <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
                         <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#E1E1E1"}}/>
                   </ListItemIcon>
-                    <Tooltip title="Basic knowledge you should know befor advanced knowledge" placement="bottom" color="black">
+                    <Tooltip title="Prerequisite knowledge students should know before this class" placement="bottom" color="black">
                       <ListItemText
-                        primary="Prerequisite knowledge"
-                          sx={{width:"170px"}}
+                        primary="Students should know before learning"
+                          sx={{width:"290px"}}
                         />
                         </Tooltip>
                   </ListItem>
-                  <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
-                      <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
-                        <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#FFDFAF"}}/>
-                  </ListItemIcon>
-                  <Tooltip title="You only marked this knowledge" placement="bottom" color="black">
-  
-                      <ListItemText
-                        primary="Marked one knowledge"
-                          sx={{width:"170px"}}
-                  />
-                      </Tooltip>
-                </ListItem>
-                <ListItem sx={{padding:"0 10px 0 10px",marginLeft:"8px"}}>
-                      <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
-                        <HexagonIcon style={{ transform: 'rotate(30deg)' ,color:"#FF9F6C"}}/>
-                  </ListItemIcon>
-                  <Tooltip title="You marked this knowledge and its prerequisite knowledge" placement="bottom" color="black">
-  
-                      <ListItemText
-                        primary="Marked more than one knowledge"
-                          sx={{width:"260px"}}
-                    />
-                      </Tooltip>
-                  </ListItem>
+                  
               </List>
                 
             </Content>
             <Content className='polygon'>
                 <div  className='mask'>
 
-                    {/* {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={1380} svgHeight={680} />)} */}
+                    {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={1380} svgHeight={680} />)}
             
                 </div>
             </Content>
