@@ -13,6 +13,7 @@ import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
 import { flash } from "../../App";
+import { VIDEO_DURATION } from "../../App";
 function MainPage(props) {
   const [chapter,setChapter]=useState(-1);
   const handerChapterChange = (newchapter) => {
@@ -21,7 +22,7 @@ function MainPage(props) {
   };
    return (
     <div style={{ paddingTop: "6vh", display: "flex", flexDirection: "column", alignItems: "center" ,width:"100%"}}>
-      <MyPlayer username={props.username} length={6221} updateChapter={handerChapterChange} />
+      <MyPlayer username={props.username} length={VIDEO_DURATION} updateChapter={handerChapterChange} />
       <MyImage username={props.username} chapter={chapter}/>
     </div>
    );

@@ -24,7 +24,7 @@ function MyImage(props) {
         function updateDimensions() {
     
         if (polygonRef.current) {
-            const { width, height } = videoImageRef.current.getBoundingClientRect();
+            const { width, height } = polygonRef.current.getBoundingClientRect();
   
             setHeight(height);
             setWidth(width);
@@ -58,7 +58,7 @@ function MyImage(props) {
         <>
           <Content className='top-content'>
               <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>Network View</Text>
-              <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '40px',height:"80px",padding:0 ,overflow:"auto"}}>
+              <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',height:"80px",padding:0 ,overflow:"auto"}}>
             
                 <ListItem sx={{ padding: "0 0 0 10px" }}>
                       <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
@@ -87,10 +87,10 @@ function MyImage(props) {
               </List>
                 
             </Content>
-            <Content className='polygon'>
+            <Content className='polygon' ref={polygonRef}>
                 <div  className='mask'>
 
-                    {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={1380} svgHeight={680} />)}
+                    {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={width} svgHeight={height} />)}
             
                 </div>
             </Content>

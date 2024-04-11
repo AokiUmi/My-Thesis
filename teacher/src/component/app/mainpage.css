@@ -12,6 +12,14 @@
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
 }
+.steps {
+    line-height: 8vh;
+    height: 8vh;
+
+    width: 100%;
+    background-color: rgb(245, 245, 245);
+    padding: 0;
+}
 .mask {
 
     width: 100%; /* Cover the entire .polygon container */
@@ -45,12 +53,12 @@
 }
 
 .player{
-    background-color: #7c7c7c;
-    text-align: center;
-    line-height: 89vh;
-    height: 89vh;
-    justify-content: center;
+    background-color: rgb(245, 245, 245);
 
+    line-height: 79vh;
+    height: 79vh;
+
+    background-color: #454545;
     color: black;
    
 }

@@ -152,7 +152,7 @@ app.get('/api/getAllComments', (req, res) => {
     const key = req.query.key; // Use req.query.user to get the author name
 
     if(key == 1){
-        console.log("ok");
+     
         db.all(GET_TOTAL_COMMENTS_SQL_By_TIME, [], (err, rows) => {
             if (err) {
                 console.error(err.message);

@@ -6,26 +6,35 @@ import React, { useEffect, useState,useRef } from 'react';
 import MyPlayer from "../app/player";
 import MyComments from "../app/comment";
 import MyImage from "../app/image";
-
-import { Layout, Flex,} from 'antd';
+import ChapterLine from './chapterline';
+import { Layout, Flex, } from 'antd';
+import { AlignLeftOutlined } from '@ant-design/icons';
 
 import { Typography } from 'antd';
-
+import { Stepper, Step, StepLabel, StepConnector, Box,} from '@mui/material';
+import { makeStyles } from '@mui/styles';
 const { Header, Footer, Sider, Content } = Layout;
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
 import LineChart from '../app/d3/linechart';
+
+
+
+
 function MainPage(props) {
-    const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
-    const videoImageRef = useRef(null);
-    const [width,setWidth]=useState(0);
-    const [height,setHeight]=useState(0);
+
+  const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
+  const videoImageRef = useRef(null);
+  const [width,setWidth]=useState(0);
+  const [height, setHeight] = useState(0);
+
+  const [video_length, setVideo_length] = useState(0);
+  const stepRef = useRef(null);
     useEffect(() => {
         function updateDimensions() {
     
         if (videoImageRef.current) {
             const { width, height } = videoImageRef.current.getBoundingClientRect();
-            console.log(width,height);
             setHeight(height);
             setWidth(width);
         }
@@ -40,9 +49,55 @@ function MainPage(props) {
         window.removeEventListener('resize', updateDimensions);
         };
         
-    }, []);
+    }, []); 
+    useEffect(() => {
+      function updateDimensions() {
+  
+      if (stepRef.current) {
+          const { width, height } = stepRef.current.getBoundingClientRect();
+        setVideo_length(width);
+      }
+      }
 
-   
+      // Call the updateDimensions function initially and add event listener for window resize
+      updateDimensions();
+      window.addEventListener('resize', updateDimensions);
+
+      // Remove event listener when component unmounts
+      return () => {
+      window.removeEventListener('resize', updateDimensions);
+      };
+      
+  }, []);
+  const loadVideoTimeline = () => {
+    fetch(`http://${NOWIP}/api/cumulativeValues`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setVideo_data(data.video_data);
+        
+      });
+  };
+  const generateTitleList = (chapters) => {
+    const steps = chapters.map(chapter => {
+      const chapterDuration = chapter.time_end - chapter.time_begin;
+      const stepWidth = (chapterDuration / VIDEO_DURATION) * video_length;
+  
+      return {
+        title: chapter.name,
+        description: '', // You can set the description here if needed
+        width: stepWidth + '%'
+      };
+    });
+    steps.push({
+      title: 'End',
+      description: '', // You can set the description here if needed
+      width: '5%' // Adjust the width according to your preference
+    });
+    return steps;
+  };
+  
+
     const handleTimeIntervalSelection = (newTimeInterval) => {
       setSelectedTimeInterval(newTimeInterval);
     };
@@ -50,15 +105,10 @@ function MainPage(props) {
     const handledatachange = (new_data) => {
       setVideo_data(new_data);
     }
-      
+   
     useEffect(()=>{
-      fetch(`http://${NOWIP}/api/cumulativeValues`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setVideo_data(data.video_data);
-        
-      });
+      loadVideoTimeline();
+  
   },[]);
   
     return (
@@ -74,17 +124,21 @@ function MainPage(props) {
               </Header>
                 <Content className="player">
                   <MyPlayer />
-                </Content>
+              </Content>
+              <Content className="steps" ref={stepRef}>
+                    <ChapterLine length={video_length} />
+                  </Content>
                 <Layout>
                     <Header className="headline">
                         VideoData View
-                    </Header>   
+                  </Header>
+           
                     <Content className="videoimage"  ref={videoImageRef}>
                         {video_data !== null && <LineChart width={width} height={height} onTimeIntervalSelection={handleTimeIntervalSelection} data={video_data} /> }
                     </Content>
                 </Layout>
              
-                <MyImage />
+             
   
             </Layout>
             
@@ -103,6 +157,9 @@ function MainPage(props) {
            
         
           </Layout> 
+          <Layout>
+             <MyImage />
+          </Layout>
         </Content>
   
       </div>
