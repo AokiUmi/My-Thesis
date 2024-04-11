@@ -17,7 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HexagonIcon from '@mui/icons-material/Hexagon';
 
-import { flash } from '../../App';
+import { flush } from '../../App';
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
 
@@ -54,7 +54,6 @@ function MyImage(props) {
   
       if (polygonRef.current) {
         const { width, height } = polygonRef.current.getBoundingClientRect();
-        console.log(width,height);
         setHeight(height);
         setWidth(width);
       }
@@ -128,7 +127,7 @@ function MyImage(props) {
 
   };
   const uploadRating = () => {
-    flash();
+    flush();
     setUserInfoList(null);
  
   }

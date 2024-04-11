@@ -13,8 +13,8 @@
     overflow: hidden; /* Hide the overflow content */
 }
 .steps {
-    line-height: 8vh;
-    height: 8vh;
+    line-height: 6vh;
+    height: 6vh;
 
     width: 100%;
     background-color: rgb(245, 245, 245);

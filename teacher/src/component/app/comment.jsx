@@ -126,7 +126,7 @@ function MyComments(props) {
           </Space>
         </Typography.Link>
       </Dropdown>
-      <Table columns={columns}  pagination={{ pageSize: 13 }} dataSource={transformData(comments)} style={{marginTop:"10px"}} />
+      <Table columns={columns}  pagination={{ pageSize: 13}} dataSource={transformData(comments)} style={{marginTop:"10px"}} />
                               
             
           

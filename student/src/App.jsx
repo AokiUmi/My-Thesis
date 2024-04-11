@@ -16,7 +16,7 @@ export const PACHONGADDR = '10.20.161.96:5000';
 export const VIDEO_URL = `http://${PACHONGADDR}/api/video`;
 export const VIDEO_DURATION = 6221;
 
-export function flash() { 
+export function flush() { 
   const data = sessionStorage.getItem("rating_list") ? JSON.parse(sessionStorage.getItem("rating_list")) : null;
   if (data) {
     fetch(`http://${NOWIP}/api/addRatingData`, {
@@ -37,8 +37,39 @@ export function flash() {
       }
     });
   }
-
-
+ 
 
 }
 
+export function flush_timeinfo() {
+  const timelist = sessionStorage.getItem("timelist") ? JSON.parse(sessionStorage.getItem("timelist") ): [];
+  const speedlist = sessionStorage.getItem("speedlist") ? JSON.parse(sessionStorage.getItem("speedlist")) : [];
+  const commentlist = sessionStorage.getItem("commentlist") ? JSON.parse(sessionStorage.getItem("commentlist")) : [];
+  const pauselist = sessionStorage.getItem("pauselist") ? JSON.parse(sessionStorage.getItem("pauselist")) : [];
+  if (timelist) {
+    fetch(`http://${NOWIP}/api/addTimeListInfo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        timeList: timelist,
+        speedList: speedlist,
+        commentList: commentlist,
+        pauseList: pauselist,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        alert("Successfully Upload!");
+      } else {
+        alert("Error!");
+      }
+    });
+    sessionStorage.removeItem("timelist");
+    sessionStorage.removeItem("speedlist");
+    sessionStorage.removeItem("commentlist");
+    sessionStorage.removeItem("pauselist");
+  }
+    
+
+}

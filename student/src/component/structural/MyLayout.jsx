@@ -12,7 +12,8 @@ import MyPlayer from '../app/player';
 import { UserOutlined } from '@ant-design/icons';
 import Home from '../app/home';
 import MyImage from "../app/image";
-import { flash } from "../../App";
+import { flush } from "../../App";
+import { flush_timeinfo } from "../../App";
 import { VIDEO_DURATION } from "../../App";
 function MainPage(props) {
   const [chapter,setChapter]=useState(-1);
@@ -62,12 +63,12 @@ function MyLayout(props) {
               System Name / Student-End
             </Menu.Item>
             <Menu.Item key="1">
-              <Link to="/" onClick={() => { setkeys('1'); flash(); }}>Home</Link>
+              <Link to="/" onClick={() => { setkeys('1'); flush(); flush_timeinfo(); }}>Home</Link>
             </Menu.Item>
             { username !== '' && (
               <> 
                 <Menu.Item key="2">
-                <Link to="/courses" onClick={() => { setkeys('2'); flash();}}>Course</Link>
+                <Link to="/courses" onClick={() => { setkeys('2'); flush(); flush_timeinfo();}}>Course</Link>
                 </Menu.Item>
        
                 

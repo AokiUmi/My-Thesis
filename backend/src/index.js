@@ -18,9 +18,14 @@ import { type } from 'os';
 const app = express();
 const port = 53706;
 
-const INSERT_TIMELIST_SQL = "INSERT INTO cumulative_values (time_index, value) VALUES (?, ?);";
-const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM cumulative_values GROUP BY time_index;";
+const INSERT_TIMELIST_SQL = "INSERT INTO  timeinfo (time_index, value) VALUES (?, ?);";
+const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM  timeinfo GROUP BY time_index;";
+const INSERT_SPEEDLIST_SQL = "INSERT INTO  speedinfo (time_index, value) VALUES (?, ?);";
+const INSERT_PAUSELIST_SQL = "INSERT INTO  pasueinfo (time_index, value) VALUES (?, ?);";
+const INSERT_COMMENTLIST_SQL = "INSERT INTO  commentinfo (time_index, value) VALUES (?, ?);";
+
 const INERST_COMMENT_SQL = "INSERT INTO comment (time, content, author, real_time) VALUES (?, ?, ?, ?);";
+
 const DELETE_COMMENT_SQL = "DELETE FROM comment WHERE id = ?;";
 const GET_COMMENTS_BY_AUTHOR_SQL = 'SELECT * FROM comment WHERE author = ? ORDER BY time;';
 const GET_TOTAL_COMMENTS_SQL_By_TIME = "SELECT * FROM comment ORDER BY time;";
@@ -67,25 +72,39 @@ function transformTimeListToJson(timeList) {
     return { video_data: videoData };
 }
 // API endpoint to receive time list data
-app.post('/api/addTimeList', (req, res) => {
+app.post('/api/addTimeListInfo', (req, res) => {
     const timeList = req.body.timeList;
+    const speedList = req.body.speedList;
+    const pauseList = req.body.pauseList;
+    const commentList = req.body.commentList;
 
     // Assuming timeList is an array of numbers
-    if (!Array.isArray(timeList)) {
+    if (!Array.isArray(timeList) ||!Array.isArray(speedList) || !Array.isArray(pauseList) || !Array.isArray(commentList)  ) {
         return res.status(400).json({ error: 'Invalid time list format' });
     }
 
     db.serialize(() => {
-        const stmt = db.prepare(INSERT_TIMELIST_SQL);
+        const stmt_time = db.prepare(INSERT_TIMELIST_SQL);
+        const stmt_speed = db.prepare(INSERT_SPEEDLIST_SQL);
+        const stmt_pause = db.prepare(INSERT_PAUSELIST_SQL);
+        const stmt_comment = db.prepare(INSERT_COMMENTLIST_SQL);
         for (let i = 0; i < timeList.length; i++) {
             // Update or insert values into the database
-            stmt.run(i, timeList[i]);
+            stmt_time.run(i, timeList[i]);
+            stmt_speed.run(i, speedList[i]);
+            stmt_pause.run(i, pauseList[i]);
+            stmt_comment.run(i, commentList[i]);
         }
-        stmt.finalize();
+        stmt_time.finalize();
+        stmt_pause.finalize();
+        stmt_speed.finalize();
+        stmt_comment.finalize();
     });
 
     return res.status(200).json({ message: 'Time list added successfully' });
 });
+
+
 
 // Endpoint to get cumulative values from the database
 app.get('/api/cumulativeValues', (req, res) => {
