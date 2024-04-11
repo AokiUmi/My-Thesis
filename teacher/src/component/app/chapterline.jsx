@@ -58,8 +58,7 @@ function ChapterLine(props) {
       .then((data) => {
         console.log(data);
         setChapters(data.chapters);
-        setStepinfo(generateTitleList(data.chapters));
-        console.log(stepinfo);
+
         sessionStorage.setItem("chapter_index", JSON.stringify(0));
       });
   };

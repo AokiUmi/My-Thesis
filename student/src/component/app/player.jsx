@@ -83,6 +83,7 @@ function MyPlayer(props) {
     const current_time = getCurrentTime();
     const roundedTime = Math.floor(current_time);
     pauselist[roundedTime]++;
+    console.log(pauselist)
     sessionStorage.setItem("pauselist", JSON.stringify(pauselist));
   }
   const addCommentList = (current_time) => {
@@ -189,8 +190,7 @@ function MyPlayer(props) {
     addPauseList();
     clearInterval(intervalId);
     intervalId = null; // Reset intervalId to undefined
-    console.log(timelist);
-
+ 
   };
   const loadMyComments = () => {
     fetch(`http://${NOWIP}/api/getCommentsByAuthor?user=${props.username}`)

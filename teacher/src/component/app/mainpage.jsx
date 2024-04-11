@@ -62,13 +62,32 @@ function MainPage(props) {
     };
   }, []);
   const loadVideoTimeline = () => {
-    fetch(`http://${NOWIP}/api/cumulativeValues`)
+    fetch(`http://${NOWIP}/api/timeinfoTotalValue`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setVideo_data(data.video_data);
+
+      });
+      fetch(`http://${NOWIP}/api/speedinfoTotalValue`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+      });
+      fetch(`http://${NOWIP}/api/pauseinfoTotalValue`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+      });
+      fetch(`http://${NOWIP}/api/commentinfoTotalValue`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
       });
   };
+  
   const generateTitleList = (chapters) => {
     const steps = chapters.map((chapter) => {
       const chapterDuration = chapter.time_end - chapter.time_begin;
@@ -124,14 +143,14 @@ function MainPage(props) {
                 <ChapterLine length={video_length} />
               </Content>
               <Content className="videoimage" ref={videoImageRef}>
-                {video_data !== null && (
+                {/* {video_data !== null && (
                   <LineChart
                     width={width}
                     height={height}
                     onTimeIntervalSelection={handleTimeIntervalSelection}
                     data={video_data}
                   />
-                )}
+                )} */}
               </Content>
             </Layout>
           </Layout>

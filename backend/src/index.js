@@ -19,10 +19,14 @@ const app = express();
 const port = 53706;
 
 const INSERT_TIMELIST_SQL = "INSERT INTO  timeinfo (time_index, value) VALUES (?, ?);";
-const GET_SUM_TIMELIST_SQL ="SELECT time_index, SUM(value) AS total_value FROM  timeinfo GROUP BY time_index;";
 const INSERT_SPEEDLIST_SQL = "INSERT INTO  speedinfo (time_index, value) VALUES (?, ?);";
-const INSERT_PAUSELIST_SQL = "INSERT INTO  pasueinfo (time_index, value) VALUES (?, ?);";
+const INSERT_PAUSELIST_SQL = "INSERT INTO  pauseinfo (time_index, value) VALUES (?, ?);";
 const INSERT_COMMENTLIST_SQL = "INSERT INTO  commentinfo (time_index, value) VALUES (?, ?);";
+
+const GET_SUM_TIMELIST_SQL = "SELECT time_index, SUM(value) AS total FROM  timeinfo GROUP BY time_index;";
+const GET_SUM_SPEEDLIST_SQL = "SELECT time_index, SUM(value) AS total FROM  speedinfo GROUP BY time_index;";
+const GET_SUM_PAUSELIST_SQL = "SELECT time_index, SUM(value) AS total FROM  pauseinfo GROUP BY time_index;";
+const GET_SUM_COMMENTLIST_SQL = "SELECT time_index, SUM(value) AS total FROM  commentinfo GROUP BY time_index;";
 
 const INERST_COMMENT_SQL = "INSERT INTO comment (time, content, author, real_time) VALUES (?, ?, ?, ?);";
 
@@ -77,7 +81,6 @@ app.post('/api/addTimeListInfo', (req, res) => {
     const speedList = req.body.speedList;
     const pauseList = req.body.pauseList;
     const commentList = req.body.commentList;
-
     // Assuming timeList is an array of numbers
     if (!Array.isArray(timeList) ||!Array.isArray(speedList) || !Array.isArray(pauseList) || !Array.isArray(commentList)  ) {
         return res.status(400).json({ error: 'Invalid time list format' });
@@ -90,10 +93,10 @@ app.post('/api/addTimeListInfo', (req, res) => {
         const stmt_comment = db.prepare(INSERT_COMMENTLIST_SQL);
         for (let i = 0; i < timeList.length; i++) {
             // Update or insert values into the database
-            stmt_time.run(i, timeList[i]);
-            stmt_speed.run(i, speedList[i]);
-            stmt_pause.run(i, pauseList[i]);
-            stmt_comment.run(i, commentList[i]);
+            if(timeList[i]) stmt_time.run(i, timeList[i]);
+            if(speedList[i]) stmt_speed.run(i, speedList[i]);
+            if(pauseList[i]) stmt_pause.run(i, pauseList[i]);
+            if(commentList[i]) stmt_comment.run(i, commentList[i]);
         }
         stmt_time.finalize();
         stmt_pause.finalize();
@@ -107,17 +110,66 @@ app.post('/api/addTimeListInfo', (req, res) => {
 
 
 // Endpoint to get cumulative values from the database
-app.get('/api/cumulativeValues', (req, res) => {
-
+app.get('/api/timeinfoTotalValue', (req, res) => {
+    let timelist = [];
+    let if_finished = false;
     db.all(GET_SUM_TIMELIST_SQL, [], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Internal server error' });
         }
+      
+        rows.forEach(row => {
+            timelist[row.time_index] = row.total;
+        });
+        return res.status(200).json({timelist: timelist});
+
         
-        const cumulativeValues = rows.map(row => row.total_value);
-        const jsonData = transformTimeListToJson(cumulativeValues);
-        return res.status(200).json(jsonData);;
+    });
+   
+});
+app.get('/api/pauseinfoTotalValue', (req, res) => {
+    let pauselist = [];
+    db.all(GET_SUM_PAUSELIST_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        rows.forEach(row => {
+            pauselist[row.time_index] = row.total;
+        });
+        return res.status(200).json({ pauselist :  pauselist});
+
+    });
+});
+app.get('/api/commentinfoTotalValue', (req, res) => {
+    let commentlist = [];
+    db.all(GET_SUM_COMMENTLIST_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        rows.forEach(row => {
+           commentlist[row.time_index] = row.total;
+        });
+        return res.status(200).json({  commentlist:commentlist});
+    });
+});
+app.get('/api/speedinfoTotalValue', (req, res) => {
+    let speedlist = [];
+    db.all(GET_SUM_SPEEDLIST_SQL, [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        rows.forEach(row => {
+            speedlist[row.time_index] = row.total;
+        });
+        return res.status(200).json({ speedlist:speedlist});
+
     });
 });
 // API endpoint to receive comment data

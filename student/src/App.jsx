@@ -46,6 +46,7 @@ export function flush_timeinfo() {
   const speedlist = sessionStorage.getItem("speedlist") ? JSON.parse(sessionStorage.getItem("speedlist")) : [];
   const commentlist = sessionStorage.getItem("commentlist") ? JSON.parse(sessionStorage.getItem("commentlist")) : [];
   const pauselist = sessionStorage.getItem("pauselist") ? JSON.parse(sessionStorage.getItem("pauselist")) : [];
+  console.log(pauselist);
   if (timelist) {
     fetch(`http://${NOWIP}/api/addTimeListInfo`, {
       method: "POST",
@@ -65,10 +66,10 @@ export function flush_timeinfo() {
         alert("Error!");
       }
     });
-    sessionStorage.removeItem("timelist");
-    sessionStorage.removeItem("speedlist");
-    sessionStorage.removeItem("commentlist");
-    sessionStorage.removeItem("pauselist");
+    // sessionStorage.removeItem("timelist");
+    // sessionStorage.removeItem("speedlist");
+    // sessionStorage.removeItem("commentlist");
+    // sessionStorage.removeItem("pauselist");
   }
     
 
