@@ -23,9 +23,10 @@ function MainPage(props) {
   const videoImageRef = useRef(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-
+  const [video_data, setVideo_data] = useState(null);
   const [video_length, setVideo_length] = useState(0);
   const stepRef = useRef(null);
+  let timelist, speedlist, pauselist, commentlist;
   useEffect(() => {
     function updateDimensions() {
       if (videoImageRef.current) {
@@ -61,31 +62,64 @@ function MainPage(props) {
       window.removeEventListener("resize", updateDimensions);
     };
   }, []);
+  async function fetchData() {
+    try {
+      const response1 = await fetch(`http://${NOWIP}/api/timeinfoTotalValue`);
+      const data1 = await response1.json();
+      console.log(data1);
+      timelist = data1.timelist;
+  
+      const response2 = await fetch(`http://${NOWIP}/api/speedinfoTotalValue`);
+      const data2 = await response2.json();
+      console.log(data2);
+      speedlist = data2.speedlist;
+  
+      const response3 = await fetch(`http://${NOWIP}/api/pauseinfoTotalValue`);
+      const data3 = await response3.json();
+      console.log(data3);
+      pauselist = data3.pauselist;
+  
+      const response4 = await fetch(`http://${NOWIP}/api/commentinfoTotalValue`);
+      const data4 = await response4.json();
+      console.log(data4);
+      commentlist = data4.commentlist;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
   const loadVideoTimeline = () => {
+   
     fetch(`http://${NOWIP}/api/timeinfoTotalValue`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
+        timelist = data.timelist;
       });
       fetch(`http://${NOWIP}/api/speedinfoTotalValue`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
+        speedlist = data.speedlist;
       });
       fetch(`http://${NOWIP}/api/pauseinfoTotalValue`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
+        pauselist = data.pauselist;
       });
       fetch(`http://${NOWIP}/api/commentinfoTotalValue`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-
+        commentlist = data.commentlist;
       });
+    const avg_speedlist= speedlist.map((value, index) => {
+      if (timelist[index] === 0) {
+        return 0;
+      }
+      return value / timelist[index];
+    });
+
   };
   
   const generateTitleList = (chapters) => {
@@ -110,13 +144,13 @@ function MainPage(props) {
   const handleTimeIntervalSelection = (newTimeInterval) => {
     setSelectedTimeInterval(newTimeInterval);
   };
-  const [video_data, setVideo_data] = useState(null);
+
   const handledatachange = (new_data) => {
     setVideo_data(new_data);
   };
 
   useEffect(() => {
-    loadVideoTimeline();
+    // loadVideoTimeline();
   }, []);
 
   return (

@@ -17,7 +17,7 @@ import { type } from 'os';
 
 const app = express();
 const port = 53706;
-
+const VIDEO_LENGTH = 6221;
 const INSERT_TIMELIST_SQL = "INSERT INTO  timeinfo (time_index, value) VALUES (?, ?);";
 const INSERT_SPEEDLIST_SQL = "INSERT INTO  speedinfo (time_index, value) VALUES (?, ?);";
 const INSERT_PAUSELIST_SQL = "INSERT INTO  pauseinfo (time_index, value) VALUES (?, ?);";
@@ -48,6 +48,23 @@ const db = await new sqlite3.Database(FS_DB, sqlite3.OPEN_READWRITE | sqlite3.OP
 db.serialize(() => {
     const INIT_SQL = fs.readFileSync(FS_INIT_SQL).toString();
     INIT_SQL.replaceAll(/\t\r\n/g, ' ').split(';').filter(str => str).forEach((stmt) => db.run(stmt + ';'));
+
+    // const stmt_time = db.prepare(INSERT_TIMELIST_SQL);
+    // const stmt_speed = db.prepare(INSERT_SPEEDLIST_SQL);
+    // const stmt_pause = db.prepare(INSERT_PAUSELIST_SQL);
+    // const stmt_comment = db.prepare(INSERT_COMMENTLIST_SQL);
+    // for (let i = 0; i < VIDEO_LENGTH; i++) {
+    //     // Update or insert values into the database
+    //     stmt_time.run(i, 0);
+    //     stmt_speed.run(i, 0);
+    //     stmt_pause.run(i,0);
+    //     stmt_comment.run(i, 0);
+    // }
+    // stmt_time.finalize();
+    // stmt_pause.finalize();
+    // stmt_speed.finalize();
+    // stmt_comment.finalize();
+    
 });
 
 applyRateLimiting(app);
