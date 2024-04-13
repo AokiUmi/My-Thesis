@@ -17,7 +17,7 @@ const { Header, Footer, Sider, Content } = Layout;
 const { Text } = Typography;
 import { NOWIP, PACHONGADDR } from "../../App";
 import LineChart from "../app/d3/linechart";
-
+import TEST_DATA from '../app/test-data/test_timelist.json';
 function MainPage(props) {
   const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
   const videoImageRef = useRef(null);
@@ -62,6 +62,31 @@ function MainPage(props) {
       window.removeEventListener("resize", updateDimensions);
     };
   }, []);
+  function calculateAvgSpeed(speedList, timeList) {
+    // Check if the lengths of both lists are the same
+    if (speedList.length !== timeList.length) {
+        throw new Error("Lists must have the same length");
+    }
+
+    let avgSpeedList = [];
+
+    // Iterate through each item in the lists
+    for (let i = 0; i < speedList.length; i++) {
+        let speedObj = speedList[i];
+        let timeObj = timeList[i];
+
+        // Check if timeObj.y is not equal to 0
+        if (timeObj.y !== 0) {
+            // Calculate avgSpeedList.y = speedList.y / timeList.y
+            avgSpeedList.push({ x: speedObj.x, y: speedObj.y / timeObj.y });
+        } else {
+            // If timeObj.y is 0, set avgSpeedList.y to 0
+            avgSpeedList.push({ x: speedObj.x, y: 0 });
+        }
+    }
+
+    return avgSpeedList;
+}
   async function fetchData() {
     try {
       const response1 = await fetch(`http://${NOWIP}/api/timeinfoTotalValue`);
@@ -83,43 +108,26 @@ function MainPage(props) {
       const data4 = await response4.json();
       console.log(data4);
       commentlist = data4.commentlist;
+      const avgSpeedList = calculateAvgSpeed(speedlist, timelist);
+      console.log(avgSpeedList)
+      // const combinedList = [TEST_DATA.timelist, TEST_DATA.speedlist, TEST_DATA.pauselist,TEST_DATA.commentlist];
+      const combinedList = TEST_DATA.timelist;
+      const resultObject = {
+        timelist: timelist,
+        avgspeedlist: avgSpeedList,
+        commentlist: commentlist,
+        pauselist: pauselist
+    };
+      console.log(resultObject); // Log combined list
+      setVideo_data(combinedList);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
   const loadVideoTimeline = () => {
    
-    fetch(`http://${NOWIP}/api/timeinfoTotalValue`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        timelist = data.timelist;
-      });
-      fetch(`http://${NOWIP}/api/speedinfoTotalValue`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        speedlist = data.speedlist;
-      });
-      fetch(`http://${NOWIP}/api/pauseinfoTotalValue`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        pauselist = data.pauselist;
-      });
-      fetch(`http://${NOWIP}/api/commentinfoTotalValue`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        commentlist = data.commentlist;
-      });
-    const avg_speedlist= speedlist.map((value, index) => {
-      if (timelist[index] === 0) {
-        return 0;
-      }
-      return value / timelist[index];
-    });
-
+    fetchData();
+ 
   };
   
   const generateTitleList = (chapters) => {
@@ -150,7 +158,8 @@ function MainPage(props) {
   };
 
   useEffect(() => {
-    // loadVideoTimeline();
+    fetchData();
+ 
   }, []);
 
   return (
@@ -177,14 +186,15 @@ function MainPage(props) {
                 <ChapterLine length={video_length} />
               </Content>
               <Content className="videoimage" ref={videoImageRef}>
-                {/* {video_data !== null && (
+                {video_data !== null && (
                   <LineChart
-                    width={width}
-                    height={height}
-                    onTimeIntervalSelection={handleTimeIntervalSelection}
                     data={video_data}
+                    svgWidth={width}
+                    svgHeight={height}
+                    onTimeIntervalSelection={handleTimeIntervalSelection}
+                    
                   />
-                )} */}
+                )}
               </Content>
             </Layout>
           </Layout>

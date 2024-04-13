@@ -263,18 +263,17 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       .attr('cy', d => -data.points_dict[d.center_poly.point][1])
       .attr('r', 2)
       .style('fill', 'rgb(255, 221, 221)');
-    
-    // Append text elements for polygon names
-      const text = svg.selectAll(".polygon-text")
-      .data(data.polygons)
-      .enter()
-      .append("text")
-      .attr("class", "polygon-text")
-      .attr("x", d => data.points_dict[d.center_poly.point][0] )
-      .attr("y", d => -data.points_dict[d.center_poly.point][1] - 10)
-      .attr("text-anchor", "middle")
-      .attr("dominant-baseline", "middle")
-      .text(function(d) { return d.center_poly.name; });
+    //Append text element for polygon name
+      centerPoints.each(function (d) {
+        
+        d3.select(this.parentNode)
+          .append("text")
+          .attr("x", data.points_dict[d.center_poly.point][0])
+          .attr("y", -data.points_dict[d.center_poly.point][1] - 10)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .text(d.center_poly.name);
+      });
       
     edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
@@ -296,26 +295,11 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       g.attr('transform', event.transform);
       const now_zoom = d3.zoomTransform(svg.node());
       sessionStorage.setItem("zoom",now_zoom.toString());
-      // Access the current zoom level
-      const currentZoomLevel = event.transform.k;
-
-      // Calculate the inverse scale factor for font size
-      const fontSizeScale = 16 / currentZoomLevel;
-
-      // Apply semantic zoom to text elements based on the current zoom level
-      textElements.each(function() {
-        const text = d3.select(this);
-        
-        // Set font size to 16px, scaled inversely with the zoom level
-        text.attr('font-size', fontSizeScale);
-        
-        // Always display text regardless of zoom level
-        text.style('display', 'block');
-      });
+    
 
     }
 
-
+ 
     return () => {
       g.selectAll('*').remove();
       svg.on('.zoom', null);

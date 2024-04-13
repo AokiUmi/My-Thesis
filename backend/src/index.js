@@ -128,7 +128,7 @@ app.post('/api/addTimeListInfo', (req, res) => {
 
 // Endpoint to get cumulative values from the database
 app.get('/api/timeinfoTotalValue', (req, res) => {
-    let timelist = [];
+
     let if_finished = false;
     db.all(GET_SUM_TIMELIST_SQL, [], (err, rows) => {
         if (err) {
@@ -136,9 +136,8 @@ app.get('/api/timeinfoTotalValue', (req, res) => {
             return res.status(500).json({ error: 'Internal server error' });
         }
       
-        rows.forEach(row => {
-            timelist[row.time_index] = row.total;
-        });
+        const timelist = rows.map(row => ({ x: row.time_index, y: row.total}));
+
         return res.status(200).json({timelist: timelist});
 
         
@@ -146,45 +145,42 @@ app.get('/api/timeinfoTotalValue', (req, res) => {
    
 });
 app.get('/api/pauseinfoTotalValue', (req, res) => {
-    let pauselist = [];
+
     db.all(GET_SUM_PAUSELIST_SQL, [], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Internal server error' });
         }
 
-        rows.forEach(row => {
-            pauselist[row.time_index] = row.total;
-        });
+        const pauselist = rows.map(row => ({ x: row.time_index, y: row.total }));
+
         return res.status(200).json({ pauselist :  pauselist});
 
     });
 });
 app.get('/api/commentinfoTotalValue', (req, res) => {
-    let commentlist = [];
+ 
     db.all(GET_SUM_COMMENTLIST_SQL, [], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Internal server error' });
         }
 
-        rows.forEach(row => {
-           commentlist[row.time_index] = row.total;
-        });
-        return res.status(200).json({  commentlist:commentlist});
+        const commentlist = rows.map(row => ({ x: row.time_index, y: row.total }));
+
+        return res.status(200).json({ commentlist : commentlist});
     });
 });
 app.get('/api/speedinfoTotalValue', (req, res) => {
-    let speedlist = [];
+
     db.all(GET_SUM_SPEEDLIST_SQL, [], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: 'Internal server error' });
         }
 
-        rows.forEach(row => {
-            speedlist[row.time_index] = row.total;
-        });
+        const speedlist = rows.map(row => ({ x: row.time_index, y: row.total }));
+
         return res.status(200).json({ speedlist:speedlist});
 
     });

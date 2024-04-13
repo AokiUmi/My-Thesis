@@ -78,7 +78,7 @@ function TextBlock(props) {
     setOpen(!open);
   };
   const knowledge_info = props.knowledgeInfo;
-
+  console.log(knowledge_info)
   const getPanelStyle = (value) => {
     if (value === 1) return { color: "rgba(0, 0, 0, 0.54)" };
     else if (value === 2) return { color: "rgb(195 ,62 ,55)" };
@@ -111,13 +111,13 @@ function TextBlock(props) {
           style={{
             display: "flex",
             flexDirection: "column",
-            height: "92vh",
+            height: "96vh",
             position: "relative",
           }}
         >
           <div
             className="knowledgecontent"
-            style={{ maxHeight: "76vh", overflow: "auto", flexGrow: 1 }}
+            style={{ maxHeight: "74vh", overflow: "auto", flexGrow: 1 }}
           >
             <Typography style={{ margin: "10px 10px 0px 10px " }}>
               <HexagonIcon
@@ -150,7 +150,7 @@ function TextBlock(props) {
               }
          
             </Typography>
-            <List sx={{ width: "100%", bgcolor: "#F1F2F3", marginTop: "18px" }}>
+            <List sx={{ width: "100%", bgcolor: "#F1F2F3", marginTop: "10px" }}>
               <ListItemButton
                 onClick={handleClick}
                 sx={{
@@ -176,7 +176,7 @@ function TextBlock(props) {
                 style={{ background: "white" }}
               >
                 <Typography>
-                  <Paragraph style={{ fontSize: "16px", marginTop: "16px" }}>
+                  <Paragraph style={{ fontSize: "16px", marginTop: "10px" }}>
                     {knowledge_info.quiz}
                   </Paragraph>
                 </Typography>
@@ -202,7 +202,7 @@ function TextBlock(props) {
                 
                   
               }}
-              style={{ margin: "5px 0px 5px 0px  " }}
+              style={{ margin: "5px 0px 0px 0px  " }}
             />
             {value !== null && (
               <Typography_Mui component="legend" sx={getPanelStyle(value)}>
@@ -223,7 +223,7 @@ const ratingStyle = {
   position: "absolute",
   bottom: "10vh",
   width: "100%",
-  height: "10vh",
+  height: "13vh",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",

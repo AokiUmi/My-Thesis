@@ -66,10 +66,10 @@ export function flush_timeinfo() {
         alert("Error!");
       }
     });
-    // sessionStorage.removeItem("timelist");
-    // sessionStorage.removeItem("speedlist");
-    // sessionStorage.removeItem("commentlist");
-    // sessionStorage.removeItem("pauselist");
+    sessionStorage.removeItem("timelist");
+    sessionStorage.removeItem("speedlist");
+    sessionStorage.removeItem("commentlist");
+    sessionStorage.removeItem("pauselist");
   }
     
 
