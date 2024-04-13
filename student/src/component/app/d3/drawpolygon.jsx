@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useRef,useState,useContext } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 export function zoomTransformStringToObject(str) {
@@ -21,18 +21,18 @@ export function zoomTransformStringToObject(str) {
   return d3.zoomIdentity.translate(translateX, translateY).scale(scale);
 }
 
-const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, svgHeight , onPolygonClick }) => {
+const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, svgHeight, onPolygonClick }) => {
   const svgRef = useRef();
   const previousClickedGroup = sessionStorage.getItem("clickedGroup") ? JSON.parse(sessionStorage.getItem("clickedGroup")) : null;
   const [clickedGroup, setClickedGroup] = useState(previousClickedGroup);
   const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
   let initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
-//  console.log(initial_zoom);
+  //  console.log(initial_zoom);
   const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
   const [node, setNode] = useState(initial_clicked);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);
   let if_initial = false;
-  let now_edgelist= [];
+  let now_edgelist = [];
   useEffect(() => {
     const svg = d3.select(svgRef.current);
 
@@ -44,7 +44,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       const deepenedColor = colorObj.darker(0.5).toString();
       // Return the deepened color as a hexadecimal string
       return deepenedColor;
-};
+    };
     const colorScale = d3.scaleOrdinal()
       .domain([0, 1, 2])
       .range(['#C39EFF', '#C39EFF', '#E1E1E1']);
@@ -78,8 +78,8 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       .style("text-algin", "center")
       .style("font-size", "18px")
       .style("position", "absolute");
-  
-   
+
+
     const groupSelection = g.selectAll('.group')
       .data(polygonData.polygons)
       .enter().append('g')
@@ -87,14 +87,14 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       .attr('id', d => `group-${d.group_id}`); // Assign unique IDs based on center polygon ID
 
     groupSelection.each(function (groupData) {
-    
+
       const group = d3.select(this);
       const centerPoly = [groupData.center_poly];
       const level2Polygons = groupData.margin_polygons;
       const edges = groupData.edges;
       if (clickedGroup === groupData.group_id)
         now_edgelist = edges;
-        
+
       // Draw level 2 polygons
       group.selectAll('.margin-polygon')
         .data(level2Polygons)
@@ -109,17 +109,17 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
         .style('opacity', (clickedGroup === groupData.group_id ? 1 : 0)) // Set opacity based on comparison
         .style('stroke-width', '2') // Adjust stroke width if needed
         .style('fill', colorselect) // Apply fill after stroke
-        .on('click', function(event, d) {
+        .on('click', function (event, d) {
           if (clickedGroup === groupData.group_id) {
-          // console.log(d.id,d.level);// Pass polygon ID to the parent component
+            // console.log(d.id,d.level);// Pass polygon ID to the parent component
             setNode(d.id);
             // Save current zoom transform state
-            const now_zoom=d3.zoomTransform(svg.node())
+            const now_zoom = d3.zoomTransform(svg.node())
             setZoomTransform(now_zoom);
             Tooltip.style("opacity", 0);
-            onPolygonClick(d.id,d.level);
+            onPolygonClick(d.id, d.level);
             sessionStorage.setItem("clickedId", d.id);
-            sessionStorage.setItem("zoom",now_zoom.toString());
+            sessionStorage.setItem("zoom", now_zoom.toString());
           }
         }) // Handle click event
         .on('mouseover', function (event, d) {
@@ -131,7 +131,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
               .style("top", (event.pageY - 36) + "px");
 
           }
-          
+
         }) // Handle mouseover event
         .on('mousemove', function (event, d) {
           if (clickedGroup === groupData.group_id) {
@@ -160,7 +160,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
         .style('stroke-width', '2') // Adjust stroke width if needed
         .style('fill', colorselect) // Apply fill after stroke
         .on('click', (event, d) => {
-   
+
           setNode(d.id);
           // Save current zoom transform state
           const now_zoom = d3.zoomTransform(svg.node())
@@ -191,55 +191,35 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
           Tooltip.style('opacity', 0);
         })
         .datum(d => d); // Bind data to each polygon
-       
-      
-    });
-    function StoreZoomInStorage(zoom) {
-      console.log("update zoom", zoom);
-      const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
-      let previous_zoomInfo = sessionStorage.getItem("zoomlist") ? JSON.parse(sessionStorage.getItem("zoomlist")) : null;
-       // Check if previous_zoomInfo contains an object with chapterid equal to now_chapter
-      if (previous_zoomInfo) {
-        const index = previous_zoomInfo.findIndex(item => item.chapterid === now_chapter);
-        if (index !== -1) {
-            // If chapterid exists, update the zoom value
-            previous_zoomInfo[index].zoom = zoom;
-        } else {
-            // If chapterid does not exist, add a new object to the zoomlist
-            previous_zoomInfo.push({ chapterid: now_chapter, zoom: zoom });
-        }
 
-      }
-      else  previous_zoomInfo=[{ chapterid: now_chapter, zoom: zoom }];
-      
-      // Store the updated zoomlist back into sessionStorage
-      sessionStorage.setItem("zoomlist", JSON.stringify(previous_zoomInfo));
-    }
+
+    });
+    
     // Function to add a new attribute to the polygon data
     function handleAddAttributeToPolygon(polygonId) {
 
       const polygon = d3.select(`#polygon-${polygonId}`); // Select the polygon by its unique ID
       if (!polygon.empty()) {
-         const data = polygon.datum();
+        const data = polygon.datum();
         if (data.level === 1 || data.level === 0) {
-            polygon.datum(function(d) {
-              // Add a new attribute to the data
-              d.if_self_marked = true;
-              return d;
-            });
-            polygon.style("fill", colorselect);
+          polygon.datum(function (d) {
+            // Add a new attribute to the data
+            d.if_self_marked = true;
+            return d;
+          });
+          polygon.style("fill", colorselect);
         }
         else if (data.level === 2) {
-      
-            polygon.datum(function(d) {
-              // Add a new attribute to the data
-              d.if_self_marked = true;
-              return d;
-            });
-            polygon.style("fill", colorselect);
+
+          polygon.datum(function (d) {
+            // Add a new attribute to the data
+            d.if_self_marked = true;
+            return d;
+          });
+          polygon.style("fill", colorselect);
           const father = d3.select(`#polygon-${data.center_id}`);
           father.style("fill", "#FF9F6C");
-          father.datum(function(d) {
+          father.datum(function (d) {
             // Add a new attribute to the data
             d.if_second_marked = true;
             return d;
@@ -249,7 +229,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
 
 
       }
-     
+
 
     }
 
@@ -258,26 +238,26 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       if (initial_rating !== null) {
         initial_rating.map((rating) => {
           handleAddAttributeToPolygon(rating.id);
-         });
+        });
       }
       if_initial = true;
     }
     if (mark !== null) {
       handleAddAttributeToPolygon(mark);
     }
-    const edges=g.selectAll('.edges')
-    .data(now_edgelist)
-    .enter()
-    .append('line')
-    .attr('class', 'edge')
-    .attr('x1', d => vertexData.points_dict[d.from][0])
-    .attr('y1', d => -vertexData.points_dict[d.from][1])
-    .attr('x2', d => vertexData.points_dict[d.to][0])
-    .attr('y2', d => -vertexData.points_dict[d.to][1])
-    .style('stroke', 'rgb(153, 116, 115)')
-    .style('stroke-width', '1');// Set opacity based on comparison
-    
-      // Add arrows to the edges
+    const edges = g.selectAll('.edges')
+      .data(now_edgelist)
+      .enter()
+      .append('line')
+      .attr('class', 'edge')
+      .attr('x1', d => vertexData.points_dict[d.from][0])
+      .attr('y1', d => -vertexData.points_dict[d.from][1])
+      .attr('x2', d => vertexData.points_dict[d.to][0])
+      .attr('y2', d => -vertexData.points_dict[d.to][1])
+      .style('stroke', 'rgb(153, 116, 115)')
+      .style('stroke-width', '1');// Set opacity based on comparison
+
+    // Add arrows to the edges
     const arrowSize = 5; // Size of the arrow
     edges.each(function (d) {
       const x1 = vertexData.points_dict[d.from][0];
@@ -309,31 +289,21 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
 
     // Add center points
     const centerPoints = g.selectAll('.center-point')
-    .data(polygonData.polygons)
-    .enter()
-    .append('circle')
-    .attr('class', 'center-point')
-    .attr('cx', d => vertexData.points_dict[d.center_poly.point][0])
-    .attr('cy', d => -vertexData.points_dict[d.center_poly.point][1])
-    .attr('r', 2)
-    .style('fill', 'rgb(255, 221, 221)');
-  //Append text element for polygon name
-    centerPoints.each(function (d) {
-      
-      d3.select(this.parentNode)
-        .append("text")
-        .attr("x", vertexData.points_dict[d.center_poly.point][0])
-        .attr("y", -vertexData.points_dict[d.center_poly.point][1] - 10)
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "middle")
-        .text(d.center_poly.name);
-    });
-    
+      .data(polygonData.polygons)
+      .enter()
+      .append('circle')
+      .attr('class', 'center-point')
+      .attr('cx', d => vertexData.points_dict[d.center_poly.point][0])
+      .attr('cy', d => -vertexData.points_dict[d.center_poly.point][1])
+      .attr('r', 2)
+      .style('fill', 'rgb(255, 221, 221)');
+
     edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
     svg.selectAll('text').style('pointer-events', 'none');
     // Initialize zoom behavior
     const zoom = d3.zoom()
+      .scaleExtent([0.5, 4])
       .on('zoom', zoomed);
 
     svg.call(zoom);
@@ -341,7 +311,7 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
       // console.log(zoomTransform);
       // console.log(typeof zoomTransform);
       // console.log(zoomTransform.toString());
-      
+
       svg.call(zoom.transform, zoomTransform);
     } else {
       // Otherwise, apply initial translation and scale
@@ -351,23 +321,62 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
     function zoomed(event) {
       g.attr('transform', event.transform);
       const now_zoom = d3.zoomTransform(svg.node());
-      sessionStorage.setItem("zoom",now_zoom.toString());
-    
+      sessionStorage.setItem("zoom", now_zoom.toString());
+
+      g.selectAll("text").remove();
+
+      //Append text element for polygon name
+      centerPoints.each(function (d) {
+
+        d3.select(this.parentNode)
+          .append("text")
+          .attr("x", vertexData.points_dict[d.center_poly.point][0])
+          .attr("y", -vertexData.points_dict[d.center_poly.point][1] - 10)
+          .style('font-size', `${getTextSize()}px`)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .text(d.center_poly.name);
+      });
+
 
     }
+
+    function getScaleValue() {
+      const zoom1 = sessionStorage.getItem('zoom');
+      // Regular expression to find scale value
+      const scaleRegex = /scale\(([^)]+)\)/;
+      // Extract scale value using regex
+      const matches = zoom1.match(scaleRegex);
+      // matches[1] should contain the scale value if it is found
+      const scaleValue = matches && matches[1] ? parseFloat(matches[1]) : null;
+      return scaleValue;
+    }
+
+    // TODO: tune this function
+    function getTextSize() {
+      const scalevalue = getScaleValue();
+      if (scalevalue > 4) {
+        if (scalevalue > 5) return 30 / scalevalue;
+        return 24 / scalevalue;
+      }
+      if (scalevalue < 0.5) return 8 / scalevalue;
+      return 16 / scalevalue;
+    }
+
+
     return () => {
       g.selectAll('*').remove();
       d3.selectAll(".tooltip").remove();
       svg.on('.zoom', null);
-  
+
     };
-  }, [polygonData, node, mark,svgHeight,svgWidth]);
+  }, [polygonData, node, mark, svgHeight, svgWidth]);
 
   return (
 
-       <svg ref={svgRef} width={svgWidth} height={svgHeight} />
-       
-  
+    <svg ref={svgRef} width={svgWidth} height={svgHeight} />
+
+
   );
 };
 
