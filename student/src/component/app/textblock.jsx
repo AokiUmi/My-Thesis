@@ -217,11 +217,11 @@ function TextBlock(props) {
 }
 
 export default TextBlock;
-
+//fix height
 const ratingStyle = {
   background: "#E1E1E1",
   position: "absolute",
-  bottom: "6vh",
+  bottom: "10vh",
   width: "100%",
   height: "10vh",
   display: "flex",

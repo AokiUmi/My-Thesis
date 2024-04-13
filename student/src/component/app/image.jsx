@@ -162,7 +162,7 @@ function MyImage(props) {
         <Layout>
           <Content className='top-content'>
             <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>Network View</Text>
-            <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',height:"80px",padding:0 ,overflow:"auto"}}>
+            <List sx={{ display: 'flex', flexDirection: 'row', marginLeft: '100px',marginTop:"10px",height:"80px",padding:0 ,overflow:"auto"}}>
           
               <ListItem sx={{ padding: "0 0 0 10px" }}>
                     <ListItemIcon sx={{ minWidth: 'auto', marginRight: '8px' }}>
@@ -218,7 +218,7 @@ function MyImage(props) {
           </Content>
           <Layout>
               <Content className='chapterName'>
-              <Text level={2} style={{ alignItems:"center",whiteSpace: 'nowrap', fontSize: "24px", minWidth: "100px", alignSelf: "flex-start",marginTop:"10px" }}>
+              <Text level={2} style={{ alignItems:"center",whiteSpace: 'nowrap', fontSize: "20px", minWidth: "100px", alignSelf: "flex-start",marginTop:"6px" }}>
                 Current Chapter: {chapterName}
               </Text>
 

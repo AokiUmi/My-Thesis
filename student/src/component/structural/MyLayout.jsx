@@ -82,11 +82,11 @@ function MyLayout(props) {
               <Menu.Item key="username" style={{
                     position: 'absolute', right: -20,
                     color: 'black', pointerEvents: 'none',
-                    opacity: 1
+                    opacity: 1, 
               }}>
           
                 {"Hello "+username+" !"}
-                <UserOutlined style={{ fontSize: '25px', margin: "10px"}}  />
+                {/* <UserOutlined style={{ fontSize: '25px', margin: "10px"}}  /> */}
               </Menu.Item>
               )
             }

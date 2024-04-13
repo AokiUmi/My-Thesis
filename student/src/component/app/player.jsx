@@ -291,7 +291,7 @@ function MyPlayer(props) {
                     color: "#191919",
                     textAlign: "left",
                     fontSize: "16px",
-                    padding: " 20px 16px 8px 16px",
+                    padding: " 16px 16px 8px 16px",
                   }}
                 >
                   Chapter Selection

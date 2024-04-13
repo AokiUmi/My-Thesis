@@ -1,6 +1,6 @@
 .polygon{
-    height: 81vh;
-    line-height: 81vh;
+    height: 78vh;
+    line-height: 78vh;
     background-color: white;
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
@@ -14,8 +14,9 @@
     align-items: center;
 }
 .chapterName{
-    height: 7vh;
-    line-height: 7vh;
+    margin-top: 18px;
+    height: 6vh;
+    line-height: 6vh;
     background-color: rgb(255,255,255);
     display: flex;
     align-items: center; /* Vertically center align the content */
@@ -43,6 +44,7 @@
 
 }
 .knowledge-detail{
+    margin-top: 18px;
     border-color: #a8a8a8;
     border-width: 1px;
     height: 86vh;

@@ -9,8 +9,8 @@
 .player {
     background-color: #454545;
     text-align: center;
-    line-height: 89vh;
-    height: 89vh;
+    line-height: 88vh;
+    height: 88vh;
     justify-content: center;
     width: 100%;
     
@@ -31,8 +31,8 @@
   }
 .chapter{
     text-align: left;
-    line-height: 89vh;
-    height: 89vh;
+    line-height: 88vh;
+    height: 88vh;
     background-color: rgb(245, 245, 245);
     
     align-items: center;
@@ -55,8 +55,8 @@
    
   }
 .headline {
-    line-height: 5vh;
-    height: 5vh;
+    line-height: 6vh;
+    height: 6vh;
     font-size: 24px;
  
     width: 100%;

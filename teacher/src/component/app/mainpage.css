@@ -6,16 +6,16 @@
     align-items: center;
 }
 .polygon{
-    height: 81vh;
-    line-height: 81vh;
+    height: 86vh;
+    line-height: 86vh;
     background-color: white;
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
 }
 .steps {
-    line-height: 6vh;
-    height: 6vh;
-
+    line-height: 10vh;
+    height: 10vh;
+    max-height: 10vh;
     width: 100%;
     background-color: rgb(245, 245, 245);
     padding: 0;
@@ -31,8 +31,8 @@
     justify-content: center;
   }
 .headline {
-    line-height: 4vh;
-    height: 4vh;
+    line-height: 6vh;
+    height: 6vh;
     font-size: 24px;
  
     width: 100%;
@@ -55,8 +55,8 @@
 .player{
     background-color: rgb(245, 245, 245);
 
-    line-height: 78vh;
-    height: 78vh;
+    line-height: 76vh;
+    height: 76vh;
 
     background-color: #454545;
     color: black;
