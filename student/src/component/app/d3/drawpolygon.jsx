@@ -356,11 +356,10 @@ const DrawPolygon = ({ initial_rating, mark, polygonData, vertexData, svgWidth, 
     function getTextSize() {
       const scalevalue = getScaleValue();
       if (scalevalue > 4) {
-        if (scalevalue > 5) return 30 / scalevalue;
-        return 24 / scalevalue;
+        return 26 / scalevalue;
       }
       if (scalevalue < 0.5) return 8 / scalevalue;
-      return 16 / scalevalue;
+      return 18 / scalevalue;
     }
 
 

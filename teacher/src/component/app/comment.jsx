@@ -4,11 +4,11 @@
 
 import React, { useState,useEffect } from 'react';
 import { Input } from 'antd';
-import './app.css';
+import './comment.css';
 import { Layout} from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 import Comments from './test-data/comments.json';
-import { Card ,Table } from 'antd';
+import { Card ,Table,  ConfigProvider } from 'antd';
 import { Badge } from 'antd';
 import { useRef } from 'react';
 import { NOWIP } from '../../App';
@@ -81,33 +81,55 @@ function transformData(data) {
   return data.map(item => ({
       key: item.id, // Change id to key
       time: formatTime(item.time), // Format time
+      seconds: item.time,
       content: item.content,
       author: item.author,
       real_time: new Date(item.real_time).toLocaleString(), // Transform real_time using Date object
   }));
 }
-function MyComments(props) {
+function MyComments({timeInterval }) {
     const [columns, setColumns]=useState([]);
     const [chosenComment, setChosenComment] = useState(4);
     const [comments, setComments] = useState([]);
     const [selectedKey,setSelectedKey]= useState(1);
     const isChosenComment = (commentId) => chosenComment === commentId;
-    const transformOriginalData = (source) => {
 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const onSelectChange = (selectedKeys) => {
+      setSelectedRowKeys(selectedKeys);
     };
+  
+    const rowSelection = {
+      selectedRowKeys,
+      hideDefaultSelections: true, // Hide the default row selection checkboxes
+    };
+  
     const handleMenuSelect = ({ key }) => {
       setSelectedKey(key);
     };
-   
+    const filterCommentsByTimeInterval = (comments) => {
+      if (!timeInterval) return []; // If timeInterval is null, return an empty array
+      const [startTime, endTime] = timeInterval;
+    
+      return comments.filter((comment) => {
+        return comment.seconds >= startTime && comment.seconds <= endTime;
+      }).map((comment) => comment.key);
+    };
+    
     useEffect(()=> {
       fetch(`http://${NOWIP}/api/getAllComments?key=${selectedKey}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setComments(data.comments);
+        setComments(transformData(data.comments));
         setColumns(Columns[selectedKey-1]);
+ 
       });
     },[selectedKey]);
+   useEffect(()=>{
+      setSelectedRowKeys(filterCommentsByTimeInterval(comments));
+   },[timeInterval]);
 
   return (
     <Content className="comment">
@@ -126,9 +148,14 @@ function MyComments(props) {
           </Space>
         </Typography.Link>
       </Dropdown>
-      <Table columns={columns}  pagination={{ pageSize: 10}} dataSource={transformData(comments)} style={{marginTop:"10px"}} />
+
+        <Table columns={columns} 
+           rowSelection={rowSelection}
+          // rowClassName={(record) => highlightRow(record)} rowHoverable={false} 
+          pagination={{ pageSize: 10}} dataSource={comments} 
+          style={{marginTop:"10px",}} />
                               
-            
+
           
       </Content >
        

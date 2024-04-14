@@ -9,47 +9,67 @@ import MyImage from "../app/image";
 import ChapterLine from "./chapterline";
 import { Layout, Flex } from "antd";
 import { AlignLeftOutlined } from "@ant-design/icons";
-
+import VideoImage from "./videoimage";
 import { Typography } from "antd";
 import { Stepper, Step, StepLabel, StepConnector, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
 const { Header, Footer, Sider, Content } = Layout;
 const { Text } = Typography;
 import { NOWIP, PACHONGADDR } from "../../App";
-import LineChart from "../app/d3/linechart";
-import TEST_DATA from '../app/test-data/test_timelist.json';
+import { Radio } from 'antd';
+ 
+const Options = [ {
+  label: 'Tooltip',
+  value: 'tooltip',
+},
+{
+  label: 'Range Selection',
+  value: 'selection',
+}];
 function MainPage(props) {
   const [selectedTimeInterval, setSelectedTimeInterval] = useState(null);
-  const videoImageRef = useRef(null);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [video_data, setVideo_data] = useState(null);
+  const [currentSecond, setCurrentSecond] = useState(null);
   const [video_length, setVideo_length] = useState(0);
   const stepRef = useRef(null);
-  let timelist, speedlist, pauselist, commentlist;
-  useEffect(() => {
-    function updateDimensions() {
-      if (videoImageRef.current) {
-        const { width, height } = videoImageRef.current.getBoundingClientRect();
-        setHeight(height);
-        setWidth(width);
-      }
-    }
+  const [alignment, setAlignment] =useState("tooltip");
+  const handleTimeIntervalSelection = (newTimeInterval) => {
+    setSelectedTimeInterval(newTimeInterval);
+  };
 
-    // Call the updateDimensions function initially and add event listener for window resize
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
+  const onChange = (e) => {
+    console.log('radio checked', e.target.value);
+    setAlignment(e.target.value);
+    setSelectedTimeInterval(null);
+    setCurrentSecond(null);
+  };
+   console.log(alignment);
 
-    // Remove event listener when component unmounts
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-    };
-  }, []);
+
+  const handleCurrentSecondChange = (new_time) => {
+    setCurrentSecond(new_time);
+  };
+
   useEffect(() => {
     function updateDimensions() {
       if (stepRef.current) {
         const { width, height } = stepRef.current.getBoundingClientRect();
         setVideo_length(width);
+        // Get a reference to the Content component with the className "videoimage"
+    // const contentElement = document.querySelector('.steps');
+
+    // Check if the element exists
+      // if (contentElement) {
+      //   // Get the bounding rectangle of the element
+      //   const contentBounds = contentElement.getBoundingClientRect();
+
+      //   // Extract the vertical position (top) of the element
+      //   const contentTop = contentBounds.top;
+
+      //   console.log("Position of .steps content (top):", contentTop);
+      // } else {
+      //   console.error("Element with class 'videoimage' not found.");
+      // }
       }
     }
 
@@ -62,105 +82,11 @@ function MainPage(props) {
       window.removeEventListener("resize", updateDimensions);
     };
   }, []);
-  function calculateAvgSpeed(speedList, timeList) {
-    // Check if the lengths of both lists are the same
-    if (speedList.length !== timeList.length) {
-        throw new Error("Lists must have the same length");
-    }
 
-    let avgSpeedList = [];
 
-    // Iterate through each item in the lists
-    for (let i = 0; i < speedList.length; i++) {
-        let speedObj = speedList[i];
-        let timeObj = timeList[i];
 
-        // Check if timeObj.y is not equal to 0
-        if (timeObj.y !== 0) {
-            // Calculate avgSpeedList.y = speedList.y / timeList.y
-            avgSpeedList.push({ x: speedObj.x, y: speedObj.y / timeObj.y });
-        } else {
-            // If timeObj.y is 0, set avgSpeedList.y to 0
-            avgSpeedList.push({ x: speedObj.x, y: 0 });
-        }
-    }
 
-    return avgSpeedList;
-}
-  async function fetchData() {
-    try {
-      const response1 = await fetch(`http://${NOWIP}/api/timeinfoTotalValue`);
-      const data1 = await response1.json();
-      console.log(data1);
-      timelist = data1.timelist;
-  
-      const response2 = await fetch(`http://${NOWIP}/api/speedinfoTotalValue`);
-      const data2 = await response2.json();
-      console.log(data2);
-      speedlist = data2.speedlist;
-  
-      const response3 = await fetch(`http://${NOWIP}/api/pauseinfoTotalValue`);
-      const data3 = await response3.json();
-      console.log(data3);
-      pauselist = data3.pauselist;
-  
-      const response4 = await fetch(`http://${NOWIP}/api/commentinfoTotalValue`);
-      const data4 = await response4.json();
-      console.log(data4);
-      commentlist = data4.commentlist;
-      const avgSpeedList = calculateAvgSpeed(speedlist, timelist);
-      console.log(avgSpeedList)
-      // const combinedList = [TEST_DATA.timelist, TEST_DATA.speedlist, TEST_DATA.pauselist,TEST_DATA.commentlist];
-      const combinedList = TEST_DATA.timelist;
-      const resultObject = {
-        timelist: timelist,
-        avgspeedlist: avgSpeedList,
-        commentlist: commentlist,
-        pauselist: pauselist
-    };
-      console.log(resultObject); // Log combined list
-      setVideo_data(combinedList);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-  const loadVideoTimeline = () => {
-   
-    fetchData();
- 
-  };
-  
-  const generateTitleList = (chapters) => {
-    const steps = chapters.map((chapter) => {
-      const chapterDuration = chapter.time_end - chapter.time_begin;
-      const stepWidth = (chapterDuration / VIDEO_DURATION) * video_length;
 
-      return {
-        title: chapter.name,
-        description: "", // You can set the description here if needed
-        width: stepWidth + "%",
-      };
-    });
-    steps.push({
-      title: "End",
-      description: "", // You can set the description here if needed
-      width: "5%", // Adjust the width according to your preference
-    });
-    return steps;
-  };
-
-  const handleTimeIntervalSelection = (newTimeInterval) => {
-    setSelectedTimeInterval(newTimeInterval);
-  };
-
-  const handledatachange = (new_data) => {
-    setVideo_data(new_data);
-  };
-
-  useEffect(() => {
-    fetchData();
- 
-  }, []);
 
   return (
     <div
@@ -181,34 +107,27 @@ function MainPage(props) {
             </Content>
 
             <Layout>
-              <Header className="headline">VideoData View</Header>
+              <Header className="headline"  style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Text level={2} style={{whiteSpace: 'nowrap',fontSize:"24px",minWidth:"100px"}}>VideoData View</Text>
+                <Radio.Group  className="radioGroup" options={Options} onChange={onChange} value={alignment} optionType="button" />
+                  </Header>
               <Content className="steps" ref={stepRef}>
-                <ChapterLine length={video_length} />
+                <ChapterLine length={video_length} currentTime={currentSecond} timeInterval={selectedTimeInterval} alignment={alignment}/>
               </Content>
-              <Content className="videoimage" ref={videoImageRef}>
-                {video_data !== null && (
-                  <LineChart
-                    data={video_data}
-                    svgWidth={width}
-                    svgHeight={height}
-                    onTimeIntervalSelection={handleTimeIntervalSelection}
-                    
-                  />
-                )}
-              </Content>
+              <VideoImage handleTimeChange={handleCurrentSecondChange} handleTimeInterval={handleTimeIntervalSelection} alignment={alignment}/>
             </Layout>
           </Layout>
 
           <Sider style={siderStyle} width="30%">
             <Layout>
-              <Header className="headline">Student Comments</Header>
+              <Header className="headline" >Student Comments</Header>
 
-              <MyComments />
+              <MyComments timeInterval={selectedTimeInterval}/>
             </Layout>
           </Sider>
         </Layout>
         <Layout>
-          <MyImage />
+          {/* <MyImage /> */}
         </Layout>
       </Content>
     </div>

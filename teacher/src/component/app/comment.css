@@ -26,3 +26,18 @@
 
  
 }
+
+.highlighted-row {
+  background-color: rgb(186, 224, 255); /* Example highlight style */
+}
+
+.highlighted-row:hover {
+  background-color: rgb(186, 224, 255); /* Adjust the hover background color for highlighted rows */
+}
+.ant-table-cell-row-hover {
+  background-color: var(--hover-color);
+}
+.disable-hover:hover {
+  background-color: inherit !important;
+  cursor: default;
+}

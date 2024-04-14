@@ -1,0 +1,8 @@
+.circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%; /* to make it a circle */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the circle and the text */
+    border: 1px solid #888888; /* Stroke color */
+  }

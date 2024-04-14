@@ -12,6 +12,9 @@
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
 }
+.radioGroup {
+    font-size: 16px;
+  }
 .steps {
     line-height: 10vh;
     height: 10vh;
@@ -55,8 +58,8 @@
 .player{
     background-color: rgb(245, 245, 245);
 
-    line-height: 76vh;
-    height: 76vh;
+    line-height: 65vh;
+    height: 65vh;
 
     background-color: #454545;
     color: black;
