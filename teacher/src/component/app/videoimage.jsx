@@ -116,7 +116,7 @@ function VideoImage(props) {
           
         ];
           console.log(test_resultObject); // Log combined list
-          setVideo_data(resultList);
+          setVideo_data(test_resultObject);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -145,6 +145,8 @@ function VideoImage(props) {
             }
           }
         }
+        
+        [500, 1000, 1500, 2000].forEach((value) => setTimeout(updateDimensions, value));
     
         // Call the updateDimensions function initially and add event listener for window resize
         updateDimensions();
@@ -158,7 +160,29 @@ function VideoImage(props) {
 
       useEffect(() => {
         fetchData();
-     
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+        setTimeout(() => {
+          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+            element.style.display = 'none';
+          });
+        }, 500)
+        setTimeout(() => {
+          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+            element.style.display = 'none';
+          });
+        }, 1000)
+        setTimeout(() => {
+          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+            element.style.display = 'none';
+          });
+        }, 1500)
+        setTimeout(() => {
+          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+            element.style.display = 'none';
+          });
+        }, 2000)
       }, []);
     return (
 

@@ -176,7 +176,7 @@ function MyComments({timeInterval }) {
         <Table columns={columns} 
            rowSelection={rowSelection}
           // rowClassName={(record) => highlightRow(record)} rowHoverable={false} 
-          pagination={{ pageSize: 8}} dataSource={comments} 
+          pagination={{ pageSize: 13}} dataSource={comments} 
           style={{marginTop:"10px",}} />
                               
 
