@@ -102,24 +102,24 @@ app.post('/api/addTimeListInfo', (req, res) => {
     if (!Array.isArray(timeList) ||!Array.isArray(speedList) || !Array.isArray(pauseList) || !Array.isArray(commentList)  ) {
         return res.status(400).json({ error: 'Invalid time list format' });
     }
-    console.log(pauseList);
-    db.serialize(() => {
-        const stmt_time = db.prepare(INSERT_TIMELIST_SQL);
-        const stmt_speed = db.prepare(INSERT_SPEEDLIST_SQL);
-        const stmt_pause = db.prepare(INSERT_PAUSELIST_SQL);
-        const stmt_comment = db.prepare(INSERT_COMMENTLIST_SQL);
-        for (let i = 0; i < timeList.length; i++) {
-            // Update or insert values into the database
-            if(timeList[i]) stmt_time.run(i, timeList[i]);
-            if(speedList[i]) stmt_speed.run(i, speedList[i]);
-            if(pauseList[i]) stmt_pause.run(i, pauseList[i]);
-            if(commentList[i]) stmt_comment.run(i, commentList[i]);
-        }
-        stmt_time.finalize();
-        stmt_pause.finalize();
-        stmt_speed.finalize();
-        stmt_comment.finalize();
-    });
+ 
+    // db.serialize(() => {
+    //     const stmt_time = db.prepare(INSERT_TIMELIST_SQL);
+    //     const stmt_speed = db.prepare(INSERT_SPEEDLIST_SQL);
+    //     const stmt_pause = db.prepare(INSERT_PAUSELIST_SQL);
+    //     const stmt_comment = db.prepare(INSERT_COMMENTLIST_SQL);
+    //     for (let i = 0; i < timeList.length; i++) {
+    //         // Update or insert values into the database
+    //         if(timeList[i]) stmt_time.run(i, timeList[i]);
+    //         if(speedList[i]) stmt_speed.run(i, speedList[i]);
+    //         if(pauseList[i]) stmt_pause.run(i, pauseList[i]);
+    //         if(commentList[i]) stmt_comment.run(i, commentList[i]);
+    //     }
+    //     stmt_time.finalize();
+    //     stmt_pause.finalize();
+    //     stmt_speed.finalize();
+    //     stmt_comment.finalize();
+    // });
 
     return res.status(200).json({ message: 'Time list added successfully' });
 });
@@ -153,7 +153,7 @@ app.get('/api/pauseinfoTotalValue', (req, res) => {
         }
 
         const pauselist = rows.map(row => ({ x: row.time_index, y: row.total }));
-        console.log(pauselist);
+     
         return res.status(200).json({ pauselist :  pauselist.slice(0,4736)});
 
     });
