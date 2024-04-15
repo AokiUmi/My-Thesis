@@ -190,7 +190,7 @@ const LineChartToolTip = ({ data, svgWidth, svgHeight, tooltipTop , handleTimeCh
         .html(tooltipContent)
         .style("opacity", 1)
         .style("left", (mouseX + 130) + "px")
-        .style("top", (tooltipTop +10) + "px");
+        .style("top", (tooltipTop +20) + "px");
     }
 
     // Function to handle mouseout event

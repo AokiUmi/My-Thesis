@@ -93,7 +93,7 @@ function MyComments({timeInterval }) {
     const [comments, setComments] = useState([]);
     const [selectedKey,setSelectedKey]= useState(1);
     const isChosenComment = (commentId) => chosenComment === commentId;
-
+    const [scrollPosition, setScrollPosition] = useState(0);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     const onSelectChange = (selectedKeys) => {
@@ -115,15 +115,38 @@ function MyComments({timeInterval }) {
       return comments.filter((comment) => {
         return comment.seconds >= startTime && comment.seconds <= endTime;
       }).map((comment) => comment.key);
-    };
-    
+  };
+    useEffect(() => {
+      // Function to update scroll position
+      const updateScrollPosition = () => {
+          setScrollPosition(window.scrollY);
+      };
+
+      // Add event listener to listen for scroll events
+      window.addEventListener('scroll', updateScrollPosition);
+
+      // Call the updateScrollPosition function to set initial scroll position
+      updateScrollPosition();
+
+      // Clean up by removing the event listener
+      return () => {
+          window.removeEventListener('scroll', updateScrollPosition);
+      };
+  }, []);
+
+    useEffect(() => {
+        // Store scroll position in session storage
+        sessionStorage.setItem('scrollPosition', scrollPosition.toString());
+    }, [scrollPosition]);
+        
     useEffect(()=> {
       fetch(`http://${NOWIP}/api/getAllComments?key=${selectedKey}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setComments(transformData(data.comments));
-        setColumns(Columns[selectedKey-1]);
+        setColumns(Columns[selectedKey - 1]);
+     
  
       });
     },[selectedKey]);
@@ -152,7 +175,7 @@ function MyComments({timeInterval }) {
         <Table columns={columns} 
            rowSelection={rowSelection}
           // rowClassName={(record) => highlightRow(record)} rowHoverable={false} 
-          pagination={{ pageSize: 10}} dataSource={comments} 
+          pagination={{ pageSize: 8}} dataSource={comments} 
           style={{marginTop:"10px",}} />
                               
 

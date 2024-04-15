@@ -134,9 +134,9 @@ function VideoImage(props) {
 
               // Extract the vertical position (top) of the element
               const contentTop = contentBounds.top;
-
+              const scrollY = JSON.parse(sessionStorage.getItem("scrollPosition"));
               console.log("Position of .videoimage content (top):", contentTop);
-              if (tooltip === 0)setTooltip(contentTop);
+              setTooltip(contentTop + scrollY);
             } else {
               console.error("Element with class 'videoimage' not found.");
             }

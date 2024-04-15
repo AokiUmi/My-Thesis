@@ -16,9 +16,9 @@
     font-size: 16px;
   }
 .steps {
-    line-height: 10vh;
-    height: 10vh;
-    max-height: 10vh;
+    line-height: 12vh;
+    height: 12vh;
+    max-height: 12vh;
     width: 100%;
     background-color: rgb(245, 245, 245);
     padding: 0;
@@ -58,8 +58,8 @@
 .player{
     background-color: rgb(245, 245, 245);
 
-    line-height: 65vh;
-    height: 65vh;
+    line-height: 70vh;
+    height: 70vh;
 
     background-color: #454545;
     color: black;
@@ -71,8 +71,8 @@
   
     display: flex;
     justify-content: center;
-    line-height: 28vh;
-    height: 28vh;
+    line-height: 32vh;
+    height: 32vh;
     align-items: center; 
 
     color: black;

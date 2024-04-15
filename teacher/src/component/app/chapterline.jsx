@@ -82,12 +82,18 @@ function ChapterLine(props) {
     if (index === 0)
       return "translate(-2%, -50%)";
     else if(index === 1)
-      return "translate(-50%, 10%)";
+      return "translate(-2%, 20%)";
     else if(index === 2)
-      return "translate(-20%, -50%)";
-
-    else if(index === 3)
-      return "translate(-50%, 10%)";
+      return "translate(-2%, -50%)";
+  }
+  
+  const transformSelect_single = (index) => {
+    if (index === 0)
+      return "translate(-2%, -50%)";
+    else if(index === 1)
+      return "translate(-2%, -50%)";
+    else if(index === 2)
+      return "translate(-50%, -50%)";
   }
   const loadChapterInfo = () => {
     fetch(`http://${PACHONGADDR}/api/chapter`)
@@ -133,7 +139,7 @@ function ChapterLine(props) {
                 <Box className={classes.chapterName}
                     style={{
                         left,
-                        transform: index === 0 ? "translate(-2%, -50%)"  : "translate(-50%, -50%)",
+                        transform:  transformSelect_single(index)
                     }}>
                   {chapter.name}
                 </Box>

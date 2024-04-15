@@ -46,7 +46,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
     const min=Math.min(data.rating_range.center.min,data.rating_range.margin.min);
     const max= Math.max( data.rating_range.center.max,data.rating_range.margin.max);
     const PurpleColorScale = d3.scaleSequential()
-      .domain([data.rating_range.center.min, data.rating_range.center.max]) // Reverse the domain
+      .domain([0, data.rating_range.center.max]) // Reverse the domain
       .interpolator(d3.interpolate("#EBDFFF", "#9250FF")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
 
     const GreyColorScale = d3.scaleSequential()

@@ -236,7 +236,10 @@ function MyPlayer(props) {
       onreadybugfix = true;
     }
   };
-  const deletePost = (meg_id) => {
+  const deletePost = (meg_id , meg_time) => {
+    const roundedTime = Math.floor(meg_time);
+    commentlist[roundedTime]--;
+    sessionStorage.setItem("commentlist", JSON.stringify(commentlist));
     fetch(`http://${NOWIP}/api/deleteComment?id=${meg_id}`, {
       method: "DELETE",
     }).then((res) => {
@@ -369,7 +372,7 @@ function MyPlayer(props) {
                         <Button
                           variant="text"
                           style={{ color: "#00AEEC" }}
-                          onClick={() => deletePost(item.id)}
+                          onClick={() => deletePost(item.id,item.time)}
                         >
                           Delete
                         </Button>

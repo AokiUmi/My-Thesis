@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import json
 
-LENGTH= 6221
+LENGTH= 4736
 def pauselist():
     array = np.zeros(LENGTH)
     for i in range(30):
@@ -59,21 +59,22 @@ def speedlist():
         
 if __name__ == '__main__':
     timelist = timelist()
-    # pauselist = pauselist()
-    # commentlist= commentlist()
-    # speedlist= speedlist()
+    pauselist = pauselist()
+    commentlist= commentlist()
+    speedlist= speedlist()
         # Write the list to a file
 
     with open("test_timelist.json", "w") as f:
         json.dump({"timelist": timelist}, f)   
-    # with open("test_commentlist.json", "w") as f:
-    #     json.dump({"commentlist": commentlist}, f)
+        
+    with open("test_commentlist.json", "w") as f:
+        json.dump({"commentlist": commentlist}, f)
 
-    # with open("test_pauselist.json", "w") as f:
-    #     json.dump({"pauselist": pauselist}, f)
+    with open("test_pauselist.json", "w") as f:
+        json.dump({"pauselist": pauselist}, f)
 
-    # with open("test_speedlist.json", "w") as f:
-    #     json.dump({"speedlist": speedlist}, f)
+    with open("test_speedlist.json", "w") as f:
+        json.dump({"speedlist": speedlist}, f)
 
     print("Data written to test_commentlist_smooth.json")
         

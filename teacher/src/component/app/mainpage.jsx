@@ -32,11 +32,14 @@ function MainPage(props) {
   const [currentSecond, setCurrentSecond] = useState(null);
   const [video_length, setVideo_length] = useState(0);
   const stepRef = useRef(null);
+  const [ifLoad, setIfLoad] = useState(false);
   const [alignment, setAlignment] =useState("tooltip");
   const handleTimeIntervalSelection = (newTimeInterval) => {
     setSelectedTimeInterval(newTimeInterval);
   };
-
+  const handleIfLoadChange = (newload) => {
+    setIfLoad(newload);
+}
   const onChange = (e) => {
     console.log('radio checked', e.target.value);
     setAlignment(e.target.value);
@@ -56,20 +59,8 @@ function MainPage(props) {
         const { width, height } = stepRef.current.getBoundingClientRect();
         setVideo_length(width);
         // Get a reference to the Content component with the className "videoimage"
-    // const contentElement = document.querySelector('.steps');
-
-    // Check if the element exists
-      // if (contentElement) {
-      //   // Get the bounding rectangle of the element
-      //   const contentBounds = contentElement.getBoundingClientRect();
-
-      //   // Extract the vertical position (top) of the element
-      //   const contentTop = contentBounds.top;
-
-      //   console.log("Position of .steps content (top):", contentTop);
-      // } else {
-      //   console.error("Element with class 'videoimage' not found.");
-      // }
+   
+    
       }
     }
 
@@ -80,6 +71,7 @@ function MainPage(props) {
     // Remove event listener when component unmounts
     return () => {
       window.removeEventListener("resize", updateDimensions);
+  
     };
   }, []);
 
@@ -122,12 +114,12 @@ function MainPage(props) {
             <Layout>
               <Header className="headline" >Student Comments</Header>
 
-              <MyComments timeInterval={selectedTimeInterval}/>
+              <MyComments timeInterval={selectedTimeInterval} handleIfLoadChange={handleIfLoadChange } />
             </Layout>
           </Sider>
         </Layout>
         <Layout>
-          {/* <MyImage /> */}
+          <MyImage />
         </Layout>
       </Content>
     </div>
