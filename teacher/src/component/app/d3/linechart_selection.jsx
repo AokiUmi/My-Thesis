@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -20,7 +22,7 @@ function formatTime(seconds) {
  
 }
 
-const LineChartSelection = ({ data, svgWidth, svgHeight, handleTimeInterval}) => {
+const LineChartSelection = ({ data, svgWidth, svgHeight, handleTimeInterval, handleSeekTime}) => {
   const svgRef = useRef();
   const tooltipRef = useRef();
   const brushRef = useRef();
@@ -32,7 +34,7 @@ const LineChartSelection = ({ data, svgWidth, svgHeight, handleTimeInterval}) =>
     svg.selectAll("*").remove();
     tooltip.selectAll("*").remove();
     // Define dimensions and margins
-    const margin = { top: 10, right: 0, bottom: 5, left: 0 };
+    const margin = { top: 10, right: 2, bottom: 5, left: 2 };
     const width = svgWidth - margin.left - margin.right;
     const height = svgHeight - margin.top - margin.bottom;
     const color_list= [ ["rgba(217, 194, 255, 1)","rgba(217, 194, 255, 0.18)"] , 
@@ -93,16 +95,8 @@ const LineChartSelection = ({ data, svgWidth, svgHeight, handleTimeInterval}) =>
     // Add overlay for capturing mouse events
    
 
-    
-    // svg.append("rect")
-    //   .attr("class", "overlay")
-    //   .attr("width", width)
-    //   .attr("height", height)
-    //   .attr("fill", "none")
-    //   .attr("pointer-events", "all")
-    //   .on("mousemove", handleMouseMove)
-    //   .on("mouseover", handleMouseOver)
-    //   .on("mouseout", handleMouseOut);
+  
+  
 
 
     
@@ -132,10 +126,19 @@ const LineChartSelection = ({ data, svgWidth, svgHeight, handleTimeInterval}) =>
       // Do something with the selected range (x0 and x1)
       console.log("Selected Range (x-axis):", x0, x1);
       handleTimeInterval([x0,x1]);
-      svg.on('click', () => {
+      svg.on('click', (event) => {
+        handleMouseClick(event);
         svg.select('.brush').call(brush.move, null);
         handleTimeInterval(null);
+        
       });
+    }
+
+  
+    function handleMouseClick(event) {
+      const mouseX = event.pageX - svg.node().getBoundingClientRect().left;
+      const xValue = xScale.invert(mouseX);
+      handleSeekTime(xValue);
     }
     // // Draw axes
     //  svg.append("g")

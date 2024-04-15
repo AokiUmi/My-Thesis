@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -223,36 +225,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       .style('stroke', 'rgb(153, 116, 115)')
       .style('stroke-width', '1');// Set opacity based on comparison
       
-        // Add arrows to the edges
-      const arrowSize = 5; // Size of the arrow
-      edges.each(function (d) {
-        const x1 = data.points_dict[d.from][0];
-        const y1 = -data.points_dict[d.from][1];
-        const x2 = data.points_dict[d.to][0];
-        const y2 = -data.points_dict[d.to][1];
-  
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        const angle = Math.atan2(dy, dx);
-  
-        // Calculate distance to move the arrowhead along the edge line
-        const distance = 2; // Adjust this value as needed
-        const newX2 = x2 - distance * Math.cos(angle);
-        const newY2 = y2 - distance * Math.sin(angle);
-  
-        // Calculate points for the arrowhead
-        const x3 = newX2 - arrowSize * Math.cos(angle - Math.PI / 6);
-        const y3 = newY2 - arrowSize * Math.sin(angle - Math.PI / 6);
-        const x4 = newX2 - arrowSize * Math.cos(angle + Math.PI / 6);
-        const y4 = newY2 - arrowSize * Math.sin(angle + Math.PI / 6);
-  
-        // Draw arrowhead
-        d3.select(this.parentNode)
-          .append('polygon')
-          .attr('points', `${newX2},${newY2} ${x3},${y3} ${x4},${y4}`)
-          .style('fill', 'rgb(153, 116, 115)');
-      });
-  
+     
       // Add center points
       const centerPoints = g.selectAll('.center-point')
       .data(data.polygons)
@@ -263,17 +236,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       .attr('cy', d => -data.points_dict[d.center_poly.point][1])
       .attr('r', 2)
       .style('fill', 'rgb(255, 221, 221)');
-    //Append text element for polygon name
-      centerPoints.each(function (d) {
-        
-        d3.select(this.parentNode)
-          .append("text")
-          .attr("x", data.points_dict[d.center_poly.point][0])
-          .attr("y", -data.points_dict[d.center_poly.point][1] - 10)
-          .attr("text-anchor", "middle")
-          .attr("dominant-baseline", "middle")
-          .text(d.center_poly.name);
-      });
+ 
       
     edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
@@ -281,6 +244,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
 
     // Initialize zoom behavior
     const zoom = d3.zoom()
+      .scaleExtent([0.5, 4])
       .on('zoom', zoomed);
 
     svg.call(zoom);
@@ -294,11 +258,88 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
     function zoomed(event) {
       g.attr('transform', event.transform);
       const now_zoom = d3.zoomTransform(svg.node());
-      sessionStorage.setItem("zoom",now_zoom.toString());
+      sessionStorage.setItem("zoom", now_zoom.toString());
+      g.selectAll('.arrow').remove();
+      // Add arrows to the edges
+     const arrowSize = getArrowSize(); // Size of the arrow
+     edges.each(function (d) {
+       const x1 = data.points_dict[d.from][0];
+       const y1 = -data.points_dict[d.from][1];
+       const x2 = data.points_dict[d.to][0];
+       const y2 = -data.points_dict[d.to][1];
+
+       const dx = x2 - x1;
+       const dy = y2 - y1;
+       const angle = Math.atan2(dy, dx);
+
+       // Calculate distance to move the arrowhead along the edge line
+       const distance = 2; // Adjust this value as needed
+       const newX2 = x2 - distance * Math.cos(angle);
+       const newY2 = y2 - distance * Math.sin(angle);
+
+       // Calculate points for the arrowhead
+       const x3 = newX2 - arrowSize * Math.cos(angle - Math.PI / 6);
+       const y3 = newY2 - arrowSize * Math.sin(angle - Math.PI / 6);
+       const x4 = newX2 - arrowSize * Math.cos(angle + Math.PI / 6);
+       const y4 = newY2 - arrowSize * Math.sin(angle + Math.PI / 6);
+
+       // Draw arrowhead
+       d3.select(this.parentNode)
+         .append('polygon')
+         .attr('class', 'arrow')
+         .attr('points', `${newX2},${newY2} ${x3},${y3} ${x4},${y4}`)
+         .style('fill', 'rgb(153, 116, 115)');
+     });
+      
+     g.selectAll("text").remove();
+        //Append text element for polygon name
+        centerPoints.each(function (d) {
+      
+        d3.select(this.parentNode)
+          .append("text")
+          .attr("x", data.points_dict[d.center_poly.point][0])
+          .attr("y", -data.points_dict[d.center_poly.point][1] - 10)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .style('font-size', `${getTextSize()}px`)
+          .text(d.center_poly.name);
+      });
+
+     svg.selectAll('text').style('pointer-events', 'none');
+     svg.selectAll('.arrow').style('pointer-events', 'none');
     
 
     }
-
+    function getScaleValue() {
+      const zoom1 = sessionStorage.getItem('zoom');
+      // Regular expression to find scale value
+      const scaleRegex = /scale\(([^)]+)\)/;
+      // Extract scale value using regex
+      const matches = zoom1.match(scaleRegex);
+      // matches[1] should contain the scale value if it is found
+      const scaleValue = matches && matches[1] ? parseFloat(matches[1]) : null;
+      return scaleValue;
+    }
+    
+    // TODO: tune this function
+    function getTextSize() {
+      const scalevalue = getScaleValue();
+      if (scalevalue >= 4) {
+        return 22 / scalevalue;
+      }
+      if (scalevalue <= 0.66) return 12 / scalevalue;
+      return 18 / scalevalue;
+    }
+    
+    // TODO: tune this function
+    function getArrowSize() {
+      const scalevalue = getScaleValue();
+      if (scalevalue >= 4) {
+        return 24 / scalevalue;
+      }
+      if (scalevalue <= 0.66) return 10 / scalevalue;
+      return 15 / scalevalue;
+    }
  
     return () => {
       g.selectAll('*').remove();

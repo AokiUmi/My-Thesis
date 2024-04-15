@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -83,7 +84,7 @@ function MyPlayer(props) {
     const current_time = getCurrentTime();
     const roundedTime = Math.floor(current_time);
     pauselist[roundedTime]++;
-    console.log(pauselist)
+    console.log("add pause list");
     sessionStorage.setItem("pauselist", JSON.stringify(pauselist));
   }
   const addCommentList = (current_time) => {
@@ -95,12 +96,13 @@ function MyPlayer(props) {
     if (playerRef.current) {
       const current_time = getCurrentTime();
       console.log("current time: ", current_time);
-
+      const current_speed = getCurrentSpeed();
+      console.log("current speed: ", current_speed);
       if (JSON.parse(sessionStorage.getItem("current_time")) !== current_time) {
         console.log("memorize timelist and speedlist");
         const roundedTime = Math.floor(current_time);
         timelist[roundedTime]++;
-        speedlist[roundedTime] += speed;
+        speedlist[roundedTime] += current_speed;
         sessionStorage.setItem("timelist", JSON.stringify(timelist));
         sessionStorage.setItem("speedlist", JSON.stringify(speedlist));
         sessionStorage.setItem("current_time", JSON.stringify(current_time));
@@ -143,6 +145,10 @@ function MyPlayer(props) {
     console.log('Playback speed changed:', newSpeed);
     // Perform any additional actions based on the new speed
     setSpeed(newSpeed);
+    console.log("current_time_speed: ", newSpeed);
+    if (!intervalId) {
+        intervalId = setInterval(getCurrentInfo, 1000 / newSpeed);
+    }
   };
 
   const handleCommentSubmit = (id) => {
@@ -177,8 +183,10 @@ function MyPlayer(props) {
     }
   };
   const startClock = () => {
+    const current_speed = getCurrentSpeed();
+    console.log("current_time_speed: ", current_speed);
     if (!intervalId) {
-        intervalId = setInterval(getCurrentInfo, 1000/speed);
+        intervalId = setInterval(getCurrentInfo, 1000 / current_speed);
     }
   };
 
@@ -190,6 +198,7 @@ function MyPlayer(props) {
     addPauseList();
     clearInterval(intervalId);
     intervalId = null; // Reset intervalId to undefined
+    console.log(timelist);
  
   };
   const loadMyComments = () => {

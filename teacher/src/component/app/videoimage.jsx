@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -17,7 +18,7 @@ import TEST_SPEEDDATA from '../app/test-data/test_speedlist.json';
 import TEST_COMMENTDATA from '../app/test-data/test_commentlist.json';
 import TEST_PAUSEDATA from '../app/test-data/test_pauselist.json';
 import LineChartSelection from "./d3/linechart_selection";
-
+import { VIDEO_DURATION } from "../../App";
 
 function sumData(data , num) {
   const newData = [];
@@ -38,7 +39,7 @@ function sumData(data , num) {
   if (data.length % num !== 0) {
     newData.push({ x: startIndex, y: sum });
   }
-
+  newData.push({ x: VIDEO_DURATION, y: sum });
   return newData;
 }
 
@@ -99,21 +100,23 @@ function VideoImage(props) {
           console.log(avgSpeedList)
           // const combinedList = [TEST_DATA.timelist, TEST_DATA.speedlist, TEST_DATA.pauselist,TEST_DATA.commentlist];
          
-          const resultObject = {
-            timelist: timelist,
-            avgspeedlist: avgSpeedList,
-            commentlist: commentlist,
-            pauselist: pauselist
-        };
+          const resultList = [
+            sumData(timelist,5),
+            sumData(avgSpeedList, 5),
+            sumData(pauselist,10),
+            sumData(commentlist,10),
+   
+          ];
         
         const test_resultObject =[ 
-            TEST_TIMEDATA.timelist,
-            TEST_SPEEDDATA.speedlist,
-            sumData(TEST_COMMENTDATA.commentlist,8),
-            sumData(TEST_PAUSEDATA.pauselist,8),
+          sumData(TEST_TIMEDATA.timelist,5),
+          sumData(TEST_SPEEDDATA.speedlist, 5),
+          sumData(TEST_PAUSEDATA.pauselist,8),
+          sumData(TEST_COMMENTDATA.commentlist,8),
+          
         ];
           console.log(test_resultObject); // Log combined list
-          setVideo_data(test_resultObject);
+          setVideo_data(resultList);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -170,6 +173,7 @@ function VideoImage(props) {
               // onTimeIntervalSelection={handleTimeIntervalSelection}
               tooltipTop={tooltip}
               handleTimeChange={props.handleTimeChange}
+              handleSeekTime={props.handleSeekTime}
           />
           )
       }
@@ -181,6 +185,7 @@ function VideoImage(props) {
               svgWidth={width}
               svgHeight={height}
               handleTimeInterval={props.handleTimeInterval}
+              handleSeekTime={props.handleSeekTime}
           />
           )
       }

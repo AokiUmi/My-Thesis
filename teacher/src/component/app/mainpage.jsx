@@ -32,6 +32,7 @@ function MainPage(props) {
   const [currentSecond, setCurrentSecond] = useState(null);
   const [video_length, setVideo_length] = useState(0);
   const stepRef = useRef(null);
+  const [seekTime, setSeekTime] = useState(null);
   const [ifLoad, setIfLoad] = useState(false);
   const [alignment, setAlignment] =useState("tooltip");
   const handleTimeIntervalSelection = (newTimeInterval) => {
@@ -39,14 +40,17 @@ function MainPage(props) {
   };
   const handleIfLoadChange = (newload) => {
     setIfLoad(newload);
-}
+  }
+  const handleSeekTimeChange = (new_time) => {
+    setSeekTime(new_time);
+  }
   const onChange = (e) => {
     console.log('radio checked', e.target.value);
     setAlignment(e.target.value);
     setSelectedTimeInterval(null);
     setCurrentSecond(null);
   };
-   console.log(alignment);
+
 
 
   const handleCurrentSecondChange = (new_time) => {
@@ -95,7 +99,7 @@ function MainPage(props) {
           <Layout>
             <Header className="headline">Course Name</Header>
             <Content className="player">
-              <MyPlayer />
+              <MyPlayer seekTime={seekTime } />
             </Content>
 
             <Layout>
@@ -106,7 +110,7 @@ function MainPage(props) {
               <Content className="steps" ref={stepRef}>
                 <ChapterLine length={video_length} currentTime={currentSecond} timeInterval={selectedTimeInterval} alignment={alignment}/>
               </Content>
-              <VideoImage handleTimeChange={handleCurrentSecondChange} handleTimeInterval={handleTimeIntervalSelection} alignment={alignment}/>
+              <VideoImage handleSeekTime={handleSeekTimeChange } handleTimeChange={handleCurrentSecondChange} handleTimeInterval={handleTimeIntervalSelection} alignment={alignment}/>
             </Layout>
           </Layout>
 

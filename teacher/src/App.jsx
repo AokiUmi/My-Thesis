@@ -13,5 +13,5 @@ function App() {
 export const NOWIP = '10.20.254.181:53706';
 export const PACHONGADDR = '10.20.161.96:5000';
 export const VIDEO_URL = `http://${PACHONGADDR}/api/video`;
-export const VIDEO_DURATION = 6221;
+export const VIDEO_DURATION = 4736;
 export default App

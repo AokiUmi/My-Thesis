@@ -17,7 +17,7 @@ import { type } from 'os';
 
 const app = express();
 const port = 53706;
-const VIDEO_LENGTH = 6221;
+const VIDEO_LENGTH = 4736;
 const INSERT_TIMELIST_SQL = "INSERT INTO  timeinfo (time_index, value) VALUES (?, ?);";
 const INSERT_SPEEDLIST_SQL = "INSERT INTO  speedinfo (time_index, value) VALUES (?, ?);";
 const INSERT_PAUSELIST_SQL = "INSERT INTO  pauseinfo (time_index, value) VALUES (?, ?);";
@@ -102,7 +102,7 @@ app.post('/api/addTimeListInfo', (req, res) => {
     if (!Array.isArray(timeList) ||!Array.isArray(speedList) || !Array.isArray(pauseList) || !Array.isArray(commentList)  ) {
         return res.status(400).json({ error: 'Invalid time list format' });
     }
-
+    console.log(pauseList);
     db.serialize(() => {
         const stmt_time = db.prepare(INSERT_TIMELIST_SQL);
         const stmt_speed = db.prepare(INSERT_SPEEDLIST_SQL);
@@ -137,8 +137,8 @@ app.get('/api/timeinfoTotalValue', (req, res) => {
         }
       
         const timelist = rows.map(row => ({ x: row.time_index, y: row.total}));
-
-        return res.status(200).json({timelist: timelist});
+     
+        return res.status(200).json({timelist: timelist.slice(0,4736)});
 
         
     });
@@ -153,8 +153,8 @@ app.get('/api/pauseinfoTotalValue', (req, res) => {
         }
 
         const pauselist = rows.map(row => ({ x: row.time_index, y: row.total }));
-
-        return res.status(200).json({ pauselist :  pauselist});
+        console.log(pauselist);
+        return res.status(200).json({ pauselist :  pauselist.slice(0,4736)});
 
     });
 });
@@ -168,7 +168,7 @@ app.get('/api/commentinfoTotalValue', (req, res) => {
 
         const commentlist = rows.map(row => ({ x: row.time_index, y: row.total }));
 
-        return res.status(200).json({ commentlist : commentlist});
+        return res.status(200).json({ commentlist : commentlist.slice(0,4736)});
     });
 });
 app.get('/api/speedinfoTotalValue', (req, res) => {
@@ -181,7 +181,7 @@ app.get('/api/speedinfoTotalValue', (req, res) => {
 
         const speedlist = rows.map(row => ({ x: row.time_index, y: row.total }));
 
-        return res.status(200).json({ speedlist:speedlist});
+        return res.status(200).json({ speedlist:speedlist.slice(0,4736)});
 
     });
 });
