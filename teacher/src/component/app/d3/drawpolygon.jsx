@@ -5,6 +5,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { edgeBundling } from './d3-ForceEdgeBundling';
 
 export function zoomTransformStringToObject(str) {
   // Parse the translation and scale values from the string
@@ -31,18 +32,19 @@ const deepenColor = (originalColor) => {
   // Return the deepened color as a hexadecimal string
   return deepenedColor;
 }
-const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
+const DrawPolygon = ({ nodeData, data, svgWidth, svgHeight}) => {
   const svgRef = useRef();
   let initial_zoom = sessionStorage.getItem("zoom") ? zoomTransformStringToObject(sessionStorage.getItem("zoom")) : null;
   const initial_clicked = sessionStorage.getItem("clickedId") ? JSON.parse(sessionStorage.getItem("clickedId")) : null;
   const [node, setNode] = useState(initial_clicked);
   const [zoomTransform, setZoomTransform] = useState(initial_zoom);
   let if_initial = false;
-  let now_edgelist= [];
+  let now_edgelist = [];
   const previousClickedGroup = sessionStorage.getItem("clickedGroup") ? JSON.parse(sessionStorage.getItem("clickedGroup")) : null;
   const [clickedGroup, setClickedGroup] = useState(previousClickedGroup);
 
-  
+  const nodes = nodeData, links = data.edge;
+
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     const min=Math.min(data.rating_range.center.min,data.rating_range.margin.min);
@@ -53,7 +55,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
 
     const GreyColorScale = d3.scaleSequential()
       .domain([data.rating_range.margin.min, data.rating_range.margin.max]) // Reverse the domain
-      .interpolator(d3.interpolate("#EEEEEE", "#888888"));  // Interpolate colors from light orange to dark orange
+      .interpolator(d3.interpolate("#EEEEEE", "#9a9a9a"));  // Interpolate colors from light orange to dark orange
       const g = svg.append('g');
     const colorselect = (d) => {
         let color = '';
@@ -64,7 +66,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
           color = deepenColor(color);
         return color;
       };
-  
+
       // const polygonsGroup = g.append('g');
   
       const Tooltip = d3.select("body")
@@ -190,61 +192,69 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
          
         
       });
-      function StoreZoomInStorage(zoom) {
-        console.log("update zoom", zoom);
-        const now_chapter = JSON.parse(sessionStorage.getItem("chapter_id"));
-        let previous_zoomInfo = sessionStorage.getItem("zoomlist") ? JSON.parse(sessionStorage.getItem("zoomlist")) : null;
-         // Check if previous_zoomInfo contains an object with chapterid equal to now_chapter
-        if (previous_zoomInfo) {
-          const index = previous_zoomInfo.findIndex(item => item.chapterid === now_chapter);
-          if (index !== -1) {
-              // If chapterid exists, update the zoom value
-              previous_zoomInfo[index].zoom = zoom;
-          } else {
-              // If chapterid does not exist, add a new object to the zoomlist
-              previous_zoomInfo.push({ chapterid: now_chapter, zoom: zoom });
-          }
-  
-        }
-        else  previous_zoomInfo=[{ chapterid: now_chapter, zoom: zoom }];
-        
-        // Store the updated zoomlist back into sessionStorage
-        sessionStorage.setItem("zoomlist", JSON.stringify(previous_zoomInfo));
-      }
-      
+
     
-      const edges=g.selectAll('.edges')
-      .data(now_edgelist)
-      .enter()
-      .append('line')
-      .attr('class', 'edge')
-      .attr('x1', d => data.points_dict[d.from][0])
-      .attr('y1', d => -data.points_dict[d.from][1])
-      .attr('x2', d => data.points_dict[d.to][0])
-      .attr('y2', d => -data.points_dict[d.to][1])
-      .style('stroke', 'rgb(153, 116, 115)')
-      .style('stroke-width', '1');// Set opacity based on comparison
-      
-     
-      // Add center points
-      const centerPoints = g.selectAll('.center-point')
-      .data(data.polygons)
-      .enter()
-      .append('circle')
-      .attr('class', 'center-point')
-      .attr('cx', d => data.points_dict[d.center_poly.point][0])
-      .attr('cy', d => -data.points_dict[d.center_poly.point][1])
-      .attr('r', 2)
-      .style('fill', 'rgb(255, 221, 221)');
+ 
+  
+    const compatibility_threshold = 0.3;
+    const bundling_stiffness = 0.2;
+    const step_size = 0.9;
+    const bundling = edgeBundling(
+        { nodes, links },
+        {
+          compatibility_threshold,
+          bundling_stiffness,
+          step_size
+        }
+    );
+    const lineGenerator = d3.line()
+      .x(d => d.x)
+      .y(d => -d.y);
+  
+    const bundling_edges = g.selectAll("path")
+      .data(links)
+      .join("path")
+      .attr("d", (d) => lineGenerator(d.path))
+      .attr("fill", "none")
+      .style('stroke', "rgba(160, 153, 153, 0.4)")
+      .style('stroke-width', '2')
+      .style("opacity", clickedGroup === null ? 1 : 0.3);
+ 
+
+
+
+    const edges=g.selectAll('.edges')
+    .data(now_edgelist)
+    .enter()
+    .append('line')
+    .attr('class', 'edge')
+    .attr('x1', d => data.points_dict[d.source][0])
+    .attr('y1', d => -data.points_dict[d.source][1])
+    .attr('x2', d => data.points_dict[d.target][0])
+    .attr('y2', d => -data.points_dict[d.target][1])
+    .style('stroke', 'rgb(153, 116, 115)')
+    .style('stroke-width', '1');// Set opacity based on comparison
+    
+    
+    // Add center points
+    const centerPoints = g.selectAll('.center-point')
+    .data(data.polygons)
+    .enter()
+    .append('circle')
+    .attr('class', 'center-point')
+    .attr('cx', d => data.points_dict[d.center_poly.point][0])
+    .attr('cy', d => -data.points_dict[d.center_poly.point][1])
+    .attr('r', 2)
+    .style('fill', 'rgb(255, 221, 221)');
  
       
-    edges.style('pointer-events', 'none');
+    // edges.style('pointer-events', 'none');
     centerPoints.style('pointer-events', 'none');
     svg.selectAll('text').style('pointer-events', 'none');
 
     // Initialize zoom behavior
     const zoom = d3.zoom()
-      .scaleExtent([0.5, 4])
+      .scaleExtent([0.6, 4])
       .on('zoom', zoomed);
 
     svg.call(zoom);
@@ -252,7 +262,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       svg.call(zoom.transform, zoomTransform);
     } else {
       // Otherwise, apply initial translation and scale
-      svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2 - 50).scale(2));
+      svg.call(zoom.transform, d3.zoomIdentity.translate(svgWidth / 2, svgHeight / 2 +40 ).scale(0.6));
     }
 
     function zoomed(event) {
@@ -261,12 +271,14 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       sessionStorage.setItem("zoom", now_zoom.toString());
       g.selectAll('.arrow').remove();
       // Add arrows to the edges
+      g.selectAll('.arrow').remove();
+      // Add arrows to the edges
      const arrowSize = getArrowSize(); // Size of the arrow
      edges.each(function (d) {
-       const x1 = data.points_dict[d.from][0];
-       const y1 = -data.points_dict[d.from][1];
-       const x2 = data.points_dict[d.to][0];
-       const y2 = -data.points_dict[d.to][1];
+       const x1 = data.points_dict[d.source][0];
+       const y1 = -data.points_dict[d.source][1];
+       const x2 = data.points_dict[d.target][0];
+       const y2 = -data.points_dict[d.target][1];
 
        const dx = x2 - x1;
        const dy = y2 - y1;
@@ -290,6 +302,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
          .attr('points', `${newX2},${newY2} ${x3},${y3} ${x4},${y4}`)
          .style('fill', 'rgb(153, 116, 115)');
      });
+
       
      g.selectAll("text").remove();
         //Append text element for polygon name
@@ -310,6 +323,7 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
     
 
     }
+
     function getScaleValue() {
       const zoom1 = sessionStorage.getItem('zoom');
       // Regular expression to find scale value
@@ -325,9 +339,9 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
     function getTextSize() {
       const scalevalue = getScaleValue();
       if (scalevalue >= 4) {
-        return 22 / scalevalue;
+        return 28 / scalevalue;
       }
-      if (scalevalue <= 0.66) return 12 / scalevalue;
+      if (scalevalue <= 0.79) return 11.5 / scalevalue;
       return 18 / scalevalue;
     }
     
@@ -340,7 +354,8 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
       if (scalevalue <= 0.66) return 10 / scalevalue;
       return 15 / scalevalue;
     }
- 
+
+   
     return () => {
       g.selectAll('*').remove();
       svg.on('.zoom', null);
@@ -349,8 +364,11 @@ const DrawPolygon = ({ data, svgWidth, svgHeight}) => {
   }, [data, svgWidth, svgHeight, node, zoomTransform,clickedGroup]);
 
   return (
-
-    <svg ref={svgRef} width={svgWidth} height={svgHeight}></svg>
+    <div>
+      <svg ref={svgRef} width={svgWidth} height={svgHeight}></svg>
+     
+    </div>
+    
 
   );
 };

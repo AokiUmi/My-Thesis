@@ -15,11 +15,20 @@ import HexagonIcon from '@mui/icons-material/Hexagon';
 const { Header, Footer, Sider, Content } = Layout;
 const { Text} = Typography;
 import { NOWIP, PACHONGADDR } from '../../App';
+function transformInput(input) {
+  return Object.keys(input).map(key => ({
+    id: parseInt(key),
+    x: input[key][0],
+    y: input[key][1]
+  }));
+}
+
 function MyImage(props) {
     const polygonRef = useRef(null);
     const [width,setWidth]=useState(0);
     const [height,setHeight]=useState(0);
-    const [range,setRange]=useState({});
+  const [range, setRange] = useState({});
+  const [nodeData,setNodeData] =  useState(null);
     useEffect(() => {
         function updateDimensions() {
     
@@ -50,7 +59,7 @@ function MyImage(props) {
             .then((data) => {
                 console.log(data);
                 setPolygonData(data);
-                
+                setNodeData(transformInput(data.points_dict));
             });
    
       },[]);
@@ -87,12 +96,12 @@ function MyImage(props) {
               </List>
                 
             </Content>
-            <Content className='polygon' ref={polygonRef}>
-                <div  className='mask'>
+            <Content className='polygon' ref={polygonRef} >
+          
 
-                    {polygonData !== null && (<DrawPolygon data={polygonData} svgWidth={width} svgHeight={height} />)}
+              {polygonData !== null && nodeData !== null && (<DrawPolygon nodeData={nodeData} data={polygonData} svgWidth={width} svgHeight={height} />)}
             
-                </div>
+            
             </Content>
         </>
 

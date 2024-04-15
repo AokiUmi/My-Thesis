@@ -225,11 +225,11 @@ function MyImage(props) {
               </Content>    
               <Content className='polygon' ref={polygonRef}>
             
-              <div className='mask'>
+   
                   {polygonData !== null && vertexData !== null && if_load === true && 
                   (<DrawPolygon initial_rating={ initial_list} mark={markedId} polygonData={polygonData} vertexData={vertexData} svgWidth={width} svgHeight={height} onPolygonClick={handlePolygonClick} />)}
 
-              </div>
+        
               
             </Content>
             </Layout>

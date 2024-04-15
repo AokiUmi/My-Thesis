@@ -6,8 +6,8 @@
     align-items: center;
 }
 .polygon{
-    height: 86vh;
-    line-height: 86vh;
+    height: 84vh;
+    line-height: 84vh;
     background-color: white;
     width: 100%;
     overflow: hidden; /* Hide the overflow content */
