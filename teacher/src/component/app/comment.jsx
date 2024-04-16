@@ -88,7 +88,8 @@ function transformData(data) {
       real_time: new Date(item.real_time).toLocaleString(), // Transform real_time using Date object
   }));
 }
-function MyComments({timeInterval }) {
+function MyComments({ timeInterval }) {
+  const [currentPage, setCurrentPage] = useState(1);
     const [columns, setColumns]=useState([]);
     const [chosenComment, setChosenComment] = useState(4);
     const [comments, setComments] = useState([]);
@@ -96,7 +97,37 @@ function MyComments({timeInterval }) {
     const isChosenComment = (commentId) => chosenComment === commentId;
     const [scrollPosition, setScrollPosition] = useState(0);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
+  const deleteCheckbox = () => {
+      document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+        element.style.display = 'none';
+      });
+      setTimeout(() => {
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+      }, 100);
+      setTimeout(() => {
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+      }, 500);
+      setTimeout(() => {
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+      }, 1000);
+      setTimeout(() => {
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+      }, 1500);
+      setTimeout(() => {
+        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
+          element.style.display = 'none';
+        });
+      }, 2000);
+    
+  }
     const onSelectChange = (selectedKeys) => {
       setSelectedRowKeys(selectedKeys);
     };
@@ -135,7 +166,7 @@ function MyComments({timeInterval }) {
       };
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
         // Store scroll position in session storage
         sessionStorage.setItem('scrollPosition', scrollPosition.toString());
     }, [scrollPosition]);
@@ -150,11 +181,25 @@ function MyComments({timeInterval }) {
      
  
       });
+      // deleteCheckbox();
     },[selectedKey]);
    useEffect(()=>{
       setSelectedRowKeys(filterCommentsByTimeInterval(comments));
-   },[timeInterval]);
+   }, [timeInterval]);
+  const handlePaginationChange = (page, pageSize) => {
+    // deleteCheckbox();
+    console.log('Page:', page);
+    console.log('Page size:', pageSize);
+    // Fetch data for the new page or update your data as needed
+     setCurrentPage(page);
 
+  };
+  // Pagination configuration
+  const pagination = {
+    pageSize: 10,
+    onChange: handlePaginationChange, // Assigning the handlePaginationChange function
+    current: currentPage // Pass the current page as a prop
+  };
   return (
     <Content className="comment">
       <Dropdown
@@ -176,7 +221,7 @@ function MyComments({timeInterval }) {
         <Table columns={columns} 
            rowSelection={rowSelection}
           // rowClassName={(record) => highlightRow(record)} rowHoverable={false} 
-          pagination={{ pageSize: 13}} dataSource={comments} 
+          pagination={pagination} dataSource={comments} 
           style={{marginTop:"10px",}} />
                               
 

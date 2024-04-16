@@ -197,8 +197,8 @@ const DrawPolygon = ({ nodeData, data, svgWidth, svgHeight}) => {
  
   
     const compatibility_threshold = 0.3;
-    const bundling_stiffness = 0.2;
-    const step_size = 0.9;
+    const bundling_stiffness = 0.5;
+    const step_size = 0.5;
     const bundling = edgeBundling(
         { nodes, links },
         {

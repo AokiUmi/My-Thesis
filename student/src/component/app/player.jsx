@@ -26,6 +26,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { flush } from "../../App";
 import { flush_timeinfo } from "../../App";
+import { flush_commentinfo } from "../../App";
 import { List as Ant_List } from "antd";
 function formatTime(seconds) {
   const hours = Math.floor(seconds / 3600);
@@ -91,13 +92,15 @@ function MyPlayer(props) {
     const roundedTime = Math.floor(current_time);
     commentlist[roundedTime]++;
     sessionStorage.setItem("commentlist", JSON.stringify(commentlist));
+    console.log("commentlist: ", commentlist);
+    flush_commentinfo();
   }
   const getCurrentInfo= () => {
     if (playerRef.current) {
       const current_time = getCurrentTime();
       console.log("current time: ", current_time);
       const current_speed = getCurrentSpeed();
-      console.log("current speed: ", current_speed);
+      // console.log("current speed: ", current_speed);
       if (JSON.parse(sessionStorage.getItem("current_time")) !== current_time) {
         console.log("memorize timelist and speedlist");
         const roundedTime = Math.floor(current_time);
@@ -173,7 +176,7 @@ function MyPlayer(props) {
         }),
       }).then((res) => {
         if (res.ok) {
-          alert("Successfully Upload!");
+          alert("Successfully upload your comment!");
           loadMyComments();
           setComment("");
         } else {
@@ -193,6 +196,7 @@ function MyPlayer(props) {
   const UploadDatabase = () => {
     flush();
     flush_timeinfo();
+    flush_commentinfo();
   }
   const stopClock = () => {
     addPauseList();
@@ -249,6 +253,7 @@ function MyPlayer(props) {
     const roundedTime = Math.floor(meg_time);
     commentlist[roundedTime]--;
     sessionStorage.setItem("commentlist", JSON.stringify(commentlist));
+    flush_commentinfo();
     fetch(`http://${NOWIP}/api/deleteComment?id=${meg_id}`, {
       method: "DELETE",
     }).then((res) => {
@@ -367,7 +372,7 @@ function MyPlayer(props) {
                   <Ant_List
                     itemLayout="horizontal"
                     dataSource={user_comments}
-                    style={{ overflow: "auto", maxHeight: "37vh" }}
+                    style={{ overflow: "auto", maxHeight: "25vh" }}
                     renderItem={(item) => (
                       <Ant_List.Item
                         style={{ background: "white", padding: "16px" }}

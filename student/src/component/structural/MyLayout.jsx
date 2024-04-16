@@ -63,12 +63,12 @@ function MyLayout(props) {
               System Name / Student-End
             </Menu.Item>
             <Menu.Item key="1">
-              <Link to="/" onClick={() => { setkeys('1'); flush(); flush_timeinfo(); }}>Home</Link>
+              <Link to="/" onClick={() => { setkeys('1'); flush(); flush_timeinfo();  flush_commentinfo(); }}>Home</Link>
             </Menu.Item>
             { username !== '' && (
               <> 
                 <Menu.Item key="2">
-                <Link to="/courses" onClick={() => { setkeys('2'); flush(); flush_timeinfo();}}>Course</Link>
+                <Link to="/courses" onClick={() => { setkeys('2'); flush(); flush_timeinfo();  flush_commentinfo(); }}>Course</Link>
                 </Menu.Item>
        
                 

@@ -33,13 +33,13 @@ function MainPage(props) {
   const [video_length, setVideo_length] = useState(0);
   const stepRef = useRef(null);
   const [seekTime, setSeekTime] = useState(null);
-  const [ifLoad, setIfLoad] = useState(false);
   const [alignment, setAlignment] =useState("tooltip");
   const handleTimeIntervalSelection = (newTimeInterval) => {
     setSelectedTimeInterval(newTimeInterval);
   };
-  const handleIfLoadChange = (newload) => {
-    setIfLoad(newload);
+
+  const handleCommentPageChange = (value) => {
+    setNowCommentPage(value);
   }
   const handleSeekTimeChange = (new_time) => {
     setSeekTime(new_time);
@@ -63,8 +63,7 @@ function MainPage(props) {
         const { width, height } = stepRef.current.getBoundingClientRect();
         setVideo_length(width);
         // Get a reference to the Content component with the className "videoimage"
-   
-    
+
       }
     }
 
@@ -110,7 +109,7 @@ function MainPage(props) {
               <Content className="steps" ref={stepRef}>
                 <ChapterLine length={video_length} currentTime={currentSecond} timeInterval={selectedTimeInterval} alignment={alignment}/>
               </Content>
-              <VideoImage handleSeekTime={handleSeekTimeChange } handleTimeChange={handleCurrentSecondChange} handleTimeInterval={handleTimeIntervalSelection} alignment={alignment}/>
+              <VideoImage  handleSeekTime={handleSeekTimeChange } handleTimeChange={handleCurrentSecondChange} handleTimeInterval={handleTimeIntervalSelection} alignment={alignment}/>
             </Layout>
           </Layout>
 
@@ -118,7 +117,7 @@ function MainPage(props) {
             <Layout>
               <Header className="headline" >Student Comments</Header>
 
-              <MyComments timeInterval={selectedTimeInterval} handleIfLoadChange={handleIfLoadChange } />
+              <MyComments timeInterval={selectedTimeInterval} />
             </Layout>
           </Sider>
         </Layout>

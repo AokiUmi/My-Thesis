@@ -11,7 +11,7 @@ function App() {
 
 export default App;
 
-export const NOWIP = '10.20.254.181:53706';
+export const NOWIP = '10.20.207.6:53706';
 export const PACHONGADDR = '10.20.161.96:5000';
 export const VIDEO_URL = `http://${PACHONGADDR}/api/video`;
 export const VIDEO_DURATION = 4736;
@@ -31,7 +31,7 @@ export function flush() {
       }),
     }).then((res) => {
       if (res.ok) {
-        console.log("Upload Successfully!");
+        // console.log("Upload Successfully!");
         sessionStorage.removeItem('rating_list');
       } else {
         alert("error!");
@@ -46,9 +46,8 @@ export function flush() {
 export function flush_timeinfo() {
   const timelist = sessionStorage.getItem("timelist") ? JSON.parse(sessionStorage.getItem("timelist") ): [];
   const speedlist = sessionStorage.getItem("speedlist") ? JSON.parse(sessionStorage.getItem("speedlist")) : [];
-  const commentlist = sessionStorage.getItem("commentlist") ? JSON.parse(sessionStorage.getItem("commentlist")) : [];
   const pauselist = sessionStorage.getItem("pauselist") ? JSON.parse(sessionStorage.getItem("pauselist")) : [];
-  console.log(pauselist);
+
   if (timelist) {
     fetch(`http://${NOWIP}/api/addTimeListInfo`, {
       method: "POST",
@@ -58,20 +57,42 @@ export function flush_timeinfo() {
       body: JSON.stringify({
         timeList: timelist,
         speedList: speedlist,
-        commentList: commentlist,
         pauseList: pauselist,
       }),
     }).then((res) => {
-      if (res.ok) {
-        alert("Successfully Upload!");
-      } else {
+      if (!res.ok) {
+        
         alert("Error!");
       }
     });
     sessionStorage.removeItem("timelist");
     sessionStorage.removeItem("speedlist");
-    sessionStorage.removeItem("commentlist");
     sessionStorage.removeItem("pauselist");
+  }
+    
+
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function flush_commentinfo() {
+  const commentlist = sessionStorage.getItem("commentlist") ? JSON.parse(sessionStorage.getItem("commentlist")) : [];
+
+  if (commentlist) {
+    fetch(`http://${NOWIP}/api/addCommentListInfo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        commentList: commentlist,
+      }),
+    }).then((res) => {
+      if (!res.ok) {
+
+        alert("Error!");
+      }
+    });
+    sessionStorage.removeItem("commentlist");
   }
     
 

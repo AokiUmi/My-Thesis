@@ -74,6 +74,33 @@ function VideoImage(props) {
         }
     
         return avgSpeedList;
+  }
+  function updateDimensions() {
+    if (videoImageRef.current) {
+      const { width, height } = videoImageRef.current.getBoundingClientRect();
+      setHeight(height);
+      setWidth(width);
+      // Get a reference to the Content component with the className "videoimage"
+      const contentElement = document.querySelector('.videoimage');
+
+      // Check if the element exists
+      if (contentElement) {
+        // Get the bounding rectangle of the element
+        const contentBounds = contentElement.getBoundingClientRect();
+
+        // Extract the vertical position (top) of the element
+        const contentTop = contentBounds.top;
+        const scrollY = JSON.parse(sessionStorage.getItem("scrollPosition"));
+        console.log("Position of .videoimage content (top):", contentTop);
+        setTooltip(contentTop + scrollY);
+      } else {
+        console.error("Element with class 'videoimage' not found.");
+      }
+    }
+  }
+  
+  const reloadDimensions = () => {
+      setInterval(updateDimensions, 500 );
     }
       async function fetchData() {
         try {
@@ -104,7 +131,7 @@ function VideoImage(props) {
             sumData(timelist,5),
             sumData(avgSpeedList, 5),
             sumData(pauselist,10),
-            sumData(commentlist,10),
+            sumData(commentlist,8),
    
           ];
         
@@ -116,40 +143,14 @@ function VideoImage(props) {
           
         ];
           console.log(test_resultObject); // Log combined list
-          setVideo_data(test_resultObject);
+          setVideo_data(resultList);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
       }
     useEffect(() => {
-        function updateDimensions() {
-          if (videoImageRef.current) {
-            const { width, height } = videoImageRef.current.getBoundingClientRect();
-            setHeight(height);
-            setWidth(width);
-            // Get a reference to the Content component with the className "videoimage"
-            const contentElement = document.querySelector('.videoimage');
-
-            // Check if the element exists
-            if (contentElement) {
-              // Get the bounding rectangle of the element
-              const contentBounds = contentElement.getBoundingClientRect();
-
-              // Extract the vertical position (top) of the element
-              const contentTop = contentBounds.top;
-              const scrollY = JSON.parse(sessionStorage.getItem("scrollPosition"));
-              console.log("Position of .videoimage content (top):", contentTop);
-              setTooltip(contentTop + scrollY);
-            } else {
-              console.error("Element with class 'videoimage' not found.");
-            }
-          }
-        }
-        
-        [500, 1000, 1500, 2000].forEach((value) => setTimeout(updateDimensions, value));
-    
-        // Call the updateDimensions function initially and add event listener for window resize
-        updateDimensions();
+      
+        reloadDimensions();
         window.addEventListener("resize", updateDimensions);
     
         // Remove event listener when component unmounts
@@ -157,32 +158,9 @@ function VideoImage(props) {
           window.removeEventListener("resize", updateDimensions);
         };
       }, []);
-
       useEffect(() => {
         fetchData();
-        document.querySelectorAll('.ant-table-selection-column').forEach(element => {
-          element.style.display = 'none';
-        });
-        setTimeout(() => {
-          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
-            element.style.display = 'none';
-          });
-        }, 500)
-        setTimeout(() => {
-          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
-            element.style.display = 'none';
-          });
-        }, 1000)
-        setTimeout(() => {
-          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
-            element.style.display = 'none';
-          });
-        }, 1500)
-        setTimeout(() => {
-          document.querySelectorAll('.ant-table-selection-column').forEach(element => {
-            element.style.display = 'none';
-          });
-        }, 2000)
+     
       }, []);
     return (
 
