@@ -60,7 +60,7 @@ function MyLayout(props) {
             }}
           >
             <Menu.Item key="system" style={{pointerEvents: 'none' }}>
-              System Name / Student-End
+              TSLink / Student-End
             </Menu.Item>
             <Menu.Item key="1">
               <Link to="/" onClick={() => { setkeys('1'); flush(); flush_timeinfo();  flush_commentinfo(); }}>Home</Link>

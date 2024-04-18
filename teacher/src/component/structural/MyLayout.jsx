@@ -34,7 +34,7 @@ function MyLayout(props) {
               }}
             >
               <Menu.Item key="system" style={{pointerEvents: 'none' }}>
-                System Name / Teacher-End
+                TSLink / Teacher-End
               </Menu.Item>
                 <Menu.Item key="1" onClick={() => { setkeys('1'); setPage(1); }}>
                     Home
