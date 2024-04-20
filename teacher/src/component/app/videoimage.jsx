@@ -143,7 +143,7 @@ function VideoImage(props) {
           
         ];
           console.log(test_resultObject); // Log combined list
-          setVideo_data(resultList);
+          setVideo_data(test_resultObject);
         } catch (error) {
           console.error('Error fetching data:', error);
         }

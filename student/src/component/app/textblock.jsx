@@ -163,7 +163,7 @@ function TextBlock(props) {
                 <ListItemText
                   primary={
                     <Typography_Mui variant="body1" fontWeight="bold">
-                      Quiz
+                     Quiz
                     </Typography_Mui>
                   }
                 />
@@ -175,10 +175,19 @@ function TextBlock(props) {
                 unmountOnExit
                 style={{ background: "white" }}
               >
-                <Typography>
-                  <Paragraph style={{ fontSize: "16px", marginTop: "10px" }}>
-                    {knowledge_info.quiz}
-                  </Paragraph>
+                <Typography style={{ fontSize: "16px", margin: "16px 10px 0 10px" }} >
+                    <Paragraph  style={{ fontSize: "16px"}}>
+                        Given the sentence, please judge whether it is  <strong>True</strong> or <strong>False</strong>.
+                    </Paragraph>
+                    <Paragraph style={{ fontSize: "16px", marginTop: "16px" , textAlign: "left" }} key={1}>
+                        Question: {knowledge_info.quiz.question}
+                    </Paragraph>
+                    <Paragraph style={{ fontSize: "16px", marginTop: "16px" , textAlign: "left"}} key={2}>
+                        Answer: {knowledge_info.quiz.answer}
+                    </Paragraph>
+                    <Paragraph style={{ fontSize: "16px", marginTop: "16px", textAlign: "left" }} key={3}>
+                        Reason: {knowledge_info.quiz.reason}
+                    </Paragraph>
                 </Typography>
               </Collapse>
             </List>
