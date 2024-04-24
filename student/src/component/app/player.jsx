@@ -85,14 +85,14 @@ function MyPlayer(props) {
     const current_time = getCurrentTime();
     const roundedTime = Math.floor(current_time);
     pauselist[roundedTime]++;
-    console.log("add pause list");
+    // console.log("add pause list");
     sessionStorage.setItem("pauselist", JSON.stringify(pauselist));
   }
   const addCommentList = (current_time) => {
     const roundedTime = Math.floor(current_time);
     commentlist[roundedTime]++;
     sessionStorage.setItem("commentlist", JSON.stringify(commentlist));
-    console.log("commentlist: ", commentlist);
+    // console.log("commentlist: ", commentlist);
     flush_commentinfo();
   }
   const getCurrentInfo= () => {
@@ -122,16 +122,16 @@ function MyPlayer(props) {
         timeInSeconds < chapter.time_end
       ) {
         if (JSON.parse(sessionStorage.getItem("chapter_id") !== chapter.id))
-          console.log("change chapter to: ", chapter.id),
+          // console.log("change chapter to: ", chapter.id),
             props.updateChapter(chapter.id);
         sessionStorage.setItem("chapter_id", JSON.stringify(chapter.id));
         sessionStorage.setItem("chapter_name", JSON.stringify(chapter.name));
-        console.log("ok");
+        // console.log("ok");
       }
     }
   }
   const setCurrentTime = (time) => {
-    console.log("Setting time to:", time);
+    // console.log("Setting time to:", time);
     sessionStorage.setItem("current_time", JSON.stringify(time));
     findChapter(time);
     playerRef.current.seekTo(time, "seconds");
@@ -145,10 +145,10 @@ function MyPlayer(props) {
     setComment(e.target.value);
   };
   const handlePlaybackRateChange = (newSpeed) => {
-    console.log('Playback speed changed:', newSpeed);
+    // console.log('Playback speed changed:', newSpeed);
     // Perform any additional actions based on the new speed
     setSpeed(newSpeed);
-    console.log("current_time_speed: ", newSpeed);
+    // console.log("current_time_speed: ", newSpeed);
     if (!intervalId) {
         intervalId = setInterval(getCurrentInfo, 1000 / newSpeed);
     }
@@ -187,7 +187,7 @@ function MyPlayer(props) {
   };
   const startClock = () => {
     const current_speed = getCurrentSpeed();
-    console.log("current_time_speed: ", current_speed);
+    // console.log("current_time_speed: ", current_speed);
     if (!intervalId) {
         intervalId = setInterval(getCurrentInfo, 1000 / current_speed);
     }

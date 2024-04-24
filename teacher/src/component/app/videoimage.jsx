@@ -91,8 +91,9 @@ function VideoImage(props) {
         // Extract the vertical position (top) of the element
         const contentTop = contentBounds.top;
         const scrollY = JSON.parse(sessionStorage.getItem("scrollPosition"));
-        console.log("Position of .videoimage content (top):", contentTop);
-        setTooltip(contentTop + scrollY);
+        // console.log("Position of .videoimage content (top):", contentTop);
+        if(contentTop + scrollY >0)
+          setTooltip(contentTop + scrollY);
       } else {
         console.error("Element with class 'videoimage' not found.");
       }
@@ -139,7 +140,7 @@ function VideoImage(props) {
           sumData(TEST_TIMEDATA.timelist,5),
           sumData(TEST_SPEEDDATA.speedlist, 5),
           sumData(TEST_PAUSEDATA.pauselist,8),
-          sumData(TEST_COMMENTDATA.commentlist,8),
+          sumData(commentlist,6),
           
         ];
           console.log(test_resultObject); // Log combined list

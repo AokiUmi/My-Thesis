@@ -254,7 +254,7 @@ const DrawPolygon = ({ nodeData, data, svgWidth, svgHeight}) => {
 
     // Initialize zoom behavior
     const zoom = d3.zoom()
-      .scaleExtent([0.6, 4])
+      .scaleExtent([0.68, 4])
       .on('zoom', zoomed);
 
     svg.call(zoom);
@@ -311,7 +311,7 @@ const DrawPolygon = ({ nodeData, data, svgWidth, svgHeight}) => {
         d3.select(this.parentNode)
           .append("text")
           .attr("x", data.points_dict[d.center_poly.point][0])
-          .attr("y", -data.points_dict[d.center_poly.point][1] - 10)
+          .attr("y", d.group_id === 5 ? -data.points_dict[d.center_poly.point][1] + 10 :-data.points_dict[d.center_poly.point][1] - 10)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "middle")
           .style('font-size', `${getTextSize()}px`)
