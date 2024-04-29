@@ -54,7 +54,7 @@ const DrawPolygon = ({ nodeData, data, svgWidth, svgHeight}) => {
       .interpolator(d3.interpolate("#EBDFFF", "#9250FF")); // Interpolate colors from light red to lighter red // Interpolate colors from light blue to dark blue
 
     const GreyColorScale = d3.scaleSequential()
-      .domain([data.rating_range.margin.min, data.rating_range.margin.max]) // Reverse the domain
+      .domain([0, data.rating_range.margin.max]) // Reverse the domain
       .interpolator(d3.interpolate("#EEEEEE", "#9a9a9a"));  // Interpolate colors from light orange to dark orange
       const g = svg.append('g');
     const colorselect = (d) => {
