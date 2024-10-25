@@ -30,14 +30,26 @@
             "time_begin": 290,
             "time_end": 314
         }
-
-
     ],
-    "click_info":{
+    "click_info": {
         "username": "AokiUmi",
         "knowledgeid": 200,
         "chapterid": 3
     },
-    "knowledge_info" : []
-    
+    "knowledge_info": [
+        {
+            "id": 1,
+            "name": "Sample Knowledge1",
+            "concept": "Detailed description.",
+            "relative_concepts": ["Sample Knowledge2","Sample Knowledge3", "Sample Knowledge5"],
+            "quiz": "xxxxxxxxxxx"
+        },
+        {
+            "id": 2,
+            "name": "Sample Knowledge2",
+            "concept": "Detailed description.",
+            "relative_concepts": ["Sample Knowledge6","Sample Knowledge3", "Sample Knowledge5"],
+            "quiz": "xxxxxxxxxxx"
+        }
+    ]
 }

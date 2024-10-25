@@ -64,14 +64,14 @@ if __name__ == '__main__':
     speedlist= speedlist()
         # Write the list to a file
 
-    with open("test_timelist.json", "w") as f:
-        json.dump({"timelist": timelist}, f)   
+    # with open("test_timelist.json", "w") as f:
+    #     json.dump({"timelist": timelist}, f)   
         
-    with open("test_commentlist.json", "w") as f:
-        json.dump({"commentlist": commentlist}, f)
+    # with open("test_commentlist.json", "w") as f:
+    #     json.dump({"commentlist": commentlist}, f)
 
-    with open("test_pauselist.json", "w") as f:
-        json.dump({"pauselist": pauselist}, f)
+    # with open("test_pauselist.json", "w") as f:
+    #     json.dump({"pauselist": pauselist}, f)
 
     with open("test_speedlist.json", "w") as f:
         json.dump({"speedlist": speedlist}, f)
